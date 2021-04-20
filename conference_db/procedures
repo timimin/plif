@@ -1,0 +1,108 @@
+---------------------------------------------------------------------------------------------------------------------
+
+PROCEDURE p_submit_paper (s_id number, p_id number, c_id number, sub_date date, stat number)
+IS
+BEGIN
+  INSERT INTO SUBMISSIONS (SUBMISSION_ID, PAPER_ID, CONFERENCE_ID, SUBMISSION_DATE, STATUS)
+  VALUES (s_id, p_id, c_id, sub_date, stat);
+EXCEPTION
+  WHEN OTHERS 
+     THEN NULL;
+END p_submit_paper;
+
+---------------------------------------------------------------------------------------------------------------------
+
+PROCEDURE p_add_paper (p_id number, tit varchar2, absr varchar2 number, auth varchar2, t clob)
+IS
+BEGIN
+  INSERT INTO SUBMISSIONS (PAPER_ID, TITLE, ABSTRACTION, AUTHORS, TEXT)
+  VALUES (p_id, tit, absr, auth, t);
+EXCEPTION
+  WHEN OTHERS 
+     THEN NULL;
+END p_submit_paper;
+
+---------------------------------------------------------------------------------------------------------------------
+
+PROCEDURE p_allocate (id number, p_id number, s_id number, alloc_date date)
+IS
+  v_status NUMBER
+  EXCEPTION PAPER_NOT_ACCEPTED
+BEGIN
+  SELECT STATUS into v_status
+  FROM SUBMISSIONS
+  WHERE PAPER_ID = p_id;
+  IF v_status = 1
+     THEN INSERT INTO ALLOCATIONS (ALLOCATION_ID, PAPER_ID, SESSION_ID, ALLOCATION_DATE)
+          VALUES (id, p_id, s_id, alloc_date)
+     ELSE RAISE PAPER_NOT_ACCEPTED;
+  EXCEPTION
+     WHEN PAPER_NOT_ACCEPTED THEN
+        INSERT INTO LOGS
+        VALUES (...);
+        RAISE_APPLICATION_ERROR(...);
+     WHEN OTHERS THEN
+        NULL;
+END p_allocate;
+
+----------------------------------------------------------------------------------------------------------------------
+
+PROCEDURE p_chahge_status (s_id number, stat number)
+IS
+BEGIN
+   UPDATE SUBMISSIONS
+   SET STATUS = stat
+   WHERE SUBMISSION_ID = s_id
+END p_chahge_status;
+
+----------------------------------------------------------------------------------------------------------------------
+
+FUNCTION f_getsubmissions (c_id number) return varray of PAPERS%rowtype
+AS
+  v_submissions varray of PAPERS%rowtype
+BEGIN
+  SELECT BULK COLLECT PAPER_ID, TITLE, ABSTRACT, TEXT, 'UNKNOWN_AUTH' INTO v_submissions
+  FROM PAPERS
+  WHERE PAPER_ID IN (SELECT PAPER_ID FROM SUBMISSIONS 
+                     WHERE CONFERENCE_ID = c_id);
+  RETURN v_submissions;
+END
+
+----------------------------------------------------------------------------------------------------------------------
+
+FUNCTION f_getaccepted (c_id number) return varray of PAPERS%rowtype
+AS
+  v_accepted varray of PAPERS%rowtype
+BEGIN
+  SELECT BULK COLLECT PAPER_ID, TITLE, ABSTRACT, TEXT, 'UNKNOWN_AUTH' INTO v_accepted
+  FROM PAPERS
+  WHERE PAPER_ID IN (SELECT PAPER_ID FROM SUBMISSIONS 
+                     WHERE CONFERENCE_ID = c_id AND STATUS = 1);
+  RETURN v_accepted;
+END
+
+----------------------------------------------------------------------------------------------------------------------
+
+FUNCTION f_getpaper (p_id number) return PAPERS%rowtype
+AS
+  v_paper PAPERS%rowtype
+BEGIN
+  SELECT PAPER_ID, TITLE, ABSTRACT, TEXT, AUTHORS INTO v_paper
+  FROM PAPERS
+  WHERE PAPER_ID = p_id;
+  RETURN v_paper;
+END
+
+----------------------------------------------------------------------------------------------------------------------
+
+FUNCTION f_getsection_program (s_id number) return varray of PAPERS%rowtype
+AS
+  v_program varray of PAPERS%rowtype
+BEGIN
+  SELECT BULK COLLECT PAPER_ID, TITLE, ABSTRACT, TEXT, 'UNKNOWN_AUTH' INTO v_program
+  FROM PAPERS
+  WHERE PAPER_ID IN (SELECT PAPER_ID FROM ALLOCATIONS 
+                     WHERE SESSION_ID = s_id);
+  RETURN v_program;
+END
+    
