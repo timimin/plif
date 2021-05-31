@@ -2,13 +2,11 @@ package myImplementation;
 
 import grammar.PlSqlParserBaseListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static grammar.PlSqlParser.*;
 
 public class PlSqlListener extends PlSqlParserBaseListener {
-    public List<String> strings = new ArrayList<>();
 
     @Override
     public void enterCreate_procedure_body(Create_procedure_bodyContext ctx) {
