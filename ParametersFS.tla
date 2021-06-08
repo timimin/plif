@@ -1,6 +1,0 @@
-P_SUBMIT_PAPER_p_S_ID(x)==[loc|->"mem", offs |->0, policy |-> any_caller(x)]
-P_SUBMIT_PAPER_p_P_ID(x)==[loc|->"mem", offs |->1, policy |-> any_caller(x)]
-P_SUBMIT_PAPER_p_C_ID(x)==[loc|->"mem", offs |->2, policy |-> any_caller(x)]
-P_SUBMIT_PAPER_p_SUB_DATE(x)==[loc|->"mem", offs |->3, policy |-> any_caller(x)]
-P_SUBMIT_PAPER_p_STAT(x)==[loc|->"mem", offs |->4, policy |-> any_caller(x)]
-P_SUBMIT_PAPER_v_V(x)==[loc|->"mem", offs |->5, policy |-> any_caller(x)]

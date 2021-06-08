@@ -1,5 +1,7 @@
 package myImplementation;
 
+import grammar.PlSqlParserBaseListener;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -12,7 +14,8 @@ import static myImplementation.VariableType.LOCAL_VARIABLE;
 import static myImplementation.VariableType.PROCEDURE_PARAMETER;
 import static util.ParametersSpecificationUtil.*;
 
-public class PlSqlProcedureListener extends PlSqlListener {
+//TODO убрать хардкод, перенести файлы в поля класса или параметры методов
+public class PlSqlProcedureListener extends PlSqlParserBaseListener {
     private final List<String> procedureParameters;
     private final List<String> procedureLocalVariables;
     private final List<String> procedureExceptions;
@@ -44,10 +47,11 @@ public class PlSqlProcedureListener extends PlSqlListener {
     public void exitCreate_procedure_body(Create_procedure_bodyContext ctx) {
         System.out.println(procedureParameters);
         System.out.println(procedureLocalVariables);
-        File parameters = new File("ParametersFS.tla");
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(parameters))) {
-            writeVariablePolicy(bufferedWriter, procedureParameters, PROCEDURE_PARAMETER, procedureName, 0);
-            writeVariablePolicy(bufferedWriter, procedureLocalVariables, LOCAL_VARIABLE, procedureName, procedureParameters.size());
+        File parameters = new File("gen/tla/ParametersFS.tla");
+        try (BufferedWriter procedureParametersPolicyWriter = new BufferedWriter(new FileWriter(parameters, true))) {
+            writeVariablePolicy(procedureParametersPolicyWriter, procedureParameters, PROCEDURE_PARAMETER, procedureName, 0);
+            writeVariablePolicy(procedureParametersPolicyWriter, procedureLocalVariables, LOCAL_VARIABLE, procedureName, procedureParameters.size());
+            procedureParametersPolicyWriter.write("\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
