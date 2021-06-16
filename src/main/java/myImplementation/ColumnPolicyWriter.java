@@ -30,8 +30,4 @@ public class ColumnPolicyWriter {
         String tableName = tableProperty.substring(0, tableProperty.lastIndexOf("_"));
         return "col_" + tableName + "_" + columnName;
     }
-
-    public static void main(String[] args) {
-      //  writeColumnPolicy();
-    }
 }

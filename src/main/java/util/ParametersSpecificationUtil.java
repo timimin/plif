@@ -19,7 +19,7 @@ public class ParametersSpecificationUtil {
     public static void writeVariablePolicy(BufferedWriter bufferedWriter, List<String> variables, VariableType variableType, String procedureName, int offset) throws IOException {
         for (int i = 0; i < variables.size(); i++) {
             StringBuilder procedureParameterPolicy = new StringBuilder(encodePolicyName(procedureName, variables.get(i), variableType));
-            procedureParameterPolicy.append("(x)==");
+            procedureParameterPolicy.append("(x) == ");
             appendBasicPolicy(procedureParameterPolicy, i+offset);
             procedureParameterPolicy.append("\n");
             bufferedWriter.write(procedureParameterPolicy.toString());
