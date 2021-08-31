@@ -1909,21 +1909,21 @@ public class PlSqlLexer extends PlSqlLexerBase {
 	private boolean REMARK_COMMENT_sempred(RuleContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
-			return IsNewlineAtPos(-4);
+			return self.IsNewlineAtPos(-4);
 		}
 		return true;
 	}
 	private boolean PROMPT_MESSAGE_sempred(RuleContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 1:
-			return IsNewlineAtPos(-4);
+			return self.IsNewlineAtPos(-4);
 		}
 		return true;
 	}
 	private boolean START_CMD_sempred(RuleContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 2:
-			return IsNewlineAtPos(-2);
+			return self.IsNewlineAtPos(-2);
 		}
 		return true;
 	}
