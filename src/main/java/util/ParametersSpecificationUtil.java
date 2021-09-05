@@ -1,5 +1,6 @@
 package util;
 
+import myImplementation.DeclaredTypes;
 import myImplementation.VariableType;
 
 import java.io.BufferedWriter;
@@ -8,8 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import static myImplementation.DeclaredTypes.RECORD;
 import static myImplementation.VariableType.*;
 
+// М.б. создать доп. утил класс?
 public class ParametersSpecificationUtil {
     private static void appendBasicPolicy(StringBuilder stringBuilder, int offset) {
         stringBuilder.append("[loc|->\"mem\", offs |->").append(offset).append(", policy |-> any_caller(x)]");
@@ -19,37 +22,82 @@ public class ParametersSpecificationUtil {
         stringBuilder.append("[loc|->\"mem\", offs |->").append(offset).append(", policy |-> min]");
     }
 
-    private static String encodePolicyName(String procedureName, String variableName, VariableType variableType) {
-        return procedureName + "_" + variableType.getShortName() + "_" +
-                variableName;
+    private static String encodePolicyName(String programBlockName, String variableName, VariableType variableType) {
+        String underscoreSurroundedVariableName = variableName.equals("") ? variableName : "_" + variableName;
+        return programBlockName + "_" + variableType.getShortName() + underscoreSurroundedVariableName;
     }
 
-    public static void writeVariablePolicy(BufferedWriter bufferedWriter, List<String> variables, VariableType variableType, String procedureName, int offset) throws IOException {
-        for (int i = 0; i < variables.size(); i++) {
-            StringBuilder procedureParameterPolicy = new StringBuilder(encodePolicyName(procedureName, variables.get(i), variableType));
-            procedureParameterPolicy.append("(x) == ");
-            if (variableType == PROCEDURE_PARAMETER || variableType == RETURN_VARIABLE) {
-                appendBasicPolicy(procedureParameterPolicy, i + offset);
+    private static String encodePolicyName(String programBlockName, String variableName, VariableType variableType, DeclaredTypes customType, int rowNumber, int columnNumber) {
+        String underscoreSurroundedVariableName = variableName.equals("") ? "_" + variableName : "_" + variableName + "_";
+        if (rowNumber == -1)
+            return programBlockName + "_" + variableType.getShortName() + underscoreSurroundedVariableName + customType.getShortName() + "_c" + columnNumber;
+        else
+            return programBlockName + "_" + variableType.getShortName() + underscoreSurroundedVariableName + customType.getShortName() + "_e" + rowNumber + "_c" + columnNumber;
+    }
+
+    //Политика для базовых типов
+    public static void writeVariablePolicy(File parametersSpecification, String variable, VariableType variableType, String programBlockName, int offset) {
+        try (BufferedWriter programBlockParametersPolicyWriter = new BufferedWriter(new FileWriter(parametersSpecification, true))) {
+            StringBuilder programBlockParameterPolicy = new StringBuilder(encodePolicyName(programBlockName, variable, variableType));
+            programBlockParameterPolicy.append("(x) == ");
+            if (variableType == INPUT_PARAMETER || variableType == RETURN_VARIABLE) {
+                appendBasicPolicy(programBlockParameterPolicy, offset);
             } else {
-                appendMinPolicy(procedureParameterPolicy, i + offset);
+                appendMinPolicy(programBlockParameterPolicy, offset);
             }
-            procedureParameterPolicy.append("\n");
-            bufferedWriter.write(procedureParameterPolicy.toString());
+            programBlockParameterPolicy.append("\n");
+            programBlockParametersPolicyWriter.write(programBlockParameterPolicy.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    // Возвращает смещение в файле
-    public static int writePolicies(File parametersSpecification, String programBlockName, List<String> parameters, List<String> localVariables, List<String> exceptions, boolean emptyLineFlag) {
-        int offset = 0;
-        try (BufferedWriter functionParametersPolicyWriter = new BufferedWriter(new FileWriter(parametersSpecification, true))) {
-            writeVariablePolicy(functionParametersPolicyWriter, parameters, PROCEDURE_PARAMETER, programBlockName, offset);
-            writeVariablePolicy(functionParametersPolicyWriter, localVariables, LOCAL_VARIABLE, programBlockName, offset += parameters.size());
-            writeVariablePolicy(functionParametersPolicyWriter, exceptions, EXCEPTION, programBlockName, offset += localVariables.size());
-            if (emptyLineFlag)
-                functionParametersPolicyWriter.write('\n');
+    //Политика для кастомных типов
+    //Входной параметр не может быть кастомного типа
+    public static int writeVariablePolicy(File parametersSpecification, String variableName, VariableType variableType, DeclaredTypes customType, String programBlockName, int offset, int numberOfColumnsInRecord) {
+        try (BufferedWriter programBlockParametersPolicyWriter = new BufferedWriter(new FileWriter(parametersSpecification, true))) {
+            outerLoop:
+            for (int i = 1; i < 3; i++) {
+                for (int j = 1; j < numberOfColumnsInRecord + 1; j++) {
+                    StringBuilder programBlockParameterPolicy = new StringBuilder(encodePolicyName(programBlockName, variableName, variableType, customType, i, j));
+                    programBlockParameterPolicy.append("(x) == ");
+                    if (variableType == RETURN_VARIABLE) {
+                        appendBasicPolicy(programBlockParameterPolicy, offset);
+                    } else {
+                        appendMinPolicy(programBlockParameterPolicy, offset);
+                    }
+                    programBlockParameterPolicy.append("\n");
+                    programBlockParametersPolicyWriter.write(programBlockParameterPolicy.toString());
+                    offset++;
+                    if (customType == RECORD)
+                        break outerLoop;
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return offset;
     }
+
+    public static void writeLineBreak(File file) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
+            bufferedWriter.write('\n');
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+/*
+    public static void writeVariablePolicy(BufferedWriter bufferedWriter, List<String> variables, VariableType variableType, String programBlockName, int offset) throws IOException {
+        for (int i = 0; i < variables.size(); i++) {
+            StringBuilder programBlockParameterPolicy = new StringBuilder(encodePolicyName(programBlockName, variables.get(i), variableType));
+            programBlockParameterPolicy.append("(x) == ");
+            if (variableType == INPUT_PARAMETER || variableType == RETURN_VARIABLE) {
+                appendBasicPolicy(programBlockParameterPolicy, i + offset);
+            } else {
+                appendMinPolicy(programBlockParameterPolicy, i + offset);
+            }
+            programBlockParameterPolicy.append("\n");
+            bufferedWriter.write(programBlockParameterPolicy.toString());
+        }
+    }*/
 }

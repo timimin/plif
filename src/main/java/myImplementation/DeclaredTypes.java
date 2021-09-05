@@ -1,13 +1,11 @@
 package myImplementation;
 
-public enum VariableType {
-    INPUT_PARAMETER("p"),
-    LOCAL_VARIABLE("v"),
-    RETURN_VARIABLE("r"),
-    EXCEPTION("e");
+public enum DeclaredTypes {
+    VARRAY("arr"),
+    RECORD("rec");
     private final String shortName;
 
-    VariableType(String type) {
+    DeclaredTypes(String type) {
         shortName = type;
     }
 

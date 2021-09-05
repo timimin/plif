@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-
+//TODO  может вынести в класс утил, т.к. только статик методы?
 //TODO убрать хардкод, перенести файлы в поля класса или параметры методов
 public class ColumnPolicyWriter {
     //Записывает минимальную политику для столбцов таблиц в файл ParametersFS

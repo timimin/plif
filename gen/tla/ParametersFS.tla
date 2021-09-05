@@ -49,10 +49,20 @@ P_SUBMIT_PAPER_p_SUB_DATE(x) == [loc|->"mem", offs |->3, policy |-> any_caller(x
 P_SUBMIT_PAPER_p_STAT(x) == [loc|->"mem", offs |->4, policy |-> any_caller(x)]
 
 F_GET_SECTION_PROGRAM_p_S_ID(x) == [loc|->"mem", offs |->0, policy |-> any_caller(x)]
-F_GET_SECTION_PROGRAM_v_V_PROGRAM(x) == [loc|->"mem", offs |->1, policy |-> min]
-F_GET_SECTION_PROGRAM_r_V_PROGRAM(x) == [loc|->"mem", offs |->2, policy |-> any_caller(x)]
+F_GET_SECTION_PROGRAM_v_V_PROGRAM_arr_e1_c1(x) == [loc|->"mem", offs |->1, policy |-> min]
+F_GET_SECTION_PROGRAM_v_V_PROGRAM_arr_e1_c2(x) == [loc|->"mem", offs |->2, policy |-> min]
+F_GET_SECTION_PROGRAM_v_V_PROGRAM_arr_e1_c3(x) == [loc|->"mem", offs |->3, policy |-> min]
+F_GET_SECTION_PROGRAM_v_V_PROGRAM_arr_e2_c1(x) == [loc|->"mem", offs |->4, policy |-> min]
+F_GET_SECTION_PROGRAM_v_V_PROGRAM_arr_e2_c2(x) == [loc|->"mem", offs |->5, policy |-> min]
+F_GET_SECTION_PROGRAM_v_V_PROGRAM_arr_e2_c3(x) == [loc|->"mem", offs |->6, policy |-> min]
+F_GET_SECTION_PROGRAM_r_arr_e1_c1(x) == [loc|->"mem", offs |->7, policy |-> any_caller(x)]
+F_GET_SECTION_PROGRAM_r_arr_e1_c2(x) == [loc|->"mem", offs |->8, policy |-> any_caller(x)]
+F_GET_SECTION_PROGRAM_r_arr_e1_c3(x) == [loc|->"mem", offs |->9, policy |-> any_caller(x)]
+F_GET_SECTION_PROGRAM_r_arr_e2_c1(x) == [loc|->"mem", offs |->10, policy |-> any_caller(x)]
+F_GET_SECTION_PROGRAM_r_arr_e2_c2(x) == [loc|->"mem", offs |->11, policy |-> any_caller(x)]
+F_GET_SECTION_PROGRAM_r_arr_e2_c3(x) == [loc|->"mem", offs |->12, policy |-> any_caller(x)]
 
 F_GET_SUBMISSIONS_p_C_ID(x) == [loc|->"mem", offs |->0, policy |-> any_caller(x)]
 F_GET_SUBMISSIONS_v_V_SUBMISSIONS(x) == [loc|->"mem", offs |->1, policy |-> min]
-F_GET_SUBMISSIONS_r_V_SUBMISSIONS(x) == [loc|->"mem", offs |->2, policy |-> any_caller(x)]
+F_GET_SUBMISSIONS_r(x) == [loc|->"mem", offs |->2, policy |-> any_caller(x)]
 
