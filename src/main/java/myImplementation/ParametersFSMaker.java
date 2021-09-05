@@ -13,9 +13,15 @@ public class ParametersFSMaker {
     public static void main(String[] args) throws IOException {
         ColumnPolicyWriter.writeColumnPolicy();
         File[] procedureFiles = new File("src/main/resources/procedures").listFiles();
-        for (File procedureFile : procedureFiles) {
+        File[] functionFiles = new File("src/main/resources/functions").listFiles();
+        writeParametersFromFiles(procedureFiles == null ? new File[0] : procedureFiles);
+        writeParametersFromFiles(functionFiles == null ? new File[0] : functionFiles);
+    }
+
+    private static void writeParametersFromFiles(File[] files) {
+        for (File file : files) {
             StringBuilder plSqlCode = new StringBuilder();
-            try (BufferedReader sqlScriptSourceReader = new BufferedReader(new FileReader(procedureFile))) {
+            try (BufferedReader sqlScriptSourceReader = new BufferedReader(new FileReader(file))) {
                 while (sqlScriptSourceReader.ready()) {
                     plSqlCode.append(sqlScriptSourceReader.readLine()).append("\n");
                 }
@@ -24,13 +30,11 @@ public class ParametersFSMaker {
                 PlSqlParser parser = new PlSqlParser(tokens);
                 ParseTree tree = parser.sql_script();
                 ParseTreeWalker walker = new ParseTreeWalker();
-                PlSqlProcedureListener sqlProcedureListener = new PlSqlProcedureListener();
-                walker.walk(sqlProcedureListener, tree);
+                PlSqlProgramBlockListener sqlListener = new PlSqlProgramBlockListener();
+                walker.walk(sqlListener, tree);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 }
-//try (InputStream sqlScriptSource = Thread.currentThread().getContextClassLoader().getResourceAsStream("procedures/test.sql");
-//                 BufferedReader sqlScriptSourceReader = new BufferedReader(new InputStreamReader(sqlScriptSource))) {

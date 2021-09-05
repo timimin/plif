@@ -3,6 +3,8 @@ package util;
 import myImplementation.VariableType;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -26,13 +28,28 @@ public class ParametersSpecificationUtil {
         for (int i = 0; i < variables.size(); i++) {
             StringBuilder procedureParameterPolicy = new StringBuilder(encodePolicyName(procedureName, variables.get(i), variableType));
             procedureParameterPolicy.append("(x) == ");
-            if (variableType == LOCAL_VARIABLE || variableType == EXCEPTION) {
-                appendMinPolicy(procedureParameterPolicy, i + offset);
-            } else {
+            if (variableType == PROCEDURE_PARAMETER || variableType == RETURN_VARIABLE) {
                 appendBasicPolicy(procedureParameterPolicy, i + offset);
+            } else {
+                appendMinPolicy(procedureParameterPolicy, i + offset);
             }
             procedureParameterPolicy.append("\n");
             bufferedWriter.write(procedureParameterPolicy.toString());
         }
+    }
+
+    // Возвращает смещение в файле
+    public static int writePolicies(File parametersSpecification, String programBlockName, List<String> parameters, List<String> localVariables, List<String> exceptions, boolean emptyLineFlag) {
+        int offset = 0;
+        try (BufferedWriter functionParametersPolicyWriter = new BufferedWriter(new FileWriter(parametersSpecification, true))) {
+            writeVariablePolicy(functionParametersPolicyWriter, parameters, PROCEDURE_PARAMETER, programBlockName, offset);
+            writeVariablePolicy(functionParametersPolicyWriter, localVariables, LOCAL_VARIABLE, programBlockName, offset += parameters.size());
+            writeVariablePolicy(functionParametersPolicyWriter, exceptions, EXCEPTION, programBlockName, offset += localVariables.size());
+            if (emptyLineFlag)
+                functionParametersPolicyWriter.write('\n');
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return offset;
     }
 }
