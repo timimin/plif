@@ -1,4 +1,4 @@
-package myImplementation;
+package myImplementation.enums;
 
 public enum DeclaredTypes {
     VARRAY("arr"),

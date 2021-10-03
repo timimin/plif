@@ -1,4 +1,4 @@
-package myImplementation;
+package myImplementation.enums;
 
 public enum VariableType {
     INPUT_PARAMETER("p"),

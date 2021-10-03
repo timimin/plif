@@ -66,3 +66,7 @@ F_GET_SUBMISSIONS_p_C_ID(x) == [loc|->"mem", offs |->0, policy |-> any_caller(x)
 F_GET_SUBMISSIONS_v_V_SUBMISSIONS(x) == [loc|->"mem", offs |->1, policy |-> min]
 F_GET_SUBMISSIONS_r(x) == [loc|->"mem", offs |->2, policy |-> any_caller(x)]
 
+F_IS_ACCEPTED_p_S_ID(x) == [loc|->"mem", offs |->0, policy |-> any_caller(x)]
+F_IS_ACCEPTED_v_V_STATUS(x) == [loc|->"mem", offs |->1, policy |-> min]
+F_IS_ACCEPTED_r(x) == [loc|->"mem", offs |->2, policy |-> any_caller(x)]
+

@@ -1,16 +1,15 @@
 package util;
 
-import myImplementation.DeclaredTypes;
-import myImplementation.VariableType;
+import myImplementation.enums.DeclaredTypes;
+import myImplementation.enums.VariableType;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
-import static myImplementation.DeclaredTypes.RECORD;
-import static myImplementation.VariableType.*;
+import static myImplementation.enums.DeclaredTypes.RECORD;
+import static myImplementation.enums.VariableType.*;
 
 // М.б. создать доп. утил класс?
 public class ParametersSpecificationUtil {

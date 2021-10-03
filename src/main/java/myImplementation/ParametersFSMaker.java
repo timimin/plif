@@ -2,12 +2,16 @@ package myImplementation;
 
 import grammar.PlSqlLexer;
 import grammar.PlSqlParser;
+import grammar.PlSqlParserBaseListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class ParametersFSMaker {
     public static void main(String[] args) throws IOException {
@@ -30,7 +34,7 @@ public class ParametersFSMaker {
                 PlSqlParser parser = new PlSqlParser(tokens);
                 ParseTree tree = parser.sql_script();
                 ParseTreeWalker walker = new ParseTreeWalker();
-                PlSqlProgramBlockListener sqlListener = new PlSqlProgramBlockListener();
+                PlSqlParserBaseListener sqlListener = new PlSqlProgramBlockListener();
                 walker.walk(sqlListener, tree);
             } catch (IOException e) {
                 e.printStackTrace();
