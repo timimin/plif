@@ -1,18 +1,21 @@
 package myImplementation;
 
+import enums.OperatorType;
 import grammar.PlSqlLexer;
 import grammar.PlSqlParser;
 import grammar.PlSqlParserBaseListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-import static myImplementation.OperatorType.*;
+import static enums.OperatorType.*;
 
 public class PlSqlOperatorListener extends PlSqlParserBaseListener {
     private final Map<OperatorType, List<Integer>> operatorToLinesMap;

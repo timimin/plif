@@ -4,6 +4,9 @@ import java.io.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+
+import static util.CommonUtil.getColumnPolicyName;
+
 //TODO  может вынести в класс утил, т.к. только статик методы?
 //TODO убрать хардкод, перенести файлы в поля класса или параметры методов
 public class ColumnPolicyWriter {
@@ -24,10 +27,5 @@ public class ColumnPolicyWriter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static String getColumnPolicyName(String tableProperty, String columnName) {
-        String tableName = tableProperty.substring(0, tableProperty.lastIndexOf("_"));
-        return "col_" + tableName + "_" + columnName;
     }
 }

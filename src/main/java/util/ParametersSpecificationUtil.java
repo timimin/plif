@@ -1,15 +1,15 @@
 package util;
 
-import myImplementation.enums.DeclaredTypes;
-import myImplementation.enums.VariableType;
+import enums.DeclaredTypes;
+import enums.VariableType;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static myImplementation.enums.DeclaredTypes.RECORD;
-import static myImplementation.enums.VariableType.*;
+import static enums.DeclaredTypes.RECORD;
+import static enums.VariableType.*;
 
 // М.б. создать доп. утил класс?
 public class ParametersSpecificationUtil {
@@ -85,18 +85,4 @@ public class ParametersSpecificationUtil {
             e.printStackTrace();
         }
     }
-/*
-    public static void writeVariablePolicy(BufferedWriter bufferedWriter, List<String> variables, VariableType variableType, String programBlockName, int offset) throws IOException {
-        for (int i = 0; i < variables.size(); i++) {
-            StringBuilder programBlockParameterPolicy = new StringBuilder(encodePolicyName(programBlockName, variables.get(i), variableType));
-            programBlockParameterPolicy.append("(x) == ");
-            if (variableType == INPUT_PARAMETER || variableType == RETURN_VARIABLE) {
-                appendBasicPolicy(programBlockParameterPolicy, i + offset);
-            } else {
-                appendMinPolicy(programBlockParameterPolicy, i + offset);
-            }
-            programBlockParameterPolicy.append("\n");
-            bufferedWriter.write(programBlockParameterPolicy.toString());
-        }
-    }*/
 }
