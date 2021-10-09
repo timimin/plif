@@ -1,27 +1,21 @@
 package myImplementation;
 
 import enums.OperatorType;
-import grammar.PlSqlLexer;
 import grammar.PlSqlParser;
 import grammar.PlSqlParserBaseListener;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import refactoring.ProgramBlockData;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import static enums.OperatorType.*;
 
 public class PlSqlOperatorListener extends PlSqlParserBaseListener {
-    private final Map<OperatorType, List<Integer>> operatorToLinesMap;
 
-    {
-        operatorToLinesMap = new LinkedHashMap<>();
+    private final ProgramBlockData programBlockData;
+
+    public PlSqlOperatorListener(ProgramBlockData programBlockData) {
+        this.programBlockData = programBlockData;
     }
 
     @Override
@@ -50,7 +44,7 @@ public class PlSqlOperatorListener extends PlSqlParserBaseListener {
         addLineOfOperatorToMap(FUNCTION_CALL, ctx.start);
     }
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         PlSqlLexer plSqlLexer = new PlSqlLexer(CharStreams.fromString("CREATE OR REPLACE PROCEDURE P_ALLOCATE (ID NUMBER, S_ID NUMBER, SEC_ID NUMBER, ALLOC_DATE DATE)\n" +
                 "IS\n" +
                 "  PAPER_NOT_ACCEPTED EXCEPTION;\n" +
@@ -81,17 +75,15 @@ public class PlSqlOperatorListener extends PlSqlParserBaseListener {
         PlSqlParserBaseListener sqlListener = new PlSqlOperatorListener();
         walker.walk(sqlListener, tree);
         System.out.println(sqlListener);
-    }
+    }*/
 
     @Override
     public String toString() {
-        return "PlSqlOperatorListener{" +
-                "operatorToLinesMap=" + operatorToLinesMap +
-                '}';
+        return programBlockData.toString();
     }
 
     private void addLineOfOperatorToMap(OperatorType operatorType, Token token) {
-        operatorToLinesMap.putIfAbsent(operatorType, new ArrayList<>());
-        operatorToLinesMap.get(operatorType).add(token.getLine());
+        programBlockData.getOperatorLines().putIfAbsent(operatorType, new ArrayList<>());
+        programBlockData.getOperatorLines().get(operatorType).add(token.getLine());
     }
 }

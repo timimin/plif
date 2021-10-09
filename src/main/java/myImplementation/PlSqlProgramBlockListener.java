@@ -5,9 +5,9 @@ import grammar.PlSqlParserBaseListener;
 
 import java.io.File;
 
-import static enums.DeclaredTypes.RECORD;
-import static enums.DeclaredTypes.VARRAY;
-import static enums.VariableType.*;
+import static enums.VariableType.CUSTOM_RECORD;
+import static enums.VariableType.CUSTOM_VARRAY;
+import static enums.ProgramBlockVariableType.*;
 import static util.ParametersSpecificationUtil.writeLineBreak;
 import static util.ParametersSpecificationUtil.writeVariablePolicy;
 
@@ -43,9 +43,9 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     @Override
     public void exitCreate_function_body(PlSqlParser.Create_function_bodyContext ctx) {
         if (returnType.equals(recordTypeName)) {
-            offset = writeVariablePolicy(parametersSpecification, "", RETURN_VARIABLE, RECORD, programBlockName, offset, numberOfColumnsInRecord);
+            offset = writeVariablePolicy(parametersSpecification, "", RETURN_VARIABLE, CUSTOM_RECORD, programBlockName, offset, numberOfColumnsInRecord);
         } else if (returnType.equals(varrayTypeName)) {
-            offset = writeVariablePolicy(parametersSpecification, "", RETURN_VARIABLE, VARRAY, programBlockName, offset, numberOfColumnsInRecord);
+            offset = writeVariablePolicy(parametersSpecification, "", RETURN_VARIABLE, CUSTOM_VARRAY, programBlockName, offset, numberOfColumnsInRecord);
         } else {
             writeVariablePolicy(parametersSpecification, "", RETURN_VARIABLE, programBlockName, offset);
         }
@@ -72,9 +72,9 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     public void enterVariable_declaration(PlSqlParser.Variable_declarationContext ctx) {
         String typeName = ctx.type_spec().getText();
         if (typeName.equals(recordTypeName)) {
-            offset = writeVariablePolicy(parametersSpecification, ctx.identifier().getText(), LOCAL_VARIABLE, RECORD, programBlockName, offset, numberOfColumnsInRecord);
+            offset = writeVariablePolicy(parametersSpecification, ctx.identifier().getText(), LOCAL_VARIABLE, CUSTOM_RECORD, programBlockName, offset, numberOfColumnsInRecord);
         } else if (typeName.equals(varrayTypeName)) {
-            offset = writeVariablePolicy(parametersSpecification, ctx.identifier().getText(), LOCAL_VARIABLE, VARRAY, programBlockName, offset, numberOfColumnsInRecord);
+            offset = writeVariablePolicy(parametersSpecification, ctx.identifier().getText(), LOCAL_VARIABLE, CUSTOM_VARRAY, programBlockName, offset, numberOfColumnsInRecord);
         } else {
             writeVariablePolicy(parametersSpecification, ctx.identifier().getText(), LOCAL_VARIABLE, programBlockName, offset);
             offset++;

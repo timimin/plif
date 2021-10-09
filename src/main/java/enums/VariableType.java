@@ -1,10 +1,9 @@
 package enums;
 
 public enum VariableType {
-    INPUT_PARAMETER("p"),
-    LOCAL_VARIABLE("v"),
-    RETURN_VARIABLE("r"),
-    EXCEPTION("e");
+    BUILT_IN("built-in"),//Для всех "примитивных" типов Pl/SQL
+    CUSTOM_VARRAY("arr"),//Для созданного Varray
+    CUSTOM_RECORD("rec");//Для созданной Record
     private final String shortName;
 
     VariableType(String type) {

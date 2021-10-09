@@ -1,6 +1,5 @@
 // Generated from D:/JavaProjects/AntlrTesting/src/main/java/grammar\PlSqlLexer.g4 by ANTLR 4.9.1
 package grammar;
-import base.PlSqlLexerBase;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
