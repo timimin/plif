@@ -104,6 +104,16 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         }
     }
 
+    @Override
+    public void exitCreate_function_body(PlSqlParser.Create_function_bodyContext ctx) {
+        if (programBlockData.getReturnType().equals(programBlockData.getVarrayTypeName())) {
+            programBlockData.addVariable(new Variable(CUSTOM_VARRAY, "", RETURN_VARIABLE));
+        } else if (programBlockData.getReturnType().equals(programBlockData.getRecordTypeName())) {
+            programBlockData.addVariable(new Variable(CUSTOM_RECORD, "", RETURN_VARIABLE));
+        } else {
+            programBlockData.addVariable(new Variable(BUILT_IN, "", RETURN_VARIABLE));
+        }
+    }
     //TODO может вынести в класс данных?
    /* private void addLineOfOperatorToMap(OperatorType operatorType, Token token) {
         programBlockData.getOperatorLines().putIfAbsent(operatorType, new ArrayList<>());

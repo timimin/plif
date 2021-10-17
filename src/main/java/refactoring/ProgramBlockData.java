@@ -1,8 +1,12 @@
 package refactoring;
 
+import enums.ProgramBlockVariableType;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static enums.ProgramBlockVariableType.RETURN_VARIABLE;
 
 public class ProgramBlockData {
     private File sourceFile;
@@ -116,6 +120,9 @@ public class ProgramBlockData {
     }
 
     public void addVariable(Variable variable) {
+        ProgramBlockVariableType programBlockVariableType = variable.getProgramBlockVariableType();
+        variable.setVariablePolicyName(programBlockName + "_" + programBlockVariableType.getShortName()
+                + (programBlockVariableType != RETURN_VARIABLE ? "_" : "") + variable.getVariableName());
         variables.add(variable);
     }
 

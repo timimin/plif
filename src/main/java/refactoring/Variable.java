@@ -8,6 +8,7 @@ public class Variable {
     private VariableType variableType;
     private String variableName;
     private ProgramBlockVariableType programBlockVariableType;
+    private String variablePolicyName;
 
     public Variable(VariableType variableType, String variableName, ProgramBlockVariableType programBlockVariableType) {
         this.variableType = variableType;
@@ -33,6 +34,14 @@ public class Variable {
 
     public ProgramBlockVariableType getProgramBlockVariableType() {
         return programBlockVariableType;
+    }
+
+    public String getVariablePolicyName() {
+        return variablePolicyName;
+    }
+
+    public void setVariablePolicyName(String variablePolicyName) {
+        this.variablePolicyName = variablePolicyName;
     }
 
     public void setProgramBlockVariableType(ProgramBlockVariableType programBlockVariableType) {

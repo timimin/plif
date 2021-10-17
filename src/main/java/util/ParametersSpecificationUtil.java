@@ -85,4 +85,18 @@ public class ParametersSpecificationUtil {
             e.printStackTrace();
         }
     }
+
+    public static void writeParametersHeader(BufferedWriter bufferedWriter) throws IOException {
+        bufferedWriter.write(
+                "EXTENDS Naturals, Sequences\n" +
+                        "CONSTANT U, UU, NONE, ALL, E0, E1, Undef, GPol, Session_number\n" +
+                        "VARIABLES StateE, Sessions, New2Old, XLocks, XLocks, Trace, SLocks, Ignore\n" +
+                        "vars == <<Sessions, SLocks, StateE, New2Old, XLocks, VPol, Trace, Ignore>>\n" +
+                        "min == {<<CHOOSE x \\in UU: TRUE,<<[e1 \\in E0 |-> {NONE}],  [e2 \\in E1 |-> {NONE}]>> >>}\n" +
+                        "any_caller(x) == {<<x, <<[e1 \\in E0 |-> {NONE}], [e2 \\in E1 |-> {NONE}]>> >>}\n" +
+                        "max == {}\n" +
+                        "u1 == CHOOSE i \\in UU: TRUE\n" +
+                        "u2 == CHOOSE j \\in UU: j#u1\n" +
+                        "S ==  CHOOSE s \\in SUBSET(U) : Cardinality(s) = Session_number\n");
+    }
 }

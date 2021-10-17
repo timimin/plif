@@ -1,5 +1,6 @@
 package refactoring;
 
+import grammar.CaseChangingCharStream;
 import grammar.PlSqlLexer;
 import grammar.PlSqlParser;
 import org.antlr.v4.runtime.CharStreams;
@@ -22,7 +23,7 @@ public class ProgramBlocksDataHolder {
     private final List<ProgramBlockData> programBlocksData;
 
     public ProgramBlocksDataHolder(String sourceDirectory) {
-        programBlocksData = new CopyOnWriteArrayList<>();
+        programBlocksData = new ArrayList<>();
         fillProgramBlocksData(sourceDirectory);
     }
 
@@ -30,8 +31,6 @@ public class ProgramBlocksDataHolder {
     private void fillProgramBlocksData(String sourceDirectory) {
         File proceduresDirectory = new File(sourceDirectory + File.separator + "procedures");
         File functionsDirectory = new File(sourceDirectory + File.separator + "functions");
-        //File propertiesDirectory = new File(sourceDirectory + File.separator + "functions");//для таблиц
-
         File[] procedures = Objects.requireNonNull(proceduresDirectory.listFiles());
         File[] functions = Objects.requireNonNull(functionsDirectory.listFiles());
         List<File> programBlockFiles = new ArrayList<>(procedures.length + functions.length);
@@ -52,11 +51,10 @@ public class ProgramBlocksDataHolder {
         } finally {
             executorService.shutdown();
         }
-        System.out.println();
     }
 
     //TODO Разобраться с видимостью/типом класса и модификаторами
-    static class ProgramBlockDataFiller implements Callable<ProgramBlockData> {
+    private static class ProgramBlockDataFiller implements Callable<ProgramBlockData> {
         private final File programBlockSourceFile;
 
         public ProgramBlockDataFiller(File programBlockSourceFile) {
@@ -73,7 +71,7 @@ public class ProgramBlocksDataHolder {
                 }
                 //TODO может здесь можно как-то лучше сделать, нужно немного разобраться.
                 // Определиться с уровнем абстракции переменных
-                PlSqlLexer plSqlLexer = new PlSqlLexer(CharStreams.fromString(plSqlCode.toString()));
+                PlSqlLexer plSqlLexer = new PlSqlLexer(new CaseChangingCharStream(CharStreams.fromString(plSqlCode.toString()), true));
                 CommonTokenStream tokens = new CommonTokenStream(plSqlLexer);
                 PlSqlParser parser = new PlSqlParser(tokens);
                 ParseTree tree = parser.sql_script();
@@ -85,6 +83,10 @@ public class ProgramBlocksDataHolder {
             }
             return programBlockData;
         }
+    }
+
+    public List<ProgramBlockData> getProgramBlocksData() {
+        return programBlocksData;
     }
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
