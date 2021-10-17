@@ -1,4 +1,4 @@
-package myImplementation;
+package rawImplementation;
 
 import enums.OperatorType;
 import grammar.PlSqlParser;
@@ -20,28 +20,28 @@ public class PlSqlOperatorListener extends PlSqlParserBaseListener {
 
     @Override
     public void enterSelect_statement(PlSqlParser.Select_statementContext ctx) {
-        addLineOfOperatorToMap(SELECT, ctx.start);
+     //   addLineOfOperatorToMap(SELECT, ctx.start);
     }
 
     @Override
     public void enterIf_statement(PlSqlParser.If_statementContext ctx) {
-        addLineOfOperatorToMap(IF, ctx.start);
-        addLineOfOperatorToMap(END_IF, ctx.stop);
+     //   addLineOfOperatorToMap(IF, ctx.start);
+     //   addLineOfOperatorToMap(END_IF, ctx.stop);
     }
 
     @Override
     public void enterInsert_statement(PlSqlParser.Insert_statementContext ctx) {
-        addLineOfOperatorToMap(INSERT, ctx.start);
+      //  addLineOfOperatorToMap(INSERT, ctx.start);
     }
 
     @Override
     public void enterUpdate_statement(PlSqlParser.Update_statementContext ctx) {
-        addLineOfOperatorToMap(UPDATE, ctx.start);
+       // addLineOfOperatorToMap(UPDATE, ctx.start);
     }
 
     @Override
     public void enterFunction_argument(PlSqlParser.Function_argumentContext ctx) {
-        addLineOfOperatorToMap(FUNCTION_CALL, ctx.start);
+      //  addLineOfOperatorToMap(FUNCTION_CALL, ctx.start);
     }
 
    /* public static void main(String[] args) {
@@ -82,8 +82,8 @@ public class PlSqlOperatorListener extends PlSqlParserBaseListener {
         return programBlockData.toString();
     }
 
-    private void addLineOfOperatorToMap(OperatorType operatorType, Token token) {
+    /*private void addLineOfOperatorToMap(OperatorType operatorType, Token token) {
         programBlockData.getOperatorLines().putIfAbsent(operatorType, new ArrayList<>());
         programBlockData.getOperatorLines().get(operatorType).add(token.getLine());
-    }
+    }*/
 }

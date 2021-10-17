@@ -1,13 +1,8 @@
 package refactoring;
 
-import enums.OperatorType;
-import enums.ProgramBlockVariableType;
-
 import java.io.File;
-import java.util.EnumMap;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ProgramBlockData {
     private File sourceFile;
@@ -16,8 +11,13 @@ public class ProgramBlockData {
     private String varrayTypeName;
     private String recordTypeName;
     private String returnType;
-    private Map<OperatorType, List<Integer>> operatorLines;
-    private Map<ProgramBlockVariableType, List<Variable>> variableTypes;
+    private List<Operator> operators;
+    private List<Variable> variables;
+
+    {
+        variables = new ArrayList<>();
+        operators = new ArrayList<>();
+    }
 
     public ProgramBlockData(File sourceFile) {
         this.sourceFile = sourceFile;
@@ -58,8 +58,7 @@ public class ProgramBlockData {
     }
 
     public void setProgramBlockName(String programBlockName) {
-        if (this.programBlockName == null)
-            this.programBlockName = programBlockName;
+        this.programBlockName = programBlockName;
     }
 
     public int getNumberOfColumnsInRecord() {
@@ -67,8 +66,7 @@ public class ProgramBlockData {
     }
 
     public void setNumberOfColumnsInRecord(int numberOfColumnsInRecord) {
-        if (this.numberOfColumnsInRecord == 0)
-            this.numberOfColumnsInRecord = numberOfColumnsInRecord;
+        this.numberOfColumnsInRecord = numberOfColumnsInRecord;
     }
 
     public String getVarrayTypeName() {
@@ -76,8 +74,7 @@ public class ProgramBlockData {
     }
 
     public void setVarrayTypeName(String varrayTypeName) {
-        if (this.varrayTypeName == null)
-            this.varrayTypeName = varrayTypeName;
+        this.varrayTypeName = varrayTypeName;
     }
 
     public String getRecordTypeName() {
@@ -85,45 +82,45 @@ public class ProgramBlockData {
     }
 
     public void setRecordTypeName(String recordTypeName) {
-        if (this.recordTypeName == null)
-            this.recordTypeName = recordTypeName;
+        this.recordTypeName = recordTypeName;
     }
 
     public String getReturnType() {
         return returnType;
     }
 
+    //TODO здесь вряд ли более 1-го раза вызов будет
     public void setReturnType(String returnType) {
-        if (this.returnType == null)
-            this.returnType = returnType;
+        this.returnType = returnType;
     }
 
-    public Map<OperatorType, List<Integer>> getOperatorLines() {
-        if (operatorLines == null) {
-            operatorLines = new EnumMap<>(OperatorType.class);
-        }
-        return operatorLines;
+    public List<Operator> getOperators() {
+        return operators;
     }
 
-    public void setOperatorLines(Map<OperatorType, List<Integer>> operatorLines) {
-        if (this.operatorLines == null)
-            this.operatorLines = operatorLines;
+    public void setOperators(List<Operator> operators) {
+        this.operators = operators;
     }
 
-    public Map<ProgramBlockVariableType, List<Variable>> getVariableTypes() {
-        if (variableTypes == null) {
-            variableTypes = new EnumMap<>(ProgramBlockVariableType.class);
-        }
-        return variableTypes;
+    public List<Variable> getVariables() {
+        return variables;
     }
 
-    public void setVariableTypes(Map<ProgramBlockVariableType, List<Variable>> variableTypes) {
-        if (this.variableTypes == null)
-            this.variableTypes = variableTypes;
+    public void setVariables(List<Variable> variables) {
+        if (this.variables == null)
+            this.variables = variables;
     }
 
     public File getSourceFile() {
         return sourceFile;
+    }
+
+    public void addVariable(Variable variable) {
+        variables.add(variable);
+    }
+
+    public void addOperator(Operator operator) {
+        operators.add(operator);
     }
 
     @Override
@@ -135,8 +132,8 @@ public class ProgramBlockData {
                 ", varrayTypeName='" + varrayTypeName + '\'' +
                 ", recordTypeName='" + recordTypeName + '\'' +
                 ", returnType='" + returnType + '\'' +
-                ", operatorToLinesMap=" + operatorLines +
-                ", typeToVariableNamesMap=" + variableTypes +
+                ", operatorToLinesMap=" + operators +
+                ", typeToVariableNamesMap=" + variables +
                 '}';
     }
 }

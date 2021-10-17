@@ -1,4 +1,4 @@
-package myImplementation;
+package rawImplementation;
 
 import java.io.*;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class ColumnPolicyWriter {
         Properties properties = new Properties();
         File parameters = new File("gen/tla/ParametersFS.tla");
         String minColumnPolicy = " == [loc|->\"persistence\", policy |-> min]";
-        try (InputStream propertiesSource = Thread.currentThread().getContextClassLoader().getResourceAsStream("properties/ParametersFS.properties");
+        try (InputStream propertiesSource = Thread.currentThread().getContextClassLoader().getResourceAsStream("programblocks/properties/ParametersFS.properties");
              BufferedWriter columnPolicyWriter = new BufferedWriter(new FileWriter(parameters))) {
             properties.load(propertiesSource);
             Map<String, String> sortedProperties = new TreeMap<>();
