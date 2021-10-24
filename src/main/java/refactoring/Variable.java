@@ -3,17 +3,23 @@ package refactoring;
 import enums.ProgramBlockVariableType;
 import enums.VariableType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //TODO Может сделать вложенным? Разобраться с типом вложенного класса и видимостью
 public class Variable {
     private VariableType variableType;
     private String variableName;
     private ProgramBlockVariableType programBlockVariableType;
-    private String variablePolicyName;
+
+    //TODO Возвращать список, чтобы не получать каждый раз политики для записией и массивов
+    private List<String> variablePolicies;
 
     public Variable(VariableType variableType, String variableName, ProgramBlockVariableType programBlockVariableType) {
         this.variableType = variableType;
         this.variableName = variableName;
         this.programBlockVariableType = programBlockVariableType;
+        this.variablePolicies = new ArrayList<>();
     }
 
     public VariableType getVariableType() {
@@ -36,12 +42,16 @@ public class Variable {
         return programBlockVariableType;
     }
 
-    public String getVariablePolicyName() {
-        return variablePolicyName;
+    public List<String> getVariablePolicies() {
+        return variablePolicies;
     }
 
-    public void setVariablePolicyName(String variablePolicyName) {
-        this.variablePolicyName = variablePolicyName;
+    public void setVariablePolicies(List<String> variablePolicies) {
+        this.variablePolicies = variablePolicies;
+    }
+
+    public void addVariablePolicy(String variablePolicy) {
+        variablePolicies.add(variablePolicy);
     }
 
     public void setProgramBlockVariableType(ProgramBlockVariableType programBlockVariableType) {

@@ -1,7 +1,5 @@
 package refactoring;
 
-import enums.VariableType;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -9,8 +7,8 @@ import java.io.IOException;
 
 import static enums.ProgramBlockVariableType.INPUT_PARAMETER;
 import static enums.ProgramBlockVariableType.RETURN_VARIABLE;
-import static enums.VariableType.CUSTOM_RECORD;
-import static enums.VariableType.CUSTOM_VARRAY;
+import static util.CommonUtil.getModuleDeclarationLine;
+import static util.Constants.END_OF_MODULE;
 
 public class ParametersSpecificationCreator implements TlaSpecificationCreator {
     private final DatabaseSchema databaseSchema;
@@ -25,10 +23,12 @@ public class ParametersSpecificationCreator implements TlaSpecificationCreator {
     @Override
     public void createSpecification(File destinationFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destinationFile))) {
+            bufferedWriter.write(getModuleDeclarationLine(destinationFile) + "\n");
             writeParametersHeader(bufferedWriter);
             writeColumnPolicies(bufferedWriter);
-            writeCalls(bufferedWriter);
+            // writeCalls(bufferedWriter);
             writeVariablePolicies(bufferedWriter);
+            bufferedWriter.write(END_OF_MODULE);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,6 +58,7 @@ public class ParametersSpecificationCreator implements TlaSpecificationCreator {
         }
     }
 
+    @Deprecated(since = "В спецификации это похоже лишнее")
     private void writeCalls(BufferedWriter bufferedWriter) throws IOException {
         StringBuilder stringBuilder = new StringBuilder("Calls == {");
         for (ProgramBlockData programBlockData : programBlocksDataHolder.getProgramBlocksData()) {
@@ -70,26 +71,9 @@ public class ParametersSpecificationCreator implements TlaSpecificationCreator {
     private void writeVariablePolicies(BufferedWriter bufferedWriter) throws IOException {
         for (ProgramBlockData programBlockData : programBlocksDataHolder.getProgramBlocksData()) {
             int offset = 0;
-            int numberOfColumnsInRecord = programBlockData.getNumberOfColumnsInRecord();
             for (Variable variable : programBlockData.getVariables()) {
-                VariableType variableType = variable.getVariableType();
-                StringBuilder policyName = new StringBuilder(variable.getVariablePolicyName());
-                if (variableType == CUSTOM_RECORD) {
-                    policyName.append("_").append(CUSTOM_RECORD.getShortName()).append("_c");
-                    for (int i = 1; i < numberOfColumnsInRecord + 1; i++) {
-                        StringBuilder recordPolicyName = new StringBuilder(policyName.toString() + i);
-                        bufferedWriter.write(recordPolicyName + "(x) == " + getPolicy(variable, offset++, recordPolicyName.toString()) + "\n");
-                    }
-                } else if (variableType == CUSTOM_VARRAY) {
-                    policyName.append("_").append(CUSTOM_VARRAY.getShortName()).append("_e");
-                    for (int i = 1; i < 3; i++) {
-                        for (int j = 1; j < numberOfColumnsInRecord + 1; j++) {
-                            StringBuilder varrayPolicyName = new StringBuilder(policyName.toString() + i + "_c" + j);
-                            bufferedWriter.write(varrayPolicyName + "(x) == " + getPolicy(variable, offset++, varrayPolicyName.toString()) + "\n");
-                        }
-                    }
-                } else {
-                    bufferedWriter.write(policyName + "(x) == " + getPolicy(variable, offset++, policyName.toString()) + "\n");
+                for (String policy : variable.getVariablePolicies()) {
+                    bufferedWriter.write(policy + "(x) == " + getPolicy(variable, offset++, policy) + "\n");
                 }
             }
             bufferedWriter.write("\n");

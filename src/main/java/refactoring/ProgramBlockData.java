@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static enums.ProgramBlockVariableType.RETURN_VARIABLE;
+import static enums.VariableType.CUSTOM_RECORD;
+import static enums.VariableType.CUSTOM_VARRAY;
 
 public class ProgramBlockData {
     private File sourceFile;
@@ -121,8 +123,23 @@ public class ProgramBlockData {
 
     public void addVariable(Variable variable) {
         ProgramBlockVariableType programBlockVariableType = variable.getProgramBlockVariableType();
-        variable.setVariablePolicyName(programBlockName + "_" + programBlockVariableType.getShortName()
-                + (programBlockVariableType != RETURN_VARIABLE ? "_" : "") + variable.getVariableName());
+        String policy = programBlockName + "_" + programBlockVariableType.getShortName()
+                + (programBlockVariableType != RETURN_VARIABLE ? "_" : "") + variable.getVariableName();
+        if (variable.getVariableType() == CUSTOM_RECORD) {
+            String recordPolicy = policy + "_" + CUSTOM_RECORD.getShortName() + "_c";
+            for (int i = 1; i < numberOfColumnsInRecord + 1; i++) {
+                variable.addVariablePolicy(recordPolicy + i);
+            }
+        } else if (variable.getVariableType() == CUSTOM_VARRAY) {
+            String varrayPolicy = policy + "_" + CUSTOM_VARRAY.getShortName() + "_e";
+            for (int i = 1; i < 3; i++) {
+                for (int j = 1; j < numberOfColumnsInRecord + 1; j++) {
+                    variable.addVariablePolicy(varrayPolicy + i + "_c" + j);
+                }
+            }
+        } else {
+            variable.addVariablePolicy(policy);
+        }
         variables.add(variable);
     }
 
@@ -139,8 +156,8 @@ public class ProgramBlockData {
                 ", varrayTypeName='" + varrayTypeName + '\'' +
                 ", recordTypeName='" + recordTypeName + '\'' +
                 ", returnType='" + returnType + '\'' +
-                ", operatorToLinesMap=" + operators +
-                ", typeToVariableNamesMap=" + variables +
+                ", operators=" + operators +
+                ", variables=" + variables +
                 '}';
     }
 }

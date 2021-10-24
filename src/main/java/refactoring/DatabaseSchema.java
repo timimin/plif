@@ -3,6 +3,8 @@ package refactoring;
 import java.io.*;
 import java.util.*;
 
+import static util.CommonUtil.getFileNameWithoutExtension;
+
 public class DatabaseSchema {
     private final Map<String, Table> tables;
 
@@ -14,8 +16,7 @@ public class DatabaseSchema {
     private void initializeSchema(String sourceDirectory) {
         File tablePropertiesDirectory = new File(sourceDirectory + File.separator + "tables");//для таблиц
         for (File tablePropertyFile : Objects.requireNonNull(tablePropertiesDirectory.listFiles())) {
-            String tablePropertyFileName = tablePropertyFile.getName();
-            String tableName = tablePropertyFileName.substring(0, tablePropertyFileName.indexOf('.'));
+            String tableName =getFileNameWithoutExtension(tablePropertyFile);
             Table table = new Table(tableName);
             try (InputStream inputStream = new FileInputStream(tablePropertyFile)) {
                 Properties tableProperties = new Properties();
