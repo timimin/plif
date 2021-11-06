@@ -40,6 +40,10 @@ public class Operator {
         this.numberOfLineInProgramBlock = numberOfLineInProgramBlock;
     }
 
+    public String getLabel() {
+        return "lbl_" + numberOfLineInProgramBlock;
+    }
+
     public List<String> getAffectedColumns() {
         return affectedColumns;
     }

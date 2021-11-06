@@ -150,8 +150,7 @@ public class ProgramBlockData {
     @Override
     public String toString() {
         return "ProgramBlockData{" +
-                "sourceFile=" + sourceFile +
-                ", programBlockName='" + programBlockName + '\'' +
+                "programBlockName='" + programBlockName + '\'' +
                 ", numberOfColumnsInRecord=" + numberOfColumnsInRecord +
                 ", varrayTypeName='" + varrayTypeName + '\'' +
                 ", recordTypeName='" + recordTypeName + '\'' +

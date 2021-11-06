@@ -13,7 +13,7 @@ public class Variable {
     private ProgramBlockVariableType programBlockVariableType;
 
     //TODO Возвращать список, чтобы не получать каждый раз политики для записией и массивов
-    private List<String> variablePolicies;
+    private final List<String> variablePolicies;
 
     public Variable(VariableType variableType, String variableName, ProgramBlockVariableType programBlockVariableType) {
         this.variableType = variableType;
@@ -46,15 +46,20 @@ public class Variable {
         return variablePolicies;
     }
 
-    public void setVariablePolicies(List<String> variablePolicies) {
-        this.variablePolicies = variablePolicies;
-    }
-
     public void addVariablePolicy(String variablePolicy) {
         variablePolicies.add(variablePolicy);
     }
 
     public void setProgramBlockVariableType(ProgramBlockVariableType programBlockVariableType) {
         this.programBlockVariableType = programBlockVariableType;
+    }
+
+    @Override
+    public String toString() {
+        return "Variable{" +
+                "variableType=" + variableType +
+                ", variableName='" + variableName + '\'' +
+                ", programBlockVariableType=" + programBlockVariableType +
+                '}';
     }
 }
