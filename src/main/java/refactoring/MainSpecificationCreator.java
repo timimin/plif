@@ -1,6 +1,7 @@
 package refactoring;
 
 import enums.ProgramBlockType;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -45,25 +46,25 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
 
     private String getProgramBlockLoadRule(ProgramBlockData programBlockData) {
         StringBuilder loadRule = new StringBuilder(programBlockData.getProgramBlockName());
-        loadRule.append("_load(id) ==\nIF XLocks = Undef\nTHEN\n/\\ XLocks' = id\n/\\ Sessions' =\n[\nSessions EXCEPT ![id][\"SessionM\"] = Sessions[id][\"SessionM\"] \\o\n");
+        loadRule.append("_load(id) ==\nIF XLocks = Undef\nTHEN\n/\\ XLocks' = id\n/\\ Sessions' =\n [\n Sessions EXCEPT ![id][\"SessionM\"] = Sessions[id][\"SessionM\"] \\o\n ");
         StringBuilder newVariablePolicies = new StringBuilder("<<");
-        List<List<String>> variablePoliciesWithIdAndPolicySuffix = appendSuffixToAllVariablePolicies(programBlockData, "(id).policy,\n");
+        List<List<String>> variablePoliciesWithIdAndPolicySuffix = appendSuffixToAllVariablePolicies(programBlockData, "(id).policy,\n ");
         programBlockData.getVariables().forEach(
                 variable ->
                 {
                     if (variable.getProgramBlockVariableType() == INPUT_PARAMETER)
-                        newVariablePolicies.append("min,\n");
+                        newVariablePolicies.append("min,\n ");
                     else {
-                        List<String> variablePoliciesWithSuffix = appendSuffixToVariablePolicies(variable, "(id).policy,\n");
+                        List<String> variablePoliciesWithSuffix = appendSuffixToVariablePolicies(variable, "(id).policy,\n ");
                         variablePoliciesWithSuffix.forEach(newVariablePolicies::append);
                     }
                 }
         );
-        newVariablePolicies.replace(newVariablePolicies.lastIndexOf(",\n"), newVariablePolicies.length(), ">>");
-        loadRule.append(newVariablePolicies).append("\n]\n/\\ New2Old' =\n<<\n<<");
+        newVariablePolicies.replace(newVariablePolicies.lastIndexOf(",\n "), newVariablePolicies.length(), ">>");
+        loadRule.append(newVariablePolicies).append("\n ]\n/\\ New2Old' =\n <<\n <<");
         variablePoliciesWithIdAndPolicySuffix.forEach(policy -> policy.forEach(loadRule::append));
-        loadRule.replace(loadRule.lastIndexOf(",\n"), loadRule.length(), ">>");
-        loadRule.append(",\n").append(newVariablePolicies).append("\n>>\n/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<VPol>>\nELSE UNCHANGED vars\n\n");
+        loadRule.replace(loadRule.lastIndexOf(",\n "), loadRule.length(), ">>");
+        loadRule.append(",\n ").append(newVariablePolicies).append("\n >>\n/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<VPol>>\nELSE UNCHANGED vars\n\n");
         return loadRule.toString();
     }
 
@@ -75,17 +76,16 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
 
     private String getProgramBlockExitRule(ProgramBlockData programBlockData) {
         StringBuilder exitRule = new StringBuilder(programBlockData.getProgramBlockName());
-        exitRule.append("_exit(id) ==\n/\\ IF Len(Sessions[id][\"StateRegs\"]) = 1\nTHEN XLocks' = Undef\nELSE XLocks' = XLocks\n/\\ Sessions' =\n[Sessions EXCEPT\n![id][\"StateRegs\"] = Tail(Sessions[id][\"StateRegs\"]) \\o <<>>,\n");
+        exitRule.append("_exit(id) ==\n/\\ IF Len(Sessions[id][\"StateRegs\"]) = 1\n THEN XLocks' = Undef\n ELSE XLocks' = XLocks\n/\\ Sessions' =\n [Sessions EXCEPT\n ![id][\"StateRegs\"] = Tail(Sessions[id][\"StateRegs\"]) \\o <<>>,\n ");
         if (programBlockData.getProgramBlockType() == ProgramBlockType.FUNCTION) {
             Optional<Variable> returnVariable = getReturnVariable(programBlockData);
             if (returnVariable.isEmpty()) {
                 throw new IllegalStateException("У функции отсутствует возвращаемое значение");
             } else {
                 List<String> policiesWithSuffix = appendSuffixToVariablePolicies(returnVariable.get(), "(id).offs");
-                exitRule.append("![id][\"Ret\"] =\n<<\n");
-                policiesWithSuffix.forEach(policy -> exitRule.append("Sessions[id][\"SessionM\"][Head(Sessions[id][\"StateRegs\"]).fp + ").append(policy).append("],\n"));
-                exitRule.setCharAt(exitRule.length() - 1, '\n');
-                exitRule.append(">>,\n");
+                exitRule.append("![id][\"Ret\"] =\n <<\n");
+                policiesWithSuffix.forEach(policy -> exitRule.append(" Sessions[id][\"SessionM\"][Head(Sessions[id][\"StateRegs\"]).fp + ").append(policy).append("],\n"));
+                exitRule.replace(exitRule.lastIndexOf(",\n"), exitRule.length(), "\n >>,\n ");
             }
         }
         exitRule.append("![id][\"SessionM\"] = SubSeq(Sessions[id][\"SessionM\"], 1, Len(Sessions[id][\"SessionM\"]) - ")
@@ -146,18 +146,18 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
                         "/\\ New2Old = <<>>\n" +
                         "/\\ Ignore = 0\n" +
                         "/\\ XLocks = Undef\n" +
-                        "/\\ VPol =\n[\n");
+                        "/\\ VPol =\n [\n");
         for (Table table : databaseSchema.getTables().values()) {
             for (Table.Column column : table.getColumns()) {
                 String columnPolicy = column.getColumnPolicy();
-                initRule.append(columnPolicy)
+                initRule.append(" ").append(columnPolicy)
                         .append(" |-> [ext|->0, policy |-> min, name |-> ")
                         .append(surroundWithQuotes(columnPolicy))
                         .append("],\n");
             }
             initRule.append("\n");
         }
-        initRule.setCharAt(initRule.lastIndexOf(","), '\n');
+        initRule.setCharAt(initRule.lastIndexOf(","), ' ');
         initRule.append("]\n");
         bufferedWriter.write(initRule.toString());
     }
