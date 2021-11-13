@@ -5,8 +5,10 @@ import refactoring.Variable;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static enums.ProgramBlockVariableType.RETURN_VARIABLE;
 import static util.Constants.END_OF_MODULE_DECLARATION;
 import static util.Constants.START_OF_MODULE_DECLARATION;
 
@@ -39,5 +41,9 @@ public class CommonUtil {
 
     public static List<List<String>> appendSuffixToAllVariablePolicies(ProgramBlockData programBlockData, String suffix) {
         return programBlockData.getVariables().stream().map(variable -> appendSuffixToVariablePolicies(variable, suffix)).collect(Collectors.toList());
+    }
+
+    public static Optional<Variable> getReturnVariable(ProgramBlockData programBlockData) {
+        return programBlockData.getVariables().stream().filter(variable -> variable.getProgramBlockVariableType() == RETURN_VARIABLE).findFirst();
     }
 }

@@ -4,6 +4,8 @@ import grammar.PlSqlParser;
 import grammar.PlSqlParserBaseListener;
 
 import static enums.OperatorType.*;
+import static enums.ProgramBlockType.FUNCTION;
+import static enums.ProgramBlockType.PROCEDURE;
 import static enums.ProgramBlockVariableType.*;
 import static enums.VariableType.*;
 
@@ -58,15 +60,17 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
 
     @Override
     public void enterProcedure_name(PlSqlParser.Procedure_nameContext ctx) {
+        programBlockData.setProgramBlockType(PROCEDURE);
         programBlockData.setProgramBlockName(ctx.getText());
     }
 
     @Override
     public void enterFunction_name(PlSqlParser.Function_nameContext ctx) {
+        programBlockData.setProgramBlockType(FUNCTION);
         programBlockData.setProgramBlockName(ctx.getText());
     }
 
-    //TODO не нужно добавлять тип переменной?
+    //TODO не нужно добавлять тип переменной? Поддерживать разные типы(записи, варреи) в параметрах
     @Override
     public void enterParameter_name(PlSqlParser.Parameter_nameContext ctx) {
         programBlockData.addVariable(new Variable(BUILT_IN, ctx.getText(), INPUT_PARAMETER));

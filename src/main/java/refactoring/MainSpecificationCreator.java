@@ -1,10 +1,12 @@
 package refactoring;
 
+import enums.ProgramBlockType;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static enums.ProgramBlockVariableType.INPUT_PARAMETER;
 import static util.CommonUtil.*;
@@ -24,6 +26,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destinationFile))) {
             bufferedWriter.write(getModuleDeclarationLine(destinationFile) + "\n");
             writeProgramBlocksLoadRules(bufferedWriter);
+            writeProgramBlocksExitRules(bufferedWriter);
             writeDispatchRule(bufferedWriter);
             writeInitRule(bufferedWriter);
             writeNextRule(bufferedWriter);
@@ -62,6 +65,33 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
         loadRule.replace(loadRule.lastIndexOf(",\n"), loadRule.length(), ">>");
         loadRule.append(",\n").append(newVariablePolicies).append("\n>>\n/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<VPol>>\nELSE UNCHANGED vars\n\n");
         return loadRule.toString();
+    }
+
+    private void writeProgramBlocksExitRules(BufferedWriter bufferedWriter) throws IOException {
+        for (ProgramBlockData pbd : programBlocksDataHolder.getProgramBlocksData()) {
+            bufferedWriter.write(getProgramBlockExitRule(pbd));
+        }
+    }
+
+    private String getProgramBlockExitRule(ProgramBlockData programBlockData) {
+        StringBuilder exitRule = new StringBuilder(programBlockData.getProgramBlockName());
+        exitRule.append("_exit(id) ==\n/\\ IF Len(Sessions[id][\"StateRegs\"]) = 1\nTHEN XLocks' = Undef\nELSE XLocks' = XLocks\n/\\ Sessions' =\n[Sessions EXCEPT\n![id][\"StateRegs\"] = Tail(Sessions[id][\"StateRegs\"]) \\o <<>>,\n");
+        if (programBlockData.getProgramBlockType() == ProgramBlockType.FUNCTION) {
+            Optional<Variable> returnVariable = getReturnVariable(programBlockData);
+            if (returnVariable.isEmpty()) {
+                throw new IllegalStateException("У функции отсутствует возвращаемое значение");
+            } else {
+                List<String> policiesWithSuffix = appendSuffixToVariablePolicies(returnVariable.get(), "(id).offs");
+                exitRule.append("![id][\"Ret\"] =\n<<\n");
+                policiesWithSuffix.forEach(policy -> exitRule.append("Sessions[id][\"SessionM\"][Head(Sessions[id][\"StateRegs\"]).fp + ").append(policy).append("],\n"));
+                exitRule.setCharAt(exitRule.length() - 1, '\n');
+                exitRule.append(">>,\n");
+            }
+        }
+        exitRule.append("![id][\"SessionM\"] = SubSeq(Sessions[id][\"SessionM\"], 1, Len(Sessions[id][\"SessionM\"]) - ")
+                .append(programBlockData.getVariables().stream().mapToInt(variable -> variable.getVariablePolicies().size()).sum())
+                .append(")]\n/\\ Trace' = Append(Trace,<<>>)\n/\\ Ignore'= 1\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<New2Old, VPol>>\n\n");
+        return exitRule.toString();
     }
 
     private void writeDispatchRule(BufferedWriter bufferedWriter) throws IOException {

@@ -1,5 +1,6 @@
 package refactoring;
 
+import enums.ProgramBlockType;
 import enums.ProgramBlockVariableType;
 
 import java.io.File;
@@ -19,6 +20,7 @@ public class ProgramBlockData {
     private String returnType;
     private List<Operator> operators;
     private List<Variable> variables;
+    private ProgramBlockType programBlockType;
 
     {
         variables = new ArrayList<>();
@@ -115,6 +117,14 @@ public class ProgramBlockData {
     public void setVariables(List<Variable> variables) {
         if (this.variables == null)
             this.variables = variables;
+    }
+
+    public ProgramBlockType getProgramBlockType() {
+        return programBlockType;
+    }
+
+    public void setProgramBlockType(ProgramBlockType programBlockType) {
+        this.programBlockType = programBlockType;
     }
 
     public File getSourceFile() {
