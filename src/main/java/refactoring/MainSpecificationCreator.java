@@ -26,8 +26,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
     public void createSpecification(File destinationFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destinationFile))) {
             bufferedWriter.write(getModuleDeclarationLine(destinationFile) + "\n");
-            writeProgramBlocksLoadRules(bufferedWriter);
-            writeProgramBlocksExitRules(bufferedWriter);
+            writeProgramBlockSpecification(bufferedWriter);
             writeDispatchRule(bufferedWriter);
             writeInitRule(bufferedWriter);
             writeNextRule(bufferedWriter);
@@ -38,10 +37,18 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
         }
     }
 
-    private void writeProgramBlocksLoadRules(BufferedWriter bufferedWriter) throws IOException {
-        for (ProgramBlockData pbd : programBlocksDataHolder.getProgramBlocksData()) {
-            bufferedWriter.write(getProgramBlockLoadRule(pbd));
-        }
+    private void writeProgramBlockSpecification(BufferedWriter bufferedWriter) {
+        programBlocksDataHolder.getProgramBlocksData().forEach(pbd -> {
+            try {
+                bufferedWriter.write(getProgramBlockSpecification(pbd));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private String getProgramBlockSpecification(ProgramBlockData programBlockData) {
+        return getProgramBlockLoadRule(programBlockData) + getProgramBlockExitRule(programBlockData);
     }
 
     private String getProgramBlockLoadRule(ProgramBlockData programBlockData) {
@@ -66,12 +73,6 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
         loadRule.replace(loadRule.lastIndexOf(",\n "), loadRule.length(), ">>");
         loadRule.append(",\n ").append(newVariablePolicies).append("\n >>\n/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<VPol>>\nELSE UNCHANGED vars\n\n");
         return loadRule.toString();
-    }
-
-    private void writeProgramBlocksExitRules(BufferedWriter bufferedWriter) throws IOException {
-        for (ProgramBlockData pbd : programBlocksDataHolder.getProgramBlocksData()) {
-            bufferedWriter.write(getProgramBlockExitRule(pbd));
-        }
     }
 
     private String getProgramBlockExitRule(ProgramBlockData programBlockData) {
