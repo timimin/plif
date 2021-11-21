@@ -1,4 +1,4 @@
-package refactoring;
+package refactoring.operator;
 
 import enums.OperatorType;
 
@@ -8,12 +8,12 @@ import java.util.List;
 public class Operator {
     private OperatorType operatorType;
     private int numberOfLineInProgramBlock;
-    private List<String> affectedColumns;
-    private List<String> expressions;
+    private List<String> involvedColumns;
+    private List<String> involvedExpressions;
 
     {
-        affectedColumns = new ArrayList<>();
-        expressions = new ArrayList<>();
+        involvedColumns = new ArrayList<>();
+        involvedExpressions = new ArrayList<>();
     }
 
     public Operator() {
@@ -44,19 +44,19 @@ public class Operator {
         return "lbl_" + numberOfLineInProgramBlock;
     }
 
-    public List<String> getAffectedColumns() {
-        return affectedColumns;
+    public List<String> getInvolvedColumns() {
+        return involvedColumns;
     }
 
-    public void setAffectedColumns(List<String> affectedColumns) {
-        this.affectedColumns = affectedColumns;
+    public void setInvolvedColumns(List<String> involvedColumns) {
+        this.involvedColumns = involvedColumns;
     }
 
-    public List<String> getExpressions() {
-        return expressions;
+    public List<String> getInvolvedExpressions() {
+        return involvedExpressions;
     }
 
-    public void setExpressions(List<String> expressions) {
-        this.expressions = expressions;
+    public void setInvolvedExpressions(List<String> involvedExpressions) {
+        this.involvedExpressions = involvedExpressions;
     }
 }

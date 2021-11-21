@@ -1,14 +1,16 @@
 package refactoring;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Table {
     private final String tableName;
-    private final List<Column> columns;
+    private final Map<String, Column> columns;
 
     {
-        columns = new ArrayList<>();
+        columns = new LinkedHashMap<>();
     }
 
     public Table(String tableName) {
@@ -19,15 +21,23 @@ public class Table {
         return tableName;
     }
 
-    public List<Column> getColumns() {
+    public Map<String, Column> getColumns() {
         return columns;
     }
 
     public void addColumn(String columnName, String columnType) {
         Column column = new Column(columnName, columnType);
         column.columnPolicy = "col_" + tableName + "_" + columnName;
-        columns.add(column);
+        columns.put(columnName, column);
 
+    }
+
+    public List<String> getColumnPolicies() {
+        return columns.values().stream().map(Column::getColumnPolicy).collect(Collectors.toList());
+    }
+
+    public String getColumnPolicy(String columnName) {
+        return columns.get(columnName).getColumnPolicy();
     }
 
     @Override
@@ -60,7 +70,7 @@ public class Table {
 
         @Override
         public String toString() {
-            return "columnName= " + columnName + ", columnType= " + columnType;
+            return "{columnName= " + columnName + ", columnType= " + columnType + "}";
         }
     }
 }

@@ -28,13 +28,25 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
             bufferedWriter.write(getModuleDeclarationLine(destinationFile) + "\n");
             writeProgramBlockSpecification(bufferedWriter);
             writeDispatchRule(bufferedWriter);
-            writeInitRule(bufferedWriter);
+            //writeInitRule(bufferedWriter);
             writeNextRule(bufferedWriter);
             writeSpecFSRule(bufferedWriter);
+            writeOperators(bufferedWriter);//TODO перенести в нужное место
             bufferedWriter.write(END_OF_MODULE);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    //TODO переработать: сейчас это отладочный метод
+    private void writeOperators(BufferedWriter bufferedWriter) {
+        programBlocksDataHolder.getProgramBlocksData().forEach(pbd -> pbd.getOperators().values().forEach(op -> {
+            try {
+                bufferedWriter.write(op.getOperatorRule());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
     }
 
     private void writeProgramBlockSpecification(BufferedWriter bufferedWriter) {
@@ -56,7 +68,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
         loadRule.append("_load(id) ==\nIF XLocks = Undef\nTHEN\n/\\ XLocks' = id\n/\\ Sessions' =\n [\n Sessions EXCEPT ![id][\"SessionM\"] = Sessions[id][\"SessionM\"] \\o\n ");
         StringBuilder newVariablePolicies = new StringBuilder("<<");
         List<List<String>> variablePoliciesWithIdAndPolicySuffix = appendSuffixToAllVariablePolicies(programBlockData, "(id).policy,\n ");
-        programBlockData.getVariables().forEach(
+        programBlockData.getVariables().values().forEach(
                 variable ->
                 {
                     if (variable.getProgramBlockVariableType() == INPUT_PARAMETER)
@@ -67,10 +79,12 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
                     }
                 }
         );
-        newVariablePolicies.replace(newVariablePolicies.lastIndexOf(",\n "), newVariablePolicies.length(), ">>");
+        replaceEndOfString(newVariablePolicies, ",\n ", ">>");
+        //newVariablePolicies.replace(newVariablePolicies.lastIndexOf(",\n "), newVariablePolicies.length(), ">>");
         loadRule.append(newVariablePolicies).append("\n ]\n/\\ New2Old' =\n <<\n <<");
         variablePoliciesWithIdAndPolicySuffix.forEach(policy -> policy.forEach(loadRule::append));
-        loadRule.replace(loadRule.lastIndexOf(",\n "), loadRule.length(), ">>");
+        replaceEndOfString(loadRule, ",\n ", ">>");
+        //loadRule.replace(loadRule.lastIndexOf(",\n "), loadRule.length(), ">>");
         loadRule.append(",\n ").append(newVariablePolicies).append("\n >>\n/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<VPol>>\nELSE UNCHANGED vars\n\n");
         return loadRule.toString();
     }
@@ -86,11 +100,12 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
                 List<String> policiesWithSuffix = appendSuffixToVariablePolicies(returnVariable.get(), "(id).offs");
                 exitRule.append("![id][\"Ret\"] =\n <<\n");
                 policiesWithSuffix.forEach(policy -> exitRule.append(" Sessions[id][\"SessionM\"][Head(Sessions[id][\"StateRegs\"]).fp + ").append(policy).append("],\n"));
-                exitRule.replace(exitRule.lastIndexOf(",\n"), exitRule.length(), "\n >>,\n ");
+                replaceEndOfString(exitRule, ",\n", "\n >>,\n ");
+                //   exitRule.replace(exitRule.lastIndexOf(",\n"), exitRule.length(), "\n >>,\n ");
             }
         }
         exitRule.append("![id][\"SessionM\"] = SubSeq(Sessions[id][\"SessionM\"], 1, Len(Sessions[id][\"SessionM\"]) - ")
-                .append(programBlockData.getVariables().stream().mapToInt(variable -> variable.getVariablePolicies().size()).sum())
+                .append(programBlockData.getVariables().values().stream().mapToInt(variable -> variable.getVariablePolicies().size()).sum())
                 .append(")]\n/\\ Trace' = Append(Trace,<<>>)\n/\\ Ignore'= 1\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<New2Old, VPol>>\n\n");
         return exitRule.toString();
     }
@@ -124,7 +139,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
             initRule.append(surroundWithAngleBrackets(
                     surroundWithQuotes(pbd.getProgramBlockName())
                             + ", "
-                            + surroundWithQuotes(pbd.getOperators().get(0).getLabel()))).append(",\n");
+                            + surroundWithQuotes(pbd.getOperators().firstEntry().getValue().getLabel()))).append(",\n");//TODO Проверить правильность
         }
         initRule.setCharAt(initRule.lastIndexOf(","), '}');
         initRule.append("]\n")
@@ -149,8 +164,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
                         "/\\ XLocks = Undef\n" +
                         "/\\ VPol =\n [\n");
         for (Table table : databaseSchema.getTables().values()) {
-            for (Table.Column column : table.getColumns()) {
-                String columnPolicy = column.getColumnPolicy();
+            for (String columnPolicy : table.getColumnPolicies()) {
                 initRule.append(" ").append(columnPolicy)
                         .append(" |-> [ext|->0, policy |-> min, name |-> ")
                         .append(surroundWithQuotes(columnPolicy))
@@ -182,7 +196,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
     public static void main(String[] args) {
         long t = System.currentTimeMillis();
         DatabaseSchema databaseSchema = new DatabaseSchema("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks");
-        ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks");
+        ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks", databaseSchema);
         System.out.println(programBlocksDataHolder.getProgramBlocksData().size());
         MainSpecificationCreator mainSpecificationCreator = new MainSpecificationCreator(databaseSchema, programBlocksDataHolder);
         mainSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\ConferenceProcFs.tla"));

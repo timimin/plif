@@ -21,9 +21,11 @@ import java.util.concurrent.*;
 
 public class ProgramBlocksDataHolder {
     private final List<ProgramBlockData> programBlocksData;
+    private final DatabaseSchema databaseSchema;
 
-    public ProgramBlocksDataHolder(String sourceDirectory) {
+    public ProgramBlocksDataHolder(String sourceDirectory, DatabaseSchema databaseSchema) {
         programBlocksData = new ArrayList<>();
+        this.databaseSchema = databaseSchema;
         fillProgramBlocksData(sourceDirectory);
     }
 
@@ -39,11 +41,10 @@ public class ProgramBlocksDataHolder {
         ExecutorService executorService = Executors.newFixedThreadPool(programBlockFiles.size());
         List<Future<ProgramBlockData>> futures = new ArrayList<>(programBlockFiles.size());
         for (File programBlockFile : programBlockFiles) {
-            futures.add(executorService.submit(new ProgramBlockDataFiller(programBlockFile)));
+            futures.add(executorService.submit(new ProgramBlockDataFiller(programBlockFile, databaseSchema)));
         }
         try {
-            for (Future<ProgramBlockData> f :
-                    futures) {
+            for (Future<ProgramBlockData> f : futures) {
                 programBlocksData.add(f.get());
             }
         } catch (ExecutionException | InterruptedException e) {
@@ -56,9 +57,11 @@ public class ProgramBlocksDataHolder {
     //TODO Разобраться с видимостью/типом класса и модификаторами
     private static class ProgramBlockDataFiller implements Callable<ProgramBlockData> {
         private final File programBlockSourceFile;
+        private final DatabaseSchema databaseSchema;//TODO может использовать внешний параметр?
 
-        public ProgramBlockDataFiller(File programBlockSourceFile) {
+        public ProgramBlockDataFiller(File programBlockSourceFile, DatabaseSchema databaseSchema) {
             this.programBlockSourceFile = programBlockSourceFile;
+            this.databaseSchema = databaseSchema;
         }
 
         @Override
@@ -76,7 +79,7 @@ public class ProgramBlocksDataHolder {
                 PlSqlParser parser = new PlSqlParser(tokens);
                 ParseTree tree = parser.sql_script();
                 ParseTreeWalker walker = new ParseTreeWalker();
-                ParseTreeListener sqlListener = new PlSqlProgramBlockListener(programBlockData);
+                ParseTreeListener sqlListener = new PlSqlProgramBlockListener(programBlockData, databaseSchema);
                 walker.walk(sqlListener, tree);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -91,7 +94,7 @@ public class ProgramBlocksDataHolder {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         long start = System.currentTimeMillis();
-        new ProgramBlocksDataHolder("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks");
+        //new ProgramBlocksDataHolder("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks",);
         System.out.println(System.currentTimeMillis() - start);
 /*
         Future<Integer> future = Executors.newSingleThreadExecutor().submit(() -> {

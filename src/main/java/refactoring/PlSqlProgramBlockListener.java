@@ -2,8 +2,13 @@ package refactoring;
 
 import grammar.PlSqlParser;
 import grammar.PlSqlParserBaseListener;
+import org.antlr.v4.runtime.RuleContext;
+import refactoring.operator.InsertOperator;
+import refactoring.operator.UpdateOperator;
 
-import static enums.OperatorType.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static enums.ProgramBlockType.FUNCTION;
 import static enums.ProgramBlockType.PROCEDURE;
 import static enums.ProgramBlockVariableType.*;
@@ -11,9 +16,18 @@ import static enums.VariableType.*;
 
 public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     private final ProgramBlockData programBlockData;
+    private Map<Integer, InsertOperator> insertOperatorMap;
+    private Map<Integer, UpdateOperator> updateOperatorMap;
+    private DatabaseSchema databaseSchema;
 
-    public PlSqlProgramBlockListener(ProgramBlockData programBlockData) {
+    {//TODO  Добавлять напрямую в programBlockData(если не возникнет проблем с хранением)
+        insertOperatorMap = new LinkedHashMap<>();
+        updateOperatorMap = new LinkedHashMap<>();
+    }
+
+    public PlSqlProgramBlockListener(ProgramBlockData programBlockData, DatabaseSchema databaseSchema) {
         this.programBlockData = programBlockData;
+        this.databaseSchema = databaseSchema;
     }
 
     public ProgramBlockData getProgramBlockData() {
@@ -22,35 +36,40 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
 
     @Override
     public void enterSelect_statement(PlSqlParser.Select_statementContext ctx) {
-        programBlockData.addOperator(new Operator(SELECT, ctx.start.getLine()));
-        //      addLineOfOperatorToMap(SELECT, ctx.start);
+        int numberOfLine = ctx.start.getLine();
+        // programBlockData.addOperator(new Operator(SELECT, numberOfLine));
     }
 
     //TODO 2 оператора в одном правиле?
     @Override
     public void enterIf_statement(PlSqlParser.If_statementContext ctx) {
-        programBlockData.addOperator(new Operator(IF, ctx.start.getLine()));
-        programBlockData.addOperator(new Operator(END_IF, ctx.stop.getLine()));
-        //      addLineOfOperatorToMap(IF, ctx.start);
-        //    addLineOfOperatorToMap(END_IF, ctx.stop);
+        int numberOfStartLine = ctx.start.getLine();
+        //      programBlockData.addOperator(new Operator(IF, numberOfStartLine));
+        int numberOfStopLine = ctx.stop.getLine();
+        //     programBlockData.addOperator(new Operator(END_IF, numberOfStopLine));
     }
 
     @Override
     public void enterInsert_statement(PlSqlParser.Insert_statementContext ctx) {
-        programBlockData.addOperator(new Operator(INSERT, ctx.getStart().getLine()));
-        // addLineOfOperatorToMap(INSERT, ctx.start);
+        int numberOfLine = ctx.start.getLine();
+        //programBlockData.addOperator(new Operator(INSERT, numberOfLine));
+        InsertOperator insertOperator = new InsertOperator(numberOfLine, programBlockData);
+        insertOperatorMap.putIfAbsent(numberOfLine, insertOperator);
     }
 
     @Override
     public void enterUpdate_statement(PlSqlParser.Update_statementContext ctx) {
-        programBlockData.addOperator(new Operator(UPDATE, ctx.start.getLine()));
-        //   addLineOfOperatorToMap(UPDATE, ctx.start);
+        int numberOfLine = ctx.start.getLine();
+        //   programBlockData.addOperator(new Operator(UPDATE, numberOfLine));
+        UpdateOperator updateOperator = new UpdateOperator(numberOfLine);
+        updateOperatorMap.putIfAbsent(numberOfLine, updateOperator);
+
     }
 
     @Override
     public void enterFunction_argument(PlSqlParser.Function_argumentContext ctx) {
-        programBlockData.addOperator(new Operator(FUNCTION_CALL, ctx.start.getLine()));
-        // addLineOfOperatorToMap(FUNCTION_CALL, ctx.start);
+        int numberOfLine = ctx.start.getLine();
+        //  programBlockData.addOperator(new Operator(FUNCTION_CALL, numberOfLine));
     }
 
     @Override
@@ -109,6 +128,51 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     }
 
     @Override
+    public void enterGeneral_table_ref(PlSqlParser.General_table_refContext ctx) {
+        int numberOfLine = ctx.start.getLine();
+        RuleContext parent = ctx.parent;
+        if (parent instanceof PlSqlParser.Insert_into_clauseContext) {
+            insertOperatorMap.get(numberOfLine).setInvolvedTable(databaseSchema.getTables().get(ctx.getText()));
+        } else if (parent instanceof PlSqlParser.Update_statementContext) {
+            updateOperatorMap.get(numberOfLine).setInvolvedTable(databaseSchema.getTables().get(ctx.getText()));
+        }
+    }
+
+    //FIXME Выражения вида a+1 будут вноситься как a+1, вместо a и 1, перед этип требуется вынести a+1 в отдельную переменную
+    @Override
+    public void enterValues_clause(PlSqlParser.Values_clauseContext ctx) {
+        int numberOfLine = ctx.start.getLine();
+        InsertOperator insertOperator = insertOperatorMap.get(numberOfLine);
+        ctx.expressions().children.stream()
+                .filter(expression -> expression.getChildCount() > 0)
+                .forEach(expression -> insertOperator.getInsertedExpressions().add(expression.getText()));
+    }
+
+    @Override
+    public void enterColumn_list(PlSqlParser.Column_listContext ctx) {
+        if (ctx.parent instanceof PlSqlParser.Paren_column_listContext) {
+            RuleContext parent = ctx.parent;
+            if (parent.parent instanceof PlSqlParser.Insert_into_clauseContext) {
+                InsertOperator insertOperator = insertOperatorMap.get(ctx.start.getLine());
+                ctx.column_name().forEach(columnName -> insertOperator.addInvolvedColumnPolicy(columnName.getText()));
+            }
+        }
+    }
+
+    @Override
+    public void exitInsert_statement(PlSqlParser.Insert_statementContext ctx) {
+        InsertOperator insertOperator = insertOperatorMap.get(ctx.start.getLine());
+        if (insertOperator.getInvolvedColumnsPolicies().isEmpty()) {
+            insertOperator.getInvolvedColumnsPolicies().addAll(insertOperator.getInvolvedTable().getColumnPolicies());
+        }
+    }
+
+    @Override
+    public void exitCreate_procedure_body(PlSqlParser.Create_procedure_bodyContext ctx) {
+        programBlockData.getOperators().putAll(insertOperatorMap);
+    }
+
+    @Override
     public void exitCreate_function_body(PlSqlParser.Create_function_bodyContext ctx) {
         if (programBlockData.getReturnType().equals(programBlockData.getVarrayTypeName())) {
             programBlockData.addVariable(new Variable(CUSTOM_VARRAY, "", RETURN_VARIABLE));
@@ -118,9 +182,4 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
             programBlockData.addVariable(new Variable(BUILT_IN, "", RETURN_VARIABLE));
         }
     }
-    //TODO может вынести в класс данных?
-   /* private void addLineOfOperatorToMap(OperatorType operatorType, Token token) {
-        programBlockData.getOperatorLines().putIfAbsent(operatorType, new ArrayList<>());
-        programBlockData.getOperatorLines().get(operatorType).add(token.getLine());
-    }*/
 }

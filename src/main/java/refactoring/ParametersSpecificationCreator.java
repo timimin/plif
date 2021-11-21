@@ -8,6 +8,7 @@ import java.io.IOException;
 import static enums.ProgramBlockVariableType.INPUT_PARAMETER;
 import static enums.ProgramBlockVariableType.RETURN_VARIABLE;
 import static util.CommonUtil.getModuleDeclarationLine;
+import static util.CommonUtil.replaceEndOfString;
 import static util.Constants.END_OF_MODULE;
 
 public class ParametersSpecificationCreator implements TlaSpecificationCreator {
@@ -51,8 +52,8 @@ public class ParametersSpecificationCreator implements TlaSpecificationCreator {
 
     private void writeColumnPolicies(BufferedWriter bufferedWriter) throws IOException {
         for (Table table : databaseSchema.getTables().values()) {
-            for (Table.Column column : table.getColumns()) {
-                bufferedWriter.write(column.getColumnPolicy() + " == " + defaultColumnPolicy + "\n");
+            for (String columnPolicy : table.getColumnPolicies()) {
+                bufferedWriter.write(columnPolicy + " == " + defaultColumnPolicy + "\n");
             }
             bufferedWriter.write("\n");
         }
@@ -64,14 +65,15 @@ public class ParametersSpecificationCreator implements TlaSpecificationCreator {
         for (ProgramBlockData programBlockData : programBlocksDataHolder.getProgramBlocksData()) {
             stringBuilder.append('\"').append(programBlockData.getProgramBlockName()).append("\",");
         }
-        stringBuilder.replace(stringBuilder.lastIndexOf(","), stringBuilder.length(), "}\n");
+        replaceEndOfString(stringBuilder, ",", "}\n");
+        //   stringBuilder.replace(stringBuilder.lastIndexOf(","), stringBuilder.length(), "}\n");
         bufferedWriter.write(stringBuilder + "\n");
     }
 
     private void writeVariablePolicies(BufferedWriter bufferedWriter) throws IOException {
         for (ProgramBlockData programBlockData : programBlocksDataHolder.getProgramBlocksData()) {
             int offset = 0;
-            for (Variable variable : programBlockData.getVariables()) {
+            for (Variable variable : programBlockData.getVariables().values()) {
                 for (String policy : variable.getVariablePolicies()) {
                     bufferedWriter.write(policy + "(x) == " + getPolicy(variable, offset++, policy) + "\n");
                 }
@@ -91,7 +93,7 @@ public class ParametersSpecificationCreator implements TlaSpecificationCreator {
     public static void main(String[] args) {
         long t = System.currentTimeMillis();
         DatabaseSchema databaseSchema = new DatabaseSchema("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks");
-        ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks");
+        ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks", databaseSchema);
         System.out.println(programBlocksDataHolder.getProgramBlocksData().size());
         ParametersSpecificationCreator parametersSpecificationCreator = new ParametersSpecificationCreator(databaseSchema, programBlocksDataHolder);
         parametersSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\param.tla"));

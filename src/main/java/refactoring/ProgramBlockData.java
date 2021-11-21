@@ -4,8 +4,9 @@ import enums.ProgramBlockType;
 import enums.ProgramBlockVariableType;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static enums.ProgramBlockVariableType.RETURN_VARIABLE;
 import static enums.VariableType.CUSTOM_RECORD;
@@ -18,13 +19,14 @@ public class ProgramBlockData {
     private String varrayTypeName;
     private String recordTypeName;
     private String returnType;
-    private List<Operator> operators;
-    private List<Variable> variables;
+    private TreeMap<Integer, SqlOperator> operators;
+    private Map<String, Variable> variables;
     private ProgramBlockType programBlockType;
 
+
     {
-        variables = new ArrayList<>();
-        operators = new ArrayList<>();
+        variables = new LinkedHashMap<>();
+        operators = new TreeMap<>();
     }
 
     public ProgramBlockData(File sourceFile) {
@@ -102,22 +104,14 @@ public class ProgramBlockData {
         this.returnType = returnType;
     }
 
-    public List<Operator> getOperators() {
+    public TreeMap<Integer, SqlOperator> getOperators() {
         return operators;
     }
 
-    public void setOperators(List<Operator> operators) {
-        this.operators = operators;
-    }
-
-    public List<Variable> getVariables() {
+    public Map<String, Variable> getVariables() {
         return variables;
     }
 
-    public void setVariables(List<Variable> variables) {
-        if (this.variables == null)
-            this.variables = variables;
-    }
 
     public ProgramBlockType getProgramBlockType() {
         return programBlockType;
@@ -150,12 +144,13 @@ public class ProgramBlockData {
         } else {
             variable.addVariablePolicy(policy);
         }
-        variables.add(variable);
+        variables.put(variable.getVariableName(), variable);
     }
 
-    public void addOperator(Operator operator) {
-        operators.add(operator);
+    public void addOperator(int numberOfLine, SqlOperator operator) {
+        operators.put(numberOfLine, operator);
     }
+
 
     @Override
     public String toString() {

@@ -1,5 +1,7 @@
 package refactoring;
 
+import util.LinkedProperties;
+
 import java.io.*;
 import java.util.*;
 
@@ -9,17 +11,17 @@ public class DatabaseSchema {
     private final Map<String, Table> tables;
 
     public DatabaseSchema(String sourceDirectory) {
-        tables = new HashMap<>();
+        tables = new LinkedHashMap<>();
         initializeSchema(sourceDirectory);
     }
 
     private void initializeSchema(String sourceDirectory) {
         File tablePropertiesDirectory = new File(sourceDirectory + File.separator + "tables");//для таблиц
         for (File tablePropertyFile : Objects.requireNonNull(tablePropertiesDirectory.listFiles())) {
-            String tableName =getFileNameWithoutExtension(tablePropertyFile);
+            String tableName = getFileNameWithoutExtension(tablePropertyFile);
             Table table = new Table(tableName);
             try (InputStream inputStream = new FileInputStream(tablePropertyFile)) {
-                Properties tableProperties = new Properties();
+                Properties tableProperties = new LinkedProperties();
                 tableProperties.load(inputStream);
                 tableProperties.keySet().forEach(key -> table.addColumn(key.toString(), tableProperties.getProperty(key.toString())));
                 tables.put(tableName, table);

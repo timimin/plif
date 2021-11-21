@@ -40,10 +40,14 @@ public class CommonUtil {
     }
 
     public static List<List<String>> appendSuffixToAllVariablePolicies(ProgramBlockData programBlockData, String suffix) {
-        return programBlockData.getVariables().stream().map(variable -> appendSuffixToVariablePolicies(variable, suffix)).collect(Collectors.toList());
+        return programBlockData.getVariables().values().stream().map(variable -> appendSuffixToVariablePolicies(variable, suffix)).collect(Collectors.toList());
     }
 
     public static Optional<Variable> getReturnVariable(ProgramBlockData programBlockData) {
-        return programBlockData.getVariables().stream().filter(variable -> variable.getProgramBlockVariableType() == RETURN_VARIABLE).findFirst();
+        return programBlockData.getVariables().values().stream().filter(variable -> variable.getProgramBlockVariableType() == RETURN_VARIABLE).findFirst();
+    }
+
+    public static StringBuilder replaceEndOfString(StringBuilder alterableStringBuilder, String replacedString, String newString) {
+        return alterableStringBuilder.replace(alterableStringBuilder.lastIndexOf(replacedString), alterableStringBuilder.length(), newString);
     }
 }
