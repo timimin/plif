@@ -24,7 +24,7 @@ public class CommonUtil {
     }
 
     public static String getModuleDeclarationLine(File file) {
-        return START_OF_MODULE_DECLARATION + getFileNameWithoutExtension(file) + END_OF_MODULE_DECLARATION;
+        return START_OF_MODULE_DECLARATION + getFileNameWithoutExtension(file) + END_OF_MODULE_DECLARATION + "\n";
     }
 
     public static String surroundWithAngleBrackets(String stringToSurround) {
@@ -49,5 +49,12 @@ public class CommonUtil {
 
     public static StringBuilder replaceEndOfString(StringBuilder alterableStringBuilder, String replacedString, String newString) {
         return alterableStringBuilder.replace(alterableStringBuilder.lastIndexOf(replacedString), alterableStringBuilder.length(), newString);
+    }
+
+    public static void loadVariablePolicies(StringBuilder stringBuilder, Variable variable, String ending) {
+        variable.getVariablePolicies().forEach(policy -> stringBuilder.append("load(id, ").append(policy).append("(id)),\n "));
+        if (ending != null) {
+            replaceEndOfString(stringBuilder, ",\n ", ending);
+        }
     }
 }

@@ -37,7 +37,8 @@ public class Table {
     }
 
     public String getColumnPolicy(String columnName) {
-        return columns.get(columnName).getColumnPolicy();
+        Column column = columns.get(columnName);
+        return column != null ? column.getColumnPolicy() : null;
     }
 
     @Override

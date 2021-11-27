@@ -24,7 +24,7 @@ public class ParametersSpecificationCreator implements TlaSpecificationCreator {
     @Override
     public void createSpecification(File destinationFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destinationFile))) {
-            bufferedWriter.write(getModuleDeclarationLine(destinationFile) + "\n");
+            bufferedWriter.write(getModuleDeclarationLine(destinationFile));
             writeParametersHeader(bufferedWriter);
             writeColumnPolicies(bufferedWriter);
             // writeCalls(bufferedWriter);

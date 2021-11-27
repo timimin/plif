@@ -3,10 +3,13 @@ package refactoring;
 import grammar.PlSqlParser;
 import grammar.PlSqlParserBaseListener;
 import org.antlr.v4.runtime.RuleContext;
+import refactoring.operator.ExitOperator;
 import refactoring.operator.InsertOperator;
 import refactoring.operator.UpdateOperator;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static enums.ProgramBlockType.FUNCTION;
@@ -16,18 +19,17 @@ import static enums.VariableType.*;
 
 public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     private final ProgramBlockData programBlockData;
-    private Map<Integer, InsertOperator> insertOperatorMap;
-    private Map<Integer, UpdateOperator> updateOperatorMap;
-    private DatabaseSchema databaseSchema;
-
-    {//TODO  Добавлять напрямую в programBlockData(если не возникнет проблем с хранением)
-        insertOperatorMap = new LinkedHashMap<>();
-        updateOperatorMap = new LinkedHashMap<>();
-    }
+    private final Map<Integer, InsertOperator> insertOperatorMap;
+    private final Map<Integer, UpdateOperator> updateOperatorMap;
+    private final DatabaseSchema databaseSchema;
+    private final Map<Integer, List<String>> relationalExpressionToLineMap;
 
     public PlSqlProgramBlockListener(ProgramBlockData programBlockData, DatabaseSchema databaseSchema) {
         this.programBlockData = programBlockData;
         this.databaseSchema = databaseSchema;
+        this.insertOperatorMap = new LinkedHashMap<>();
+        this.updateOperatorMap = new LinkedHashMap<>();
+        this.relationalExpressionToLineMap = new LinkedHashMap<>();
     }
 
     public ProgramBlockData getProgramBlockData() {
@@ -52,7 +54,6 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     @Override
     public void enterInsert_statement(PlSqlParser.Insert_statementContext ctx) {
         int numberOfLine = ctx.start.getLine();
-        //programBlockData.addOperator(new Operator(INSERT, numberOfLine));
         InsertOperator insertOperator = new InsertOperator(numberOfLine, programBlockData);
         insertOperatorMap.putIfAbsent(numberOfLine, insertOperator);
     }
@@ -60,10 +61,33 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     @Override
     public void enterUpdate_statement(PlSqlParser.Update_statementContext ctx) {
         int numberOfLine = ctx.start.getLine();
-        //   programBlockData.addOperator(new Operator(UPDATE, numberOfLine));
-        UpdateOperator updateOperator = new UpdateOperator(numberOfLine);
+        UpdateOperator updateOperator = new UpdateOperator(numberOfLine, programBlockData);
         updateOperatorMap.putIfAbsent(numberOfLine, updateOperator);
+    }
 
+    @Override
+    public void enterColumn_based_update_set_clause(PlSqlParser.Column_based_update_set_clauseContext ctx) {
+        UpdateOperator updateOperator = updateOperatorMap.get(ctx.start.getLine());
+        updateOperator.getUpdatableColumnPolicies().add(updateOperator.getInvolvedTable().getColumnPolicy(ctx.column_name().getText()));
+        updateOperator.getUpdatingExpressions().add(ctx.expression().getText());
+    }
+
+    @Override
+    public void enterWhere_clause(PlSqlParser.Where_clauseContext ctx) {//where должно быть записано в одну строку(или весь оператор в одну строку)
+        if (ctx.parent instanceof PlSqlParser.Update_statementContext) {
+            int numberOfLine = ctx.start.getLine();
+            UpdateOperator updateOperator = updateOperatorMap.get(numberOfLine);
+            relationalExpressionToLineMap.get(numberOfLine).forEach(expression -> updateOperator.getConditionalExpressions().add(expression));
+        }
+    }
+
+    @Override
+    public void enterRelational_expression(PlSqlParser.Relational_expressionContext ctx) {
+        if (ctx.getChildCount() == 1) {
+            int numberOfLine = ctx.start.getLine();
+            relationalExpressionToLineMap.putIfAbsent(numberOfLine, new ArrayList<>());
+            relationalExpressionToLineMap.get(numberOfLine).add(ctx.getText());
+        }
     }
 
     @Override
@@ -141,8 +165,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     //FIXME Выражения вида a+1 будут вноситься как a+1, вместо a и 1, перед этип требуется вынести a+1 в отдельную переменную
     @Override
     public void enterValues_clause(PlSqlParser.Values_clauseContext ctx) {
-        int numberOfLine = ctx.start.getLine();
-        InsertOperator insertOperator = insertOperatorMap.get(numberOfLine);
+        InsertOperator insertOperator = insertOperatorMap.get(ctx.start.getLine());
         ctx.expressions().children.stream()
                 .filter(expression -> expression.getChildCount() > 0)
                 .forEach(expression -> insertOperator.getInsertedExpressions().add(expression.getText()));
@@ -169,7 +192,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
 
     @Override
     public void exitCreate_procedure_body(PlSqlParser.Create_procedure_bodyContext ctx) {
-        programBlockData.getOperators().putAll(insertOperatorMap);
+        exitProgramBlock(ctx.stop.getLine());
     }
 
     @Override
@@ -181,5 +204,15 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         } else {
             programBlockData.addVariable(new Variable(BUILT_IN, "", RETURN_VARIABLE));
         }
+        exitProgramBlock(ctx.stop.getLine());
+    }
+
+    private void addAllOperatorsToProgramBlockData() {
+        List.of(insertOperatorMap, updateOperatorMap).forEach(operatorMap -> programBlockData.getOperators().putAll(operatorMap));
+    }
+
+    private void exitProgramBlock(int endLine) {
+        programBlockData.getOperators().put(endLine, new ExitOperator(endLine, programBlockData));
+        addAllOperatorsToProgramBlockData();
     }
 }

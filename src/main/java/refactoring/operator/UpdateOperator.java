@@ -1,59 +1,60 @@
 package refactoring.operator;
 
-import refactoring.Table;
+import refactoring.ProgramBlockData;
+import refactoring.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class UpdateOperator {
-    private List<String> updatingExpressions;
-    private int numberOfLineInProgramBlock;
-    private List<String> involvedColumns;
-    private Table involvedTable;
+import static util.CommonUtil.*;
+import static util.OperatorUtil.appendColumnAndExpressionPolicies;
+import static util.OperatorUtil.appendNextRuleLabel;
+
+public class UpdateOperator extends AbstractSqlOperator {
+    private final List<String> updatableColumnPolicies;
+    private final List<String> updatingExpressions;
+    private final List<String> conditionalExpressions;
 
     {
-        involvedColumns = new ArrayList<>();
+        updatableColumnPolicies = new ArrayList<>();
         updatingExpressions = new ArrayList<>();
+        conditionalExpressions = new ArrayList<>();
     }
 
+    public UpdateOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData) {
+        super(numberOfLineInProgramBlock, programBlockData);
+    }
 
-    public UpdateOperator(int numberOfLineInProgramBlock) {
-        this.numberOfLineInProgramBlock = numberOfLineInProgramBlock;
+    @Override
+    public String getOperatorRule() {
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n /\\ update (id, <<\n ");
+        Map<String, Variable> variables = programBlockData.getVariables();
+        appendColumnAndExpressionPolicies(operatorRule, updatableColumnPolicies, variables, updatingExpressions, ">>,\n LUB4Seq(");
+        conditionalExpressions.forEach(conditionalExpression ->
+        {
+            String expColumnPolicy = involvedTable.getColumnPolicy(conditionalExpression);
+            Variable expVariable = variables.get(conditionalExpression);
+            if (expColumnPolicy != null) {
+                operatorRule.append("VPol[").append(surroundWithQuotes(expColumnPolicy)).append("].policy,");
+            } else if (expVariable != null) {
+                loadVariablePolicies(operatorRule, expVariable, ")),\n <<\n ");
+            }
+        });
+        appendNextRuleLabel(operatorRule, programBlockData, numberOfLineInProgramBlock);
+        operatorRule.append("\n >>)\n /\\ Trace' = Append(Trace,<<>>)\n /\\ Ignore' = 0\n /\\ SLocks' = SLocks\n /\\ StateE' = SLocks'[id]\n /\\ XLocks' = XLocks\n\n");
+        return operatorRule.toString();
+    }
+
+    public List<String> getUpdatableColumnPolicies() {
+        return updatableColumnPolicies;
     }
 
     public List<String> getUpdatingExpressions() {
         return updatingExpressions;
     }
 
-    public void setUpdatingExpressions(List<String> updatingExpressions) {
-        this.updatingExpressions = updatingExpressions;
-    }
-
-    public Table getInvolvedTable() {
-        return involvedTable;
-    }
-
-    public void setInvolvedTable(Table involvedTable) {
-        this.involvedTable = involvedTable;
-    }
-
-    public int getNumberOfLineInProgramBlock() {
-        return numberOfLineInProgramBlock;
-    }
-
-    public void setNumberOfLineInProgramBlock(int numberOfLineInProgramBlock) {
-        this.numberOfLineInProgramBlock = numberOfLineInProgramBlock;
-    }
-
-    public String getLabel() {
-        return "lbl_" + numberOfLineInProgramBlock;
-    }
-
-    public List<String> getInvolvedColumns() {
-        return involvedColumns;
-    }
-
-    public void setInvolvedColumns(List<String> involvedColumns) {
-        this.involvedColumns = involvedColumns;
+    public List<String> getConditionalExpressions() {
+        return conditionalExpressions;
     }
 }
