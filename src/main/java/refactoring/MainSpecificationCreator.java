@@ -8,6 +8,7 @@ import java.util.List;
 
 import static enums.ProgramBlockVariableType.INPUT_PARAMETER;
 import static util.CommonUtil.*;
+import static util.Constants.COMMA_WITH_LINE_BREAK;
 import static util.Constants.END_OF_MODULE;
 
 public class MainSpecificationCreator implements TlaSpecificationCreator {
@@ -25,25 +26,13 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
             bufferedWriter.write(getModuleDeclarationLine(destinationFile));
             writeProgramBlocksSpecification(bufferedWriter);
             writeDispatchRule(bufferedWriter);
-            //writeInitRule(bufferedWriter);
+            writeInitRule(bufferedWriter);
             writeNextRule(bufferedWriter);
             writeSpecFSRule(bufferedWriter);
-            // writeOperators(bufferedWriter);//TODO перенести в нужное место
             bufferedWriter.write(END_OF_MODULE);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    //TODO переработать: сейчас это отладочный метод
-    private void writeOperators(BufferedWriter bufferedWriter) {
-        programBlocksDataHolder.getProgramBlocksData().forEach(pbd -> pbd.getOperators().values().forEach(op -> {
-            try {
-                bufferedWriter.write(op.getOperatorRule());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }));
     }
 
     private void writeProgramBlocksSpecification(BufferedWriter bufferedWriter) {
@@ -59,7 +48,15 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
     private String getProgramBlockSpecification(ProgramBlockData programBlockData) {
         StringBuilder specification = new StringBuilder(getProgramBlockLoadRule(programBlockData));
         programBlockData.getOperators().values().forEach(operator -> specification.append(operator.getOperatorRule()));
-        return specification.toString();
+        return specification.append(getProgramBlockDispatcher(programBlockData)).toString();
+    }
+
+    private String getProgramBlockDispatcher(ProgramBlockData programBlockData) {
+        StringBuilder programBlockDispatcher = new StringBuilder(programBlockData.getProgramBlockName()).append("(id,st) ==\n CASE ");
+        programBlockData.getOperators().values().forEach(
+                operator -> programBlockDispatcher.append("Head(st).pc[2] = ").append(operator.getLabel()).append(" -> ").append(operator.getOperatorRuleName()).append("\n[] "));
+        programBlockDispatcher.append("OTHER -> UNCHANGED vars\n\n");
+        return programBlockDispatcher.toString();
     }
 
     private String getProgramBlockLoadRule(ProgramBlockData programBlockData) {
@@ -78,13 +75,11 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
                     }
                 }
         );
-        replaceEndOfString(newVariablePolicies, ",\n ", ">>");
-        //newVariablePolicies.replace(newVariablePolicies.lastIndexOf(",\n "), newVariablePolicies.length(), ">>");
+        replaceEndOfString(newVariablePolicies, COMMA_WITH_LINE_BREAK, ">>");
         loadRule.append(newVariablePolicies).append("\n ]\n/\\ New2Old' =\n <<\n <<");
         variablePoliciesWithIdAndPolicySuffix.forEach(policy -> policy.forEach(loadRule::append));
-        replaceEndOfString(loadRule, ",\n ", ">>");
-        //loadRule.replace(loadRule.lastIndexOf(",\n "), loadRule.length(), ">>");
-        loadRule.append(",\n ").append(newVariablePolicies).append("\n >>\n/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<VPol>>\nELSE UNCHANGED vars\n\n");
+        replaceEndOfString(loadRule, COMMA_WITH_LINE_BREAK, ">>");
+        loadRule.append(COMMA_WITH_LINE_BREAK).append(newVariablePolicies).append("\n >>\n/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<VPol>>\nELSE UNCHANGED vars\n\n");
         return loadRule.toString();
     }
 
@@ -117,7 +112,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
             initRule.append(surroundWithAngleBrackets(
                     surroundWithQuotes(pbd.getProgramBlockName())
                             + ", "
-                            + surroundWithQuotes(pbd.getOperators().firstEntry().getValue().getLabel()))).append(",\n");//TODO Проверить правильность
+                            + pbd.getOperators().firstEntry().getValue().getLabel())).append(",\n");//TODO Проверить правильность
         }
         initRule.setCharAt(initRule.lastIndexOf(","), '}');
         initRule.append("]\n")
@@ -151,10 +146,9 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
             initRule.append("\n");
         }
         initRule.setCharAt(initRule.lastIndexOf(","), ' ');
-        initRule.append("]\n");
+        initRule.append("]\n\n");
         bufferedWriter.write(initRule.toString());
     }
-
 
     private void writeNextRule(BufferedWriter bufferedWriter) throws IOException {
         bufferedWriter.write("Next(K(_,_)) == \n" +

@@ -18,7 +18,7 @@ public class ExitOperator extends AbstractSqlOperator {
     @Override
     public String getOperatorRule() {
         StringBuilder exitRule = new StringBuilder(getOperatorRuleName())
-                .append("(id) ==\n/\\ IF Len(Sessions[id][\"StateRegs\"]) = 1\n THEN XLocks' = Undef\n ELSE XLocks' = XLocks\n/\\ Sessions' =\n [Sessions EXCEPT\n ![id][\"StateRegs\"] = Tail(Sessions[id][\"StateRegs\"]) \\o <<>>,\n ");
+                .append(" ==\n/\\ IF Len(Sessions[id][\"StateRegs\"]) = 1\n THEN XLocks' = Undef\n ELSE XLocks' = XLocks\n/\\ Sessions' =\n [Sessions EXCEPT\n ![id][\"StateRegs\"] = Tail(Sessions[id][\"StateRegs\"]) \\o <<>>,\n ");
         if (programBlockData.getProgramBlockType() == ProgramBlockType.FUNCTION) {
             Optional<Variable> returnVariable = getReturnVariable(programBlockData);
             if (returnVariable.isEmpty()) {
@@ -38,11 +38,11 @@ public class ExitOperator extends AbstractSqlOperator {
 
     @Override
     public String getLabel() {
-        return "exit";
+        return surroundWithQuotes("exit");
     }
 
     @Override
     public String getOperatorRuleName() {
-        return programBlockData.getProgramBlockName() + "_" + getLabel();
+        return programBlockData.getProgramBlockName() + "_exit(id)";
     }
 }

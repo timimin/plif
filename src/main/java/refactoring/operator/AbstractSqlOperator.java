@@ -4,6 +4,8 @@ import refactoring.ProgramBlockData;
 import refactoring.SqlOperator;
 import refactoring.Table;
 
+import static util.CommonUtil.surroundWithQuotes;
+
 public abstract class AbstractSqlOperator implements SqlOperator {
     protected final int numberOfLineInProgramBlock;
     protected final ProgramBlockData programBlockData;
@@ -32,9 +34,10 @@ public abstract class AbstractSqlOperator implements SqlOperator {
 
     @Override
     public String getLabel() {
-        return "lbl_" + numberOfLineInProgramBlock;
+        return surroundWithQuotes("lbl_" + numberOfLineInProgramBlock);
     }
 
+    @Override
     public String getOperatorRuleName() {
         return programBlockData.getProgramBlockName() + numberOfLineInProgramBlock + "(id)";
     }

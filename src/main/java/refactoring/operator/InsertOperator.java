@@ -39,7 +39,7 @@ public class InsertOperator extends AbstractSqlOperator {
 
     @Override
     public String getOperatorRule() {
-        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n /\\ insert (id, <<\n ");
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ insert (id, <<\n ");
         appendColumnAndExpressionPolicies(operatorRule, involvedColumnsPolicies, programBlockData.getVariables(), insertedExpressions, ">>,\n <<\n ");
         appendNextRuleLabel(operatorRule, programBlockData, numberOfLineInProgramBlock);
         operatorRule.append("\n >>)\n /\\ Trace' = Append(Trace,<<>>)\n /\\ Ignore' = 0\n /\\ SLocks' = SLocks\n /\\ StateE' = SLocks'[id]\n /\\ XLocks' = XLocks\n\n");

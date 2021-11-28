@@ -72,11 +72,18 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         updateOperator.getUpdatingExpressions().add(ctx.expression().getText());
     }
 
+    /**
+     * Условие where должно быть записано в одну строку, в следующей за оператором строке
+     * example:
+     * update table set col1=val1
+     * where col1>val2
+     */
+    //TODO добавить поддержку сложных вложенных выражений
     @Override
-    public void enterWhere_clause(PlSqlParser.Where_clauseContext ctx) {//where должно быть записано в одну строку(или весь оператор в одну строку)
+    public void exitWhere_clause(PlSqlParser.Where_clauseContext ctx) {
         if (ctx.parent instanceof PlSqlParser.Update_statementContext) {
             int numberOfLine = ctx.start.getLine();
-            UpdateOperator updateOperator = updateOperatorMap.get(numberOfLine);
+            UpdateOperator updateOperator = updateOperatorMap.get(numberOfLine - 1);
             relationalExpressionToLineMap.get(numberOfLine).forEach(expression -> updateOperator.getConditionalExpressions().add(expression));
         }
     }

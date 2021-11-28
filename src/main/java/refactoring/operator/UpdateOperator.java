@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import static util.CommonUtil.*;
+import static util.Constants.COMMA_WITH_LINE_BREAK;
 import static util.OperatorUtil.appendColumnAndExpressionPolicies;
 import static util.OperatorUtil.appendNextRuleLabel;
 
@@ -28,19 +29,20 @@ public class UpdateOperator extends AbstractSqlOperator {
 
     @Override
     public String getOperatorRule() {
-        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n /\\ update (id, <<\n ");
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ update (id, <<\n ");
         Map<String, Variable> variables = programBlockData.getVariables();
-        appendColumnAndExpressionPolicies(operatorRule, updatableColumnPolicies, variables, updatingExpressions, ">>,\n LUB4Seq(");
+        appendColumnAndExpressionPolicies(operatorRule, updatableColumnPolicies, variables, updatingExpressions, ">>,\n LUB4Seq(<<\n ");
         conditionalExpressions.forEach(conditionalExpression ->
         {
             String expColumnPolicy = involvedTable.getColumnPolicy(conditionalExpression);
             Variable expVariable = variables.get(conditionalExpression);
             if (expColumnPolicy != null) {
-                operatorRule.append("VPol[").append(surroundWithQuotes(expColumnPolicy)).append("].policy,");
+                operatorRule.append("VPol[").append(surroundWithQuotes(expColumnPolicy)).append("].policy,\n ");
             } else if (expVariable != null) {
-                loadVariablePolicies(operatorRule, expVariable, ")),\n <<\n ");
+                loadVariablePolicies(operatorRule, expVariable);
             }
         });
+        replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>),\n <<\n ");
         appendNextRuleLabel(operatorRule, programBlockData, numberOfLineInProgramBlock);
         operatorRule.append("\n >>)\n /\\ Trace' = Append(Trace,<<>>)\n /\\ Ignore' = 0\n /\\ SLocks' = SLocks\n /\\ StateE' = SLocks'[id]\n /\\ XLocks' = XLocks\n\n");
         return operatorRule.toString();

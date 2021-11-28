@@ -9,8 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static enums.ProgramBlockVariableType.RETURN_VARIABLE;
-import static util.Constants.END_OF_MODULE_DECLARATION;
-import static util.Constants.START_OF_MODULE_DECLARATION;
+import static util.Constants.*;
 
 public class CommonUtil {
     public static String getColumnPolicyName(String tableProperty, String columnName) {
@@ -52,9 +51,13 @@ public class CommonUtil {
     }
 
     public static void loadVariablePolicies(StringBuilder stringBuilder, Variable variable, String ending) {
-        variable.getVariablePolicies().forEach(policy -> stringBuilder.append("load(id, ").append(policy).append("(id)),\n "));
+        loadVariablePolicies(stringBuilder, variable);
         if (ending != null) {
-            replaceEndOfString(stringBuilder, ",\n ", ending);
+            replaceEndOfString(stringBuilder, COMMA_WITH_LINE_BREAK, ending);
         }
+    }
+
+    public static void loadVariablePolicies(StringBuilder stringBuilder, Variable variable) {
+        variable.getVariablePolicies().forEach(policy -> stringBuilder.append("load(id, ").append(policy).append("(id)),\n "));
     }
 }
