@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static enums.ProgramBlockVariableType.RETURN_VARIABLE;
+import static refactoring.enums.ProgramBlockVariableType.RETURN_VARIABLE;
 import static util.Constants.*;
 
 public class CommonUtil {

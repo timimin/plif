@@ -1,6 +1,6 @@
 package refactoring.operator;
 
-import enums.ProgramBlockType;
+import refactoring.enums.ProgramBlockType;
 import refactoring.ProgramBlockData;
 import refactoring.Variable;
 

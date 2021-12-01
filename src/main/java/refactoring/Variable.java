@@ -1,7 +1,7 @@
 package refactoring;
 
-import enums.ProgramBlockVariableType;
-import enums.VariableType;
+import refactoring.enums.ProgramBlockVariableType;
+import refactoring.enums.VariableType;
 
 import java.util.ArrayList;
 import java.util.List;

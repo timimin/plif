@@ -1,15 +1,15 @@
 package util;
 
-import enums.VariableType;
-import enums.ProgramBlockVariableType;
+import refactoring.enums.VariableType;
+import refactoring.enums.ProgramBlockVariableType;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static enums.VariableType.CUSTOM_RECORD;
-import static enums.ProgramBlockVariableType.*;
+import static refactoring.enums.VariableType.CUSTOM_RECORD;
+import static refactoring.enums.ProgramBlockVariableType.*;
 
 // М.б. создать доп. утил класс?
 public class ParametersSpecificationUtil {

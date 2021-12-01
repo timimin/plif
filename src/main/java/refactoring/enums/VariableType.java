@@ -1,4 +1,4 @@
-package enums;
+package refactoring.enums;
 
 public enum VariableType {
     BUILT_IN("built-in"),//Для всех "примитивных" типов Pl/SQL

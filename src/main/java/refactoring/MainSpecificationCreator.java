@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import static enums.ProgramBlockVariableType.INPUT_PARAMETER;
+import static refactoring.enums.ProgramBlockVariableType.INPUT_PARAMETER;
 import static util.CommonUtil.*;
 import static util.Constants.COMMA_WITH_LINE_BREAK;
 import static util.Constants.END_OF_MODULE;

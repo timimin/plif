@@ -1,4 +1,4 @@
-package enums;
+package refactoring.enums;
 
 public enum ProgramBlockVariableType {
     INPUT_PARAMETER("p"),

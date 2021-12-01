@@ -1,16 +1,16 @@
 package refactoring;
 
-import enums.ProgramBlockType;
-import enums.ProgramBlockVariableType;
+import refactoring.enums.ProgramBlockType;
+import refactoring.enums.ProgramBlockVariableType;
 
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static enums.ProgramBlockVariableType.RETURN_VARIABLE;
-import static enums.VariableType.CUSTOM_RECORD;
-import static enums.VariableType.CUSTOM_VARRAY;
+import static refactoring.enums.ProgramBlockVariableType.RETURN_VARIABLE;
+import static refactoring.enums.VariableType.CUSTOM_RECORD;
+import static refactoring.enums.VariableType.CUSTOM_VARRAY;
 
 public class ProgramBlockData {
     private File sourceFile;
@@ -19,8 +19,8 @@ public class ProgramBlockData {
     private String varrayTypeName;
     private String recordTypeName;
     private String returnType;
-    private TreeMap<Integer, SqlOperator> operators;
-    private Map<String, Variable> variables;
+    private final TreeMap<Integer, SqlOperator> operators;
+    private final Map<String, Variable> variables;
     private ProgramBlockType programBlockType;
 
 

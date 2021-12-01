@@ -3,24 +3,21 @@ package refactoring.operator;
 import refactoring.ProgramBlockData;
 import refactoring.Variable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static util.CommonUtil.*;
 import static util.Constants.COMMA_WITH_LINE_BREAK;
-import static util.OperatorUtil.appendColumnAndExpressionPolicies;
-import static util.OperatorUtil.appendNextRuleLabel;
+import static util.OperatorUtil.*;
 
 public class UpdateOperator extends AbstractSqlOperator {
     private final List<String> updatableColumnPolicies;
     private final List<String> updatingExpressions;
-    private final List<String> conditionalExpressions;
+    private final Set<String> conditionalExpressions;
 
     {
         updatableColumnPolicies = new ArrayList<>();
         updatingExpressions = new ArrayList<>();
-        conditionalExpressions = new ArrayList<>();
+        conditionalExpressions = new LinkedHashSet<>();
     }
 
     public UpdateOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData) {
@@ -32,16 +29,21 @@ public class UpdateOperator extends AbstractSqlOperator {
         StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ update (id, <<\n ");
         Map<String, Variable> variables = programBlockData.getVariables();
         appendColumnAndExpressionPolicies(operatorRule, updatableColumnPolicies, variables, updatingExpressions, ">>,\n LUB4Seq(<<\n ");
-        conditionalExpressions.forEach(conditionalExpression ->
+        appendConditionalExpressions(operatorRule, conditionalExpressions, programBlockData, involvedTable);
+   /*     conditionalExpressions.forEach(conditionalExpression ->
         {
-            String expColumnPolicy = involvedTable.getColumnPolicy(conditionalExpression);
-            Variable expVariable = variables.get(conditionalExpression);
-            if (expColumnPolicy != null) {
-                operatorRule.append("VPol[").append(surroundWithQuotes(expColumnPolicy)).append("].policy,\n ");
-            } else if (expVariable != null) {
-                loadVariablePolicies(operatorRule, expVariable);
+            if (conditionalExpression.startsWith("\"col_"))
+                operatorRule.append("VPol[").append(conditionalExpression).append("].policy,\n ");
+            else {
+                String expColumnPolicy = involvedTable.getColumnPolicy(conditionalExpression);
+                Variable expVariable = variables.get(conditionalExpression);
+                if (expColumnPolicy != null) {
+                    operatorRule.append("VPol[").append(surroundWithQuotes(expColumnPolicy)).append("].policy,\n ");
+                } else if (expVariable != null) {
+                    loadVariablePolicies(operatorRule, expVariable);
+                }//TODO может здесь будет поддержка литералов
             }
-        });
+        });*/
         replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>),\n <<\n ");
         appendNextRuleLabel(operatorRule, programBlockData, numberOfLineInProgramBlock);
         operatorRule.append("\n >>)\n /\\ Trace' = Append(Trace,<<>>)\n /\\ Ignore' = 0\n /\\ SLocks' = SLocks\n /\\ StateE' = SLocks'[id]\n /\\ XLocks' = XLocks\n\n");
@@ -56,7 +58,7 @@ public class UpdateOperator extends AbstractSqlOperator {
         return updatingExpressions;
     }
 
-    public List<String> getConditionalExpressions() {
+    public Set<String> getConditionalExpressions() {
         return conditionalExpressions;
     }
 }

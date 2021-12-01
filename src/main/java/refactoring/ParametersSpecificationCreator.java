@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static enums.ProgramBlockVariableType.INPUT_PARAMETER;
-import static enums.ProgramBlockVariableType.RETURN_VARIABLE;
+import static refactoring.enums.ProgramBlockVariableType.INPUT_PARAMETER;
+import static refactoring.enums.ProgramBlockVariableType.RETURN_VARIABLE;
 import static util.CommonUtil.getModuleDeclarationLine;
 import static util.CommonUtil.replaceEndOfString;
 import static util.Constants.END_OF_MODULE;

@@ -5,9 +5,9 @@ import grammar.PlSqlParserBaseListener;
 
 import java.io.File;
 
-import static enums.VariableType.CUSTOM_RECORD;
-import static enums.VariableType.CUSTOM_VARRAY;
-import static enums.ProgramBlockVariableType.*;
+import static refactoring.enums.VariableType.CUSTOM_RECORD;
+import static refactoring.enums.VariableType.CUSTOM_VARRAY;
+import static refactoring.enums.ProgramBlockVariableType.*;
 import static util.ParametersSpecificationUtil.writeLineBreak;
 import static util.ParametersSpecificationUtil.writeVariablePolicy;
 

@@ -7,8 +7,7 @@ begin
   v_is_acc := f_is_accepted (s_id);
   if v_is_acc
      then
-select paper_id into v_p_id
-from submissions
+select paper_id into v_p_id from submissions
 where submission_id = s_id;
 insert into allocations (allocation_id, submission_id, section_id, allocation_date) values (id, s_id, sec_id, alloc_date);
 else raise paper_not_accepted;
