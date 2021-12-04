@@ -7,6 +7,7 @@ import java.util.*;
 
 import static util.CommonUtil.*;
 import static util.Constants.COMMA_WITH_LINE_BREAK;
+import static util.Constants.UNCHANGED_TRACE;
 import static util.OperatorUtil.appendConditionalExpressions;
 import static util.OperatorUtil.appendNextRuleLabel;
 
@@ -87,7 +88,7 @@ public class SelectIntoOperator extends AbstractSqlOperator {
         });*/
         replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>),\n <<\n ");
         appendNextRuleLabel(operatorRule, programBlockData, numberOfLineInProgramBlock);
-        operatorRule.append("\n >>)\n /\\ Trace' = Append(Trace,<<>>)\n /\\ Ignore' = 0\n /\\ SLocks' = SLocks\n /\\ StateE' = SLocks'[id]\n /\\ UNCHANGED <<XLocks, VPol>>\n\n");
+        operatorRule.append("\n >>)\n").append(UNCHANGED_TRACE).append("/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<XLocks, VPol>>\n\n");
         return operatorRule.toString();
     }
 

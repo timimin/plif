@@ -19,7 +19,7 @@ public class ProgramBlockData {
     private String varrayTypeName;
     private String recordTypeName;
     private String returnType;
-    private final TreeMap<Integer, SqlOperator> operators;
+    private final TreeMap<Integer, SqlOperator> operators;//несколько операторов в одной строке не поддерживаются
     private final Map<String, Variable> variables;
     private ProgramBlockType programBlockType;
 
@@ -151,6 +151,13 @@ public class ProgramBlockData {
         operators.put(numberOfLine, operator);
     }
 
+    public String getProgramBlockDispatcher() {
+        StringBuilder programBlockDispatcher = new StringBuilder(programBlockName).append("(id,st) ==\n CASE ");
+        operators.values().forEach(
+                operator -> programBlockDispatcher.append(operator.getOperatorDispatcherRule()).append("\n[] "));
+        programBlockDispatcher.append("OTHER -> UNCHANGED vars\n\n");
+        return programBlockDispatcher.toString();
+    }
 
     @Override
     public String toString() {

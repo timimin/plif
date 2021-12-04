@@ -48,15 +48,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
     private String getProgramBlockSpecification(ProgramBlockData programBlockData) {
         StringBuilder specification = new StringBuilder(getProgramBlockLoadRule(programBlockData));
         programBlockData.getOperators().values().forEach(operator -> specification.append(operator.getOperatorRule()));
-        return specification.append(getProgramBlockDispatcher(programBlockData)).toString();
-    }
-
-    private String getProgramBlockDispatcher(ProgramBlockData programBlockData) {
-        StringBuilder programBlockDispatcher = new StringBuilder(programBlockData.getProgramBlockName()).append("(id,st) ==\n CASE ");
-        programBlockData.getOperators().values().forEach(
-                operator -> programBlockDispatcher.append("Head(st).pc[2] = ").append(operator.getLabel()).append(" -> ").append(operator.getOperatorRuleName()).append("\n[] "));
-        programBlockDispatcher.append("OTHER -> UNCHANGED vars\n\n");
-        return programBlockDispatcher.toString();
+        return specification.append(programBlockData.getProgramBlockDispatcher()).toString();
     }
 
     private String getProgramBlockLoadRule(ProgramBlockData programBlockData) {

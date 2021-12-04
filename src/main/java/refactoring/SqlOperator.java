@@ -6,4 +6,6 @@ public interface SqlOperator {
     String getLabel();
 
     String getOperatorRuleName();
+
+    String getOperatorDispatcherRule();
 }

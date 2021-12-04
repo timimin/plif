@@ -5,10 +5,7 @@ import grammar.PlSqlParserBaseListener;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import refactoring.operator.ExitOperator;
-import refactoring.operator.InsertOperator;
-import refactoring.operator.SelectIntoOperator;
-import refactoring.operator.UpdateOperator;
+import refactoring.operator.*;
 
 import java.util.*;
 
@@ -23,6 +20,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     private final Map<Integer, InsertOperator> insertOperatorMap;
     private final Map<Integer, UpdateOperator> updateOperatorMap;
     private final Map<Integer, SelectIntoOperator> selectIntoOperatorMap;
+    private final Map<Integer, IfOperator> ifOperatorMap;
     private final DatabaseSchema databaseSchema;
     private final Map<Integer, Set<String>> relationalExpressionToLineMap;
     private final Map<Integer, Set<String>> dotReferencedColumnPolicies;
@@ -33,6 +31,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         this.insertOperatorMap = new LinkedHashMap<>();
         this.updateOperatorMap = new LinkedHashMap<>();
         this.selectIntoOperatorMap = new LinkedHashMap<>();
+        this.ifOperatorMap = new LinkedHashMap<>();
         this.relationalExpressionToLineMap = new LinkedHashMap<>();
         this.dotReferencedColumnPolicies = new LinkedHashMap<>();
     }
@@ -138,7 +137,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     //TODO добавить этот метод в insert и update (where, set)
 
     //FIXME вложенные запросы должны быть в одну строку и в следующей за главным оператором (????)
-    private boolean isSimpleRelationalExpression(PlSqlParser.Relational_expressionContext ctx) {
+    private boolean isSimpleRelationalExpression(PlSqlParser.Relational_expressionContext ctx) {//например a>b - relational_expression, где a и b relational_expression
         ParseTree child = ctx.getChildCount() == 1 ? ctx.getChild(0) : null;
         if (child == null)
             return false;
@@ -319,6 +318,23 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     }
 
     @Override
+    public void enterIf_statement(PlSqlParser.If_statementContext ctx) {
+        int numberOfLine = ctx.start.getLine();
+        IfOperator ifOperator = new IfOperator(numberOfLine, programBlockData);
+        ifOperator.setNumberOfEndIfLine(ctx.stop.getLine());
+        ifOperator.setNumberOfThenLine(ctx.seq_of_statements().start.getLine());
+        ifOperator.setNumberOfElseLine(ctx.else_part().start.getLine());
+        ifOperatorMap.putIfAbsent(numberOfLine, ifOperator);
+    }
+
+    @Override
+    public void exitIf_statement(PlSqlParser.If_statementContext ctx) {
+        int numberOfLine = ctx.start.getLine();
+        IfOperator ifOperator = ifOperatorMap.get(numberOfLine);
+        relationalExpressionToLineMap.get(numberOfLine).forEach(conditionalExpression -> ifOperator.getConditionalExpressions().add(conditionalExpression));
+    }
+
+    @Override
     public void exitCreate_procedure_body(PlSqlParser.Create_procedure_bodyContext ctx) {
         exitProgramBlock(ctx.stop.getLine());
     }
@@ -336,7 +352,8 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     }
 
     private void addAllOperatorsToProgramBlockData() {
-        List.of(selectIntoOperatorMap, insertOperatorMap, updateOperatorMap).forEach(operatorMap -> programBlockData.getOperators().putAll(operatorMap));
+        List.of(selectIntoOperatorMap, insertOperatorMap, updateOperatorMap, ifOperatorMap)
+                .forEach(operatorMap -> programBlockData.getOperators().putAll(operatorMap));
     }
 
     private void exitProgramBlock(int endLine) {

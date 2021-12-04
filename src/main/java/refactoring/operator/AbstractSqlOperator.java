@@ -41,4 +41,9 @@ public abstract class AbstractSqlOperator implements SqlOperator {
     public String getOperatorRuleName() {
         return programBlockData.getProgramBlockName() + numberOfLineInProgramBlock + "(id)";
     }
+
+    @Override
+    public String getOperatorDispatcherRule() {
+        return "Head(st).pc[2] = " + getLabel() + " -> " + getOperatorRuleName();
+    }
 }

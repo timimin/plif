@@ -1,6 +1,6 @@
 package rawImplementation;
 
-import enums.OperatorType;
+
 import grammar.PlSqlParser;
 import grammar.PlSqlParserBaseListener;
 import org.antlr.v4.runtime.Token;
@@ -8,7 +8,7 @@ import refactoring.ProgramBlockData;
 
 import java.util.ArrayList;
 
-import static enums.OperatorType.*;
+
 
 public class PlSqlOperatorListener extends PlSqlParserBaseListener {
 

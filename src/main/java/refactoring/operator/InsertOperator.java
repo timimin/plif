@@ -5,6 +5,7 @@ import refactoring.ProgramBlockData;
 import java.util.ArrayList;
 import java.util.List;
 
+import static util.Constants.UNCHANGED_TRACE;
 import static util.OperatorUtil.appendColumnAndExpressionPolicies;
 import static util.OperatorUtil.appendNextRuleLabel;
 
@@ -42,7 +43,7 @@ public class InsertOperator extends AbstractSqlOperator {
         StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ insert (id, <<\n ");
         appendColumnAndExpressionPolicies(operatorRule, involvedColumnsPolicies, programBlockData.getVariables(), insertedExpressions, ">>,\n <<\n ");
         appendNextRuleLabel(operatorRule, programBlockData, numberOfLineInProgramBlock);
-        operatorRule.append("\n >>)\n /\\ Trace' = Append(Trace,<<>>)\n /\\ Ignore' = 0\n /\\ SLocks' = SLocks\n /\\ StateE' = SLocks'[id]\n /\\ XLocks' = XLocks\n\n");
+        operatorRule.append("\n >>)\n").append(UNCHANGED_TRACE).append("/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ XLocks' = XLocks\n\n");
         return operatorRule.toString();
     }
 }

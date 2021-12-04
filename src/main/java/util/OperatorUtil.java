@@ -40,7 +40,7 @@ public class OperatorUtil {
             if (conditionalExpression.startsWith("\"col_"))
                 operatorRule.append("VPol[").append(conditionalExpression).append("].policy,\n ");
             else {
-                String expColumnPolicy = involvedTable.getColumnPolicy(conditionalExpression);
+                String expColumnPolicy = involvedTable != null ? involvedTable.getColumnPolicy(conditionalExpression) : null;
                 Variable expVariable = variables.get(conditionalExpression);
                 if (expColumnPolicy != null) {
                     operatorRule.append("VPol[").append(surroundWithQuotes(expColumnPolicy)).append("].policy,\n ");
