@@ -41,7 +41,7 @@ public class SelectIntoOperator extends AbstractSqlOperator {
 
     @Override
     public String getOperatorRule() {
-        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ select (id, <<\n ");
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ select(id, <<\n ");
         Map<String, Variable> variables = programBlockData.getVariables();
         List<String> policies = new ArrayList<>();
         insertedVariables.forEach(variableName -> policies.addAll(variables.get(variableName).getVariablePolicies()));

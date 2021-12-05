@@ -27,7 +27,7 @@ public class IfOperator extends AbstractSqlOperator {
 
     @Override
     public String getOperatorRule() {
-        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ if (id, LUB4Seq(<<\n ");
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ if(id, LUB4Seq(<<\n ");
         appendConditionalExpressions(operatorRule, conditionalExpressions, programBlockData, null);
         replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>),\n <<\n ");
         String programBlockName = programBlockData.getProgramBlockName();

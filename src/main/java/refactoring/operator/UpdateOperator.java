@@ -29,7 +29,7 @@ public class UpdateOperator extends AbstractSqlOperator {
 
     @Override
     public String getOperatorRule() {
-        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ update (id, <<\n ");
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ update(id, <<\n ");
         Map<String, Variable> variables = programBlockData.getVariables();
         appendColumnAndExpressionPolicies(operatorRule, updatableColumnPolicies, variables, updatingExpressions, ">>,\n LUB4Seq(<<\n ");
         appendConditionalExpressions(operatorRule, conditionalExpressions, programBlockData, involvedTable);
