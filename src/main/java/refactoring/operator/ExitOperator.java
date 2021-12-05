@@ -1,5 +1,6 @@
 package refactoring.operator;
 
+import refactoring.enums.OperatorType;
 import refactoring.enums.ProgramBlockType;
 import refactoring.ProgramBlockData;
 import refactoring.Variable;
@@ -11,8 +12,8 @@ import static util.CommonUtil.*;
 
 public class ExitOperator extends AbstractSqlOperator {
 
-    public ExitOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData) {
-        super(numberOfLineInProgramBlock, programBlockData);
+    public ExitOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {
+        super(numberOfLineInProgramBlock, programBlockData, operatorType);
     }
 
     @Override

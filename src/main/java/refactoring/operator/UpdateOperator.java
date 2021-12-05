@@ -2,6 +2,7 @@ package refactoring.operator;
 
 import refactoring.ProgramBlockData;
 import refactoring.Variable;
+import refactoring.enums.OperatorType;
 
 import java.util.*;
 
@@ -21,9 +22,10 @@ public class UpdateOperator extends AbstractSqlOperator {
         conditionalExpressions = new LinkedHashSet<>();
     }
 
-    public UpdateOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData) {
-        super(numberOfLineInProgramBlock, programBlockData);
+    public UpdateOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {
+        super(numberOfLineInProgramBlock, programBlockData, operatorType);
     }
+
 
     @Override
     public String getOperatorRule() {
@@ -31,20 +33,6 @@ public class UpdateOperator extends AbstractSqlOperator {
         Map<String, Variable> variables = programBlockData.getVariables();
         appendColumnAndExpressionPolicies(operatorRule, updatableColumnPolicies, variables, updatingExpressions, ">>,\n LUB4Seq(<<\n ");
         appendConditionalExpressions(operatorRule, conditionalExpressions, programBlockData, involvedTable);
-   /*     conditionalExpressions.forEach(conditionalExpression ->
-        {
-            if (conditionalExpression.startsWith("\"col_"))
-                operatorRule.append("VPol[").append(conditionalExpression).append("].policy,\n ");
-            else {
-                String expColumnPolicy = involvedTable.getColumnPolicy(conditionalExpression);
-                Variable expVariable = variables.get(conditionalExpression);
-                if (expColumnPolicy != null) {
-                    operatorRule.append("VPol[").append(surroundWithQuotes(expColumnPolicy)).append("].policy,\n ");
-                } else if (expVariable != null) {
-                    loadVariablePolicies(operatorRule, expVariable);
-                }//TODO может здесь будет поддержка литералов
-            }
-        });*/
         replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>),\n <<\n ");
         appendNextRuleLabel(operatorRule, programBlockData, numberOfLineInProgramBlock);
         operatorRule.append("\n >>)\n").append(UNCHANGED_TRACE).append("/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ XLocks' = XLocks\n\n");

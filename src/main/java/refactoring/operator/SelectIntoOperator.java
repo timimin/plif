@@ -2,6 +2,7 @@ package refactoring.operator;
 
 import refactoring.ProgramBlockData;
 import refactoring.Variable;
+import refactoring.enums.OperatorType;
 
 import java.util.*;
 
@@ -22,8 +23,8 @@ public class SelectIntoOperator extends AbstractSqlOperator {
         conditionalExpressions = new LinkedHashSet<>();
     }
 
-    public SelectIntoOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData) {
-        super(numberOfLineInProgramBlock, programBlockData);
+    public SelectIntoOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {
+        super(numberOfLineInProgramBlock, programBlockData, operatorType);
     }
 
     public List<String> getInsertedVariables() {
@@ -72,20 +73,6 @@ public class SelectIntoOperator extends AbstractSqlOperator {
         }
         replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>,\n LUB4Seq(<<\n ");
         appendConditionalExpressions(operatorRule, conditionalExpressions, programBlockData, involvedTable);
-       /* conditionalExpressions.forEach(conditionalExpression ->
-        {
-            if (conditionalExpression.startsWith("\"col_"))
-                operatorRule.append("VPol[").append(conditionalExpression).append("].policy,\n ");
-            else {
-                String expColumnPolicy = involvedTable.getColumnPolicy(conditionalExpression);
-                Variable expVariable = variables.get(conditionalExpression);
-                if (expColumnPolicy != null) {
-                    operatorRule.append("VPol[").append(surroundWithQuotes(expColumnPolicy)).append("].policy,\n ");
-                } else if (expVariable != null) {
-                    loadVariablePolicies(operatorRule, expVariable);
-                }//TODO может здесь будет поддержка литералов
-            }
-        });*/
         replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>),\n <<\n ");
         appendNextRuleLabel(operatorRule, programBlockData, numberOfLineInProgramBlock);
         operatorRule.append("\n >>)\n").append(UNCHANGED_TRACE).append("/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<XLocks, VPol>>\n\n");

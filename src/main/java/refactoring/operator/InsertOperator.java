@@ -1,6 +1,7 @@
 package refactoring.operator;
 
 import refactoring.ProgramBlockData;
+import refactoring.enums.OperatorType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,10 @@ public class InsertOperator extends AbstractSqlOperator {
         insertedExpressions = new ArrayList<>();
     }
 
-    public InsertOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData) {
-        super(numberOfLineInProgramBlock, programBlockData);
+    public InsertOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {
+        super(numberOfLineInProgramBlock, programBlockData, operatorType);
     }
+
 
     public List<String> getInsertedExpressions() {
         return insertedExpressions;
