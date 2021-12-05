@@ -366,18 +366,15 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
 
         @Override
         public void enterVariable_name(PlSqlParser.Variable_nameContext ctx) {
-            if (ctx.getChildCount() != 1) {//обращение без точки
-                List<PlSqlParser.Id_expressionContext> expressions = ctx.id_expression();
-                Table table = databaseSchema.getTables().get(expressions.get(0).getText().toLowerCase());
-                if (table != null) {
-                    columnPolicy = surroundWithQuotes(table.getColumnPolicy(expressions.get(1).getText()));
+            if (columnPolicy == null) {
+                if (ctx.getChildCount() != 1) {//обращение без точки
+                    List<PlSqlParser.Id_expressionContext> expressions = ctx.id_expression();
+                    Table table = databaseSchema.getTables().get(expressions.get(0).getText().toLowerCase());
+                    if (table != null) {
+                        columnPolicy = surroundWithQuotes(table.getColumnPolicy(expressions.get(1).getText()));
+                    }
                 }
             }
-        }
-
-        @Override
-        public void exitCompound_expression(PlSqlParser.Compound_expressionContext ctx) {
-            columnPolicy = null;
         }
     }
 }

@@ -34,16 +34,17 @@ public class IfOperator extends AbstractSqlOperator {
         String programBlockName = programBlockData.getProgramBlockName();
         String ifDispatcherInterval = numberOfThenLine + "_" + numberOfElseLine;
         String quotedProgramBlockName = surroundWithQuotes(programBlockName);
-        String unchangedVariablesInSkipBranch = " /\\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore, Trace>>\n ";
+        String unchangedVariablesInSkipBranch = " /\\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore, Trace>>\n";
         String unchangedVariablesInIfAndEndIf = "/\\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>\n\n";
         operatorRule
                 .append(quotedProgramBlockName)//if правило
                 .append(", ").append(surroundWithQuotes("lbl_" + ifDispatcherInterval)).append("\n >>)\n")
                 .append(UNCHANGED_TRACE).append(unchangedVariablesInIfAndEndIf)
 
-                .append(programBlockName).append(ifDispatcherInterval).append("(id) ==\n \\/ /\\ skip(id, <<").append(quotedProgramBlockName) //диспетчер оператора if
-                .append("lbl_").append(numberOfThenLine).append(">>)\n").append(unchangedVariablesInSkipBranch).append("\\/ /\\ skip(id, <<")
-                .append(quotedProgramBlockName).append("lbl_").append(numberOfElseLine).append(">>)\n").append(unchangedVariablesInSkipBranch).append("\n\n")
+                .append(programBlockName).append(ifDispatcherInterval).append("(id) ==\n\\/ /\\ skip(id, <<").append(quotedProgramBlockName) //диспетчер оператора if
+                .append(", ").append(surroundWithQuotes("lbl_" + numberOfThenLine)).append(">>)\n")
+                .append(unchangedVariablesInSkipBranch).append("\\/ /\\ skip(id, <<").append(quotedProgramBlockName).append(", ")
+                .append(surroundWithQuotes("lbl_" + numberOfElseLine)).append(">>)\n").append(unchangedVariablesInSkipBranch).append("\n\n")
 
                 .append(programBlockName).append(numberOfEndIfLine).append("(id) ==\n/\\ ifend(id, <<");// ifend правило
         appendNextRuleLabel(operatorRule, programBlockData, numberOfEndIfLine);

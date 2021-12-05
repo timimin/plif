@@ -4,6 +4,7 @@ import refactoring.ProgramBlockData;
 import refactoring.Table;
 import refactoring.Variable;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +20,7 @@ public class OperatorUtil {
             Map<String, Variable> programBlockVariables, List<String> involvedExpressions, String ending) {
         involvedColumnPolicies.forEach(policy -> operatorRule.append(surroundWithQuotes(policy)).append(COMMA_WITH_LINE_BREAK));
         replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>,\n <<\n ");
-        Set<String> variableNames = programBlockVariables.keySet().stream().filter(involvedExpressions::contains).collect(Collectors.toSet());
+        Set<String> variableNames = programBlockVariables.keySet().stream().filter(involvedExpressions::contains).collect(Collectors.toCollection(LinkedHashSet::new));
         if (variableNames.size() != 0) {
             variableNames.forEach(key -> loadVariablePolicies(operatorRule, programBlockVariables.get(key), null));
         } else {

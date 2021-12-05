@@ -6,6 +6,6 @@ as
   v_program program_arr_type;
 begin
 select paper_id, title, abstract, text, 'unknown_auth' bulk collect into v_program from papers
-where paper_id in (select allocations.paper_id from allocations JOIN SUBMISSIONS ON allocations.submission_id = SUBMISSIONS.submission_id WHERE allocations.section_id = s_id);
+where papers.paper_id in (select SUBMISSIONS.paper_id from allocations JOIN SUBMISSIONS ON allocations.submission_id = SUBMISSIONS.submission_id WHERE allocations.section_id = s_id);
 return v_program;
 end;

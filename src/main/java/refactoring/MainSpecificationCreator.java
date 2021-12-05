@@ -71,7 +71,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
         loadRule.append(newVariablePolicies).append("\n ]\n/\\ New2Old' =\n <<\n <<");
         variablePoliciesWithIdAndPolicySuffix.forEach(policy -> policy.forEach(loadRule::append));
         replaceEndOfString(loadRule, COMMA_WITH_LINE_BREAK, ">>");
-        loadRule.append(COMMA_WITH_LINE_BREAK).append(newVariablePolicies).append("\n >>\n/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<VPol>>\nELSE UNCHANGED vars\n\n");
+        loadRule.append(COMMA_WITH_LINE_BREAK).append(newVariablePolicies).append("\n >>\n/\\ Ignore' = 1\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<VPol>>\nELSE UNCHANGED vars\n\n");
         return loadRule.toString();
     }
 
