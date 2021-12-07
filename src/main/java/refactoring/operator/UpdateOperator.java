@@ -11,7 +11,7 @@ import static util.Constants.COMMA_WITH_LINE_BREAK;
 import static util.Constants.UNCHANGED_TRACE;
 import static util.OperatorUtil.*;
 
-public class UpdateOperator extends AbstractSqlOperator {
+public class UpdateOperator extends SqlOperator {
     private final List<String> updatableColumnPolicies;
     private final List<String> updatingExpressions;
     private final Set<String> conditionalExpressions;

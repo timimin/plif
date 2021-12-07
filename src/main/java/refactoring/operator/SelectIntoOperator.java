@@ -12,7 +12,7 @@ import static util.Constants.UNCHANGED_TRACE;
 import static util.OperatorUtil.appendConditionalExpressions;
 import static util.OperatorUtil.appendNextRuleLabel;
 
-public class SelectIntoOperator extends AbstractSqlOperator {
+public class SelectIntoOperator extends SqlOperator {
     private final List<String> insertedVariables;
     private final List<String> selectedExpressions;
     private final Set<String> conditionalExpressions;

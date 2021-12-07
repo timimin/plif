@@ -15,7 +15,7 @@ import static util.CommonUtil.surroundWithQuotes;
 import static util.Constants.UNCHANGED_TRACE;
 import static util.OperatorUtil.appendNextRuleLabel;
 
-public class ExceptionOperator extends AbstractSqlOperator {
+public class ExceptionOperator extends SqlOperator {
     private Map<Integer, Set<String>> handledExceptions;
     private String exceptionName;
 

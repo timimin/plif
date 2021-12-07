@@ -6,7 +6,7 @@ import refactoring.enums.OperatorType;
 import static util.Constants.UNCHANGED_TRACE;
 import static util.OperatorUtil.appendNextRuleLabel;
 
-public class EndIfOperator extends AbstractSqlOperator {
+public class EndIfOperator extends SqlOperator {
 
     public EndIfOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {
         super(numberOfLineInProgramBlock, programBlockData, operatorType);

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static util.CommonUtil.*;
 
-public class ExitOperator extends AbstractSqlOperator {
+public class ExitOperator extends SqlOperator {
 
     public ExitOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {
         super(numberOfLineInProgramBlock, programBlockData, operatorType);

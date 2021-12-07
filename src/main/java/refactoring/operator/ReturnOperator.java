@@ -13,7 +13,7 @@ import static util.Constants.COMMA_WITH_LINE_BREAK;
 import static util.Constants.UNCHANGED_TRACE;
 import static util.OperatorUtil.appendNextRuleLabel;
 
-public class ReturnOperator extends AbstractSqlOperator {
+public class ReturnOperator extends SqlOperator {
     private String returnableVariableName;
 
     public ReturnOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {

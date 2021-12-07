@@ -2,6 +2,7 @@ package refactoring;
 
 import grammar.PlSqlParser;
 import grammar.PlSqlParserBaseListener;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -24,7 +25,6 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     private final Map<Integer, UpdateOperator> updateOperatorMap;
     private final Map<Integer, SelectIntoOperator> selectIntoOperatorMap;
     private final Map<Integer, IfOperator> ifOperatorMap;
-    private final Map<Integer, EndIfOperator> endIfOperatorMap;
     private final Map<Integer, ReturnOperator> returnOperatorMap;
     private final Map<Integer, ExceptionOperator> exceptionOperatorMap;
     private final DatabaseSchema databaseSchema;
@@ -39,7 +39,6 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         this.updateOperatorMap = new LinkedHashMap<>();
         this.selectIntoOperatorMap = new LinkedHashMap<>();
         this.ifOperatorMap = new LinkedHashMap<>();
-        this.endIfOperatorMap = new LinkedHashMap<>();
         this.returnOperatorMap = new LinkedHashMap<>();
         this.exceptionOperatorMap = new LinkedHashMap<>();
         this.relationalExpressionToLineMap = new LinkedHashMap<>();
@@ -54,6 +53,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
             int numberOfLine = ctx.start.getLine();
             SelectIntoOperator selectIntoOperator = new SelectIntoOperator(numberOfLine, programBlockData, SELECT_INTO);
             selectIntoOperatorMap.putIfAbsent(numberOfLine, selectIntoOperator);
+            programBlockData.addOperator(numberOfLine, selectIntoOperator);
         }
     }
 
@@ -73,6 +73,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         int numberOfLine = ctx.start.getLine();
         InsertOperator insertOperator = new InsertOperator(numberOfLine, programBlockData, INSERT);
         insertOperatorMap.putIfAbsent(numberOfLine, insertOperator);
+        programBlockData.addOperator(numberOfLine, insertOperator);
     }
 
     //FIXME обращение через точку к столбцам в предложении set не поддерживается
@@ -81,6 +82,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         int numberOfLine = ctx.start.getLine();
         UpdateOperator updateOperator = new UpdateOperator(numberOfLine, programBlockData, UPDATE);
         updateOperatorMap.putIfAbsent(numberOfLine, updateOperator);
+        programBlockData.addOperator(numberOfLine, updateOperator);
     }
 
     @Override
@@ -228,6 +230,13 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     }
 
     @Override
+    public void enterBody(PlSqlParser.BodyContext ctx) {
+        if (ctx.EXCEPTION() != null) {
+            programBlockData.setNumberOfLineOfExceptionKeyWord(ctx.EXCEPTION().getSymbol().getLine());
+        }
+    }
+
+    @Override
     public void enterProcedure_name(PlSqlParser.Procedure_nameContext ctx) {
         programBlockData.setProgramBlockType(PROCEDURE);
         programBlockData.setProgramBlockName(ctx.getText());
@@ -333,13 +342,22 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         int numberOfEndCtxLine = ctx.stop.getLine();
         EndIfOperator endIfOperator = new EndIfOperator(numberOfEndCtxLine, programBlockData, END_IF);
         ifOperatorMap.putIfAbsent(numberOfStartCtxLine, ifOperator);
-        endIfOperatorMap.putIfAbsent(numberOfEndCtxLine, endIfOperator);
+        programBlockData.addOperator(numberOfStartCtxLine, ifOperator);
+        programBlockData.addOperator(numberOfEndCtxLine, endIfOperator);
     }
 
     @Override
     public void exitIf_statement(PlSqlParser.If_statementContext ctx) {
         int numberOfLine = ctx.start.getLine();
         IfOperator ifOperator = ifOperatorMap.get(numberOfLine);
+        ParserRuleContext elseContext = ctx.else_part();
+        if (elseContext != null) {
+            int numberOfLineOfElseKeyWord = elseContext.start.getLine();
+            SqlOperator sqlOperatorInElseClause = programBlockData.getOperators().get(numberOfLineOfElseKeyWord);
+            if (sqlOperatorInElseClause != null) {
+                sqlOperatorInElseClause.setHasElseKeyWordInThisLine(true);
+            }
+        }
         relationalExpressionToLineMap.get(numberOfLine).forEach(conditionalExpression -> ifOperator.getConditionalExpressions().add(conditionalExpression));
     }
 
@@ -348,6 +366,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         int numberOfLine = ctx.start.getLine();
         ReturnOperator returnOperator = new ReturnOperator(numberOfLine, programBlockData, RETURN);
         returnOperatorMap.putIfAbsent(numberOfLine, returnOperator);
+        programBlockData.addOperator(numberOfLine, returnOperator);
     }
 
     @Override
@@ -363,6 +382,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         ExceptionOperator exceptionOperator = new ExceptionOperator(numberOfLine, programBlockData, OperatorType.EXCEPTION);
         exceptionOperator.setExceptionName(ctx.exception_name().getText());
         exceptionOperatorMap.putIfAbsent(numberOfLine, exceptionOperator);
+        programBlockData.addOperator(numberOfLine, exceptionOperator);
     }
 
     @Override
@@ -389,22 +409,9 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         exitProgramBlock(ctx.stop.getLine());
     }
 
-    private void addAllOperatorsToProgramBlockData() {
-        List.of(
-                        selectIntoOperatorMap,
-                        insertOperatorMap,
-                        updateOperatorMap,
-                        ifOperatorMap,
-                        endIfOperatorMap,
-                        returnOperatorMap,
-                        exceptionOperatorMap)
-                .forEach(operatorMap -> programBlockData.getOperators().putAll(operatorMap));
-    }
-
     private void exitProgramBlock(int endLine) {
         programBlockData.getOperators().put(endLine, new ExitOperator(endLine, programBlockData, EXIT));
         exceptionOperatorMap.values().forEach(exceptionOperator -> exceptionOperator.setHandledExceptions(handledExceptions));
-        addAllOperatorsToProgramBlockData();
     }
 
     private class VariableListener extends PlSqlParserBaseListener {

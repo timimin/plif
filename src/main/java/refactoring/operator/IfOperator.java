@@ -12,7 +12,7 @@ import static util.Constants.COMMA_WITH_LINE_BREAK;
 import static util.Constants.UNCHANGED_TRACE;
 import static util.OperatorUtil.appendConditionalExpressions;
 
-public class IfOperator extends AbstractSqlOperator {
+public class IfOperator extends SqlOperator {
     private Set<String> conditionalExpressions;
     private int numberOfThenLine;
     private int numberOfElseLine;

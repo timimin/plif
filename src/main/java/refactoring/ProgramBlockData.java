@@ -2,6 +2,7 @@ package refactoring;
 
 import refactoring.enums.ProgramBlockType;
 import refactoring.enums.ProgramBlockVariableType;
+import refactoring.operator.SqlOperator;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -22,7 +23,7 @@ public class ProgramBlockData {
     private final TreeMap<Integer, SqlOperator> operators;//несколько операторов в одной строке не поддерживаются
     private final Map<String, Variable> variables;
     private ProgramBlockType programBlockType;
-
+    private int numberOfLineOfExceptionKeyWord;
 
     {
         variables = new LinkedHashMap<>();
@@ -112,6 +113,13 @@ public class ProgramBlockData {
         return variables;
     }
 
+    public int getNumberOfLineOfExceptionKeyWord() {
+        return numberOfLineOfExceptionKeyWord;
+    }
+
+    public void setNumberOfLineOfExceptionKeyWord(int numberOfLineOfExceptionKeyWord) {
+        this.numberOfLineOfExceptionKeyWord = numberOfLineOfExceptionKeyWord;
+    }
 
     public ProgramBlockType getProgramBlockType() {
         return programBlockType;

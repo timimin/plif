@@ -1,23 +1,25 @@
 package refactoring.operator;
 
 import refactoring.ProgramBlockData;
-import refactoring.SqlOperator;
 import refactoring.Table;
 import refactoring.enums.OperatorType;
 
 import static util.CommonUtil.surroundWithQuotes;
 
-public abstract class AbstractSqlOperator implements SqlOperator {
+public abstract class SqlOperator {
     protected final int numberOfLineInProgramBlock;
     protected final ProgramBlockData programBlockData;
-    protected final OperatorType operatorType;
     protected Table involvedTable;
+    private final OperatorType operatorType;
+    private boolean hasElseKeyWordInThisLine;
 
-    public AbstractSqlOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {
+    public SqlOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {
         this.numberOfLineInProgramBlock = numberOfLineInProgramBlock;
         this.programBlockData = programBlockData;
         this.operatorType = operatorType;
     }
+
+    public abstract String getOperatorRule();
 
     public int getNumberOfLineInProgramBlock() {
         return numberOfLineInProgramBlock;
@@ -39,19 +41,25 @@ public abstract class AbstractSqlOperator implements SqlOperator {
         this.involvedTable = involvedTable;
     }
 
-    @Override
+
     public String getLabel() {
         return surroundWithQuotes("lbl_" + numberOfLineInProgramBlock);
     }
 
-    @Override
     public String getOperatorRuleName() {
         return programBlockData.getProgramBlockName() + numberOfLineInProgramBlock + "(id)";
     }
 
-    @Override
     public String getOperatorDispatcherRule() {
         return "Head(st).pc[2] = " + getLabel() + " -> " + getOperatorRuleName();
+    }
+
+    public boolean hasElseKeyWordInThisLine() {
+        return hasElseKeyWordInThisLine;
+    }
+
+    public void setHasElseKeyWordInThisLine(boolean hasElseKeyWordInThisLine) {
+        this.hasElseKeyWordInThisLine = hasElseKeyWordInThisLine;
     }
 
     @Override
@@ -59,6 +67,7 @@ public abstract class AbstractSqlOperator implements SqlOperator {
         return "AbstractSqlOperator{" +
                 "numberOfLineInProgramBlock=" + numberOfLineInProgramBlock +
                 ", operatorType=" + operatorType +
+                ", hasElseKeyWordInThisLine=" + hasElseKeyWordInThisLine +
                 '}';
     }
 }

@@ -3,11 +3,10 @@ package util;
 import refactoring.ProgramBlockData;
 import refactoring.Table;
 import refactoring.Variable;
+import refactoring.enums.OperatorType;
+import refactoring.operator.SqlOperator;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static util.CommonUtil.*;
@@ -30,8 +29,23 @@ public class OperatorUtil {
     }
 
     public static void appendNextRuleLabel(StringBuilder operatorRule, ProgramBlockData programBlockData, int numberOfLineInProgramBlock) {
-        operatorRule.append(surroundWithQuotes(programBlockData.getProgramBlockName())).append(", ")
-                .append(programBlockData.getOperators().higherEntry(numberOfLineInProgramBlock).getValue().getLabel());
+        TreeMap<Integer, SqlOperator> pbdOperators = programBlockData.getOperators();
+        SqlOperator nextSqlOperator = pbdOperators.higherEntry(numberOfLineInProgramBlock).getValue();
+        operatorRule.append(surroundWithQuotes(programBlockData.getProgramBlockName())).append(", ");
+        int numberOfLineOfExceptionKeyWord = programBlockData.getNumberOfLineOfExceptionKeyWord();
+        int nextOperatorLine = nextSqlOperator.getNumberOfLineInProgramBlock();
+        if (numberOfLineOfExceptionKeyWord < nextOperatorLine && numberOfLineOfExceptionKeyWord > numberOfLineInProgramBlock) {//последний оператор перед exception
+            operatorRule.append(pbdOperators.lastEntry().getValue().getLabel());//метка exit
+        } else {
+            if (nextSqlOperator.hasElseKeyWordInThisLine()) {//если следующий оператор находится в строке с else, то переходим к ближайшему end if
+                pbdOperators.keySet().stream().filter(key -> {
+                    SqlOperator operator = pbdOperators.get(key);
+                    return operator.getOperatorType() == OperatorType.END_IF && operator.getNumberOfLineInProgramBlock() > nextOperatorLine;
+                }).findFirst().ifPresent(value -> operatorRule.append(pbdOperators.get(value).getLabel()));
+            } else {
+                operatorRule.append(nextSqlOperator.getLabel());
+            }
+        }
     }
 
     public static void appendConditionalExpressions(StringBuilder operatorRule, Set<String> conditionalExpressions, ProgramBlockData programBlockData, Table involvedTable) {

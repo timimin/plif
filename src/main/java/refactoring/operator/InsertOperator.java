@@ -14,7 +14,7 @@ import static util.OperatorUtil.appendNextRuleLabel;
  * Инсерт в одну таблицу(insert values), без селекта(insert into a select b from c)
  */
 //TODO В абстрактный класс Operator добавить общие для скл-операторов методы
-public class InsertOperator extends AbstractSqlOperator {
+public class InsertOperator extends SqlOperator {
     private final List<String> insertedExpressions;
     private final List<String> involvedColumnsPolicies;
 
