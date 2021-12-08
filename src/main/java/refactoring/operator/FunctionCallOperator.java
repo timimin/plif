@@ -65,7 +65,7 @@ public class FunctionCallOperator extends SqlOperator {
             replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>),");
             List.of(localVariables, exceptionVariables, returnVariables).forEach(variables -> lubVariables(variables, operatorRule));
             replaceEndOfString(operatorRule, ",", ">>)\n").append(endOfRule).append(", New2Old>>\n\n");
-            operatorRule.append(programBlockData.getProgramBlockName()).append(numberOfLineInProgramBlock).append("r(id) ==\n/\\ exit_call(id, <<\n");
+            operatorRule.append(programBlockData.getProgramBlockName()).append(numberOfLineInProgramBlock).append("r(id) ==\n/\\ exit_call(id, <<\n ");
             appendSuffixToVariablePolicies(programBlockData.getVariables().get(assignableVariable), "(id)" + COMMA_WITH_LINE_BREAK).forEach(operatorRule::append);
             replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>,\n <<\n ");
             appendNextRuleLabel(operatorRule, programBlockData, numberOfLineInProgramBlock);

@@ -1,4 +1,6 @@
-package refactoring;
+package refactoring.specification.creator;
+
+import refactoring.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,7 +10,6 @@ import java.io.IOException;
 import static refactoring.enums.ProgramBlockVariableType.INPUT_PARAMETER;
 import static refactoring.enums.ProgramBlockVariableType.RETURN_VARIABLE;
 import static util.CommonUtil.getModuleDeclarationLine;
-import static util.CommonUtil.replaceEndOfString;
 import static util.Constants.END_OF_MODULE;
 
 public class ParametersSpecificationCreator implements TlaSpecificationCreator {
@@ -27,7 +28,6 @@ public class ParametersSpecificationCreator implements TlaSpecificationCreator {
             bufferedWriter.write(getModuleDeclarationLine(destinationFile));
             writeParametersHeader(bufferedWriter);
             writeColumnPolicies(bufferedWriter);
-            // writeCalls(bufferedWriter);
             writeVariablePolicies(bufferedWriter);
             bufferedWriter.write(END_OF_MODULE);
         } catch (IOException e) {
@@ -59,17 +59,6 @@ public class ParametersSpecificationCreator implements TlaSpecificationCreator {
         }
     }
 
-    @Deprecated(since = "В спецификации это похоже лишнее")
-    private void writeCalls(BufferedWriter bufferedWriter) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder("Calls == {");
-        for (ProgramBlockData programBlockData : programBlocksDataHolder.getProgramBlocksData()) {
-            stringBuilder.append('\"').append(programBlockData.getProgramBlockName()).append("\",");
-        }
-        replaceEndOfString(stringBuilder, ",", "}\n");
-        //   stringBuilder.replace(stringBuilder.lastIndexOf(","), stringBuilder.length(), "}\n");
-        bufferedWriter.write(stringBuilder + "\n");
-    }
-
     private void writeVariablePolicies(BufferedWriter bufferedWriter) throws IOException {
         for (ProgramBlockData programBlockData : programBlocksDataHolder.getProgramBlocksData()) {
             int offset = 0;
@@ -88,15 +77,5 @@ public class ParametersSpecificationCreator implements TlaSpecificationCreator {
         } else {
             return "[loc|->\"mem\", offs |-> " + offset + ", policy |-> min, name |-> " + "\"" + policyName + "\"" + "]";
         }
-    }
-
-    public static void main(String[] args) {
-        long t = System.currentTimeMillis();
-        DatabaseSchema databaseSchema = new DatabaseSchema("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks");
-        ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks", databaseSchema);
-        System.out.println(programBlocksDataHolder.getProgramBlocksData().size());
-        ParametersSpecificationCreator parametersSpecificationCreator = new ParametersSpecificationCreator(databaseSchema, programBlocksDataHolder);
-        parametersSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\param.tla"));
-        System.out.println(System.currentTimeMillis() - t);
     }
 }

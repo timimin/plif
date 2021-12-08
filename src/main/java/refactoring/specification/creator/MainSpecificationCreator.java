@@ -1,4 +1,6 @@
-package refactoring;
+package refactoring.specification.creator;
+
+import refactoring.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,8 +10,7 @@ import java.util.List;
 
 import static refactoring.enums.ProgramBlockVariableType.INPUT_PARAMETER;
 import static util.CommonUtil.*;
-import static util.Constants.COMMA_WITH_LINE_BREAK;
-import static util.Constants.END_OF_MODULE;
+import static util.Constants.*;
 
 public class MainSpecificationCreator implements TlaSpecificationCreator {
     private final DatabaseSchema databaseSchema;
@@ -24,6 +25,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
     public void createSpecification(File destinationFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destinationFile))) {
             bufferedWriter.write(getModuleDeclarationLine(destinationFile));
+            bufferedWriter.write(MAIN_SPECIFICATION_EXTENDS_CLAUSE);
             writeProgramBlocksSpecification(bufferedWriter);
             writeDispatchRule(bufferedWriter);
             writeInitRule(bufferedWriter);
@@ -137,8 +139,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
             }
             initRule.append("\n");
         }
-        initRule.setCharAt(initRule.lastIndexOf(","), ' ');
-        initRule.append("]\n\n");
+        replaceEndOfString(initRule, ",\n", "\n ]\n\n");
         bufferedWriter.write(initRule.toString());
     }
 
@@ -155,15 +156,5 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
     //TODO может назвать по-другому? Или добавить вариативность названия правила
     private void writeSpecFSRule(BufferedWriter bufferedWriter) throws IOException {
         bufferedWriter.write("SpecFS == Init /\\ [] [Next(dispatch)]_vars\n");
-    }
-
-    public static void main(String[] args) {
-        long t = System.currentTimeMillis();
-        DatabaseSchema databaseSchema = new DatabaseSchema("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks");
-        ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks", databaseSchema);
-        System.out.println(programBlocksDataHolder.getProgramBlocksData().size());
-        MainSpecificationCreator mainSpecificationCreator = new MainSpecificationCreator(databaseSchema, programBlocksDataHolder);
-        mainSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\ConferenceProcFs.tla"));
-        System.out.println(System.currentTimeMillis() - t);
     }
 }

@@ -1,4 +1,4 @@
-package refactoring;
+package refactoring.specification.creator;
 
 import java.io.File;
 

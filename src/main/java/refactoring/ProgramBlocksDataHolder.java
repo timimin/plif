@@ -102,17 +102,4 @@ public class ProgramBlocksDataHolder {
     public List<ProgramBlockData> getProgramBlocksData() {
         return programBlocksData;
     }
-
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
-        long start = System.currentTimeMillis();
-        //new ProgramBlocksDataHolder("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks",);
-        System.out.println(System.currentTimeMillis() - start);
-/*
-        Future<Integer> future = Executors.newSingleThreadExecutor().submit(() -> {
-            if (LocalDateTime.now().toLocalTime() == null)
-                throw new Exception();
-            return 1;
-        });
-        System.out.println(future.isDone());*/
-    }
 }

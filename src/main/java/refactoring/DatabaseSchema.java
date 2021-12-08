@@ -39,9 +39,4 @@ public class DatabaseSchema {
     public String toString() {
         return "DatabaseSchema: " + tables;
     }
-
-    public static void main(String[] args) {
-        DatabaseSchema databaseSchema = new DatabaseSchema("L:\\");
-        System.out.println();
-    }
 }

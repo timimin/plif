@@ -33,7 +33,7 @@ public class ExitOperator extends SqlOperator {
         }
         exitRule.append("![id][\"SessionM\"] = SubSeq(Sessions[id][\"SessionM\"], 1, Len(Sessions[id][\"SessionM\"]) - ")
                 .append(programBlockData.getVariables().values().stream().mapToInt(variable -> variable.getVariablePolicies().size()).sum())
-                .append(")]\n/\\ Trace' = Append(Trace,<<>>)\n/\\ Ignore'= 1\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<New2Old, VPol>>\n\n");
+                .append(")]\n/\\ Trace' = Append(Trace,<<>>)\n/\\ Ignore' = 1\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<New2Old, VPol>>\n\n");
         return exitRule.toString();
     }
 

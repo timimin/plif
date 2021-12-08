@@ -1,15 +1,20 @@
-import refactoring.DatabaseSchema;
-import refactoring.ParametersSpecificationCreator;
-import refactoring.ProgramBlocksDataHolder;
+import refactoring.*;
+import refactoring.specification.creator.MainSpecificationCreator;
+import refactoring.specification.creator.ParametersSpecificationCreator;
+import refactoring.specification.creator.TlaSpecificationCreator;
 
 import java.io.File;
 
 public class Application {
     public static void main(String[] args) {
+        long t = System.currentTimeMillis();
         DatabaseSchema databaseSchema = new DatabaseSchema("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks");
         ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks", databaseSchema);
         System.out.println(programBlocksDataHolder.getProgramBlocksData().size());
-        ParametersSpecificationCreator parametersSpecificationCreator = new ParametersSpecificationCreator(databaseSchema, programBlocksDataHolder);
-        parametersSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\param.tla"));
+        TlaSpecificationCreator parametersSpecificationCreator = new ParametersSpecificationCreator(databaseSchema, programBlocksDataHolder);
+        TlaSpecificationCreator mainSpecificationCreator = new MainSpecificationCreator(databaseSchema, programBlocksDataHolder);
+        parametersSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\ParametersFS.tla"));
+        mainSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\ConferenceProcFS_final.tla"));
+        System.out.println(System.currentTimeMillis() - t);
     }
 }
