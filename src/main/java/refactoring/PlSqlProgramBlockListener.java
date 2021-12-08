@@ -49,7 +49,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     //TODO select from select не поддерживается
     @Override
     public void enterSelect_statement(PlSqlParser.Select_statementContext ctx) {
-        if (!isSelectInFromClause(ctx)) {
+        if (selectNotInFromClause(ctx)) {
             int numberOfLine = ctx.start.getLine();
             SelectIntoOperator selectIntoOperator = new SelectIntoOperator(numberOfLine, programBlockData, SELECT_INTO);
             selectIntoOperatorMap.putIfAbsent(numberOfLine, selectIntoOperator);
@@ -59,7 +59,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
 
     @Override
     public void exitSelect_statement(PlSqlParser.Select_statementContext ctx) {
-        if (!isSelectInFromClause(ctx)) {
+        if (selectNotInFromClause(ctx)) {
             int numberOfLine = ctx.start.getLine();
             SelectIntoOperator selectIntoOperator = selectIntoOperatorMap.get(numberOfLine);
             Set<String> policies = dotReferencedColumnPolicies.get(numberOfLine + 1);
@@ -101,15 +101,15 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         updateOperator.getUpdatingExpressions().add(ctx.expression().getText());
     }
 
-    private boolean isSelectInFromClause(PlSqlParser.Select_statementContext ctx) {//TODO уточнить проверяемый контекст
+    private boolean selectNotInFromClause(PlSqlParser.Select_statementContext ctx) {//TODO уточнить проверяемый контекст
         RuleContext parent = ctx.parent;
         while (parent != null) {
             if (parent instanceof PlSqlParser.From_clauseContext) {
-                return true;
+                return false;
             }
             parent = parent.parent;
         }
-        return false;
+        return true;
     }
 
     /**
@@ -219,9 +219,34 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     }
 
     @Override
-    public void enterFunction_argument(PlSqlParser.Function_argumentContext ctx) {
+    public void enterGeneral_element_part(PlSqlParser.General_element_partContext ctx) {
+        if (ctx.function_argument() != null && !isGeneralElementPartInSelectListElements(ctx)) {//если присутствуют аргументы функции (узел function_call появляется, если вызов функции идет без присваивания)
+            int numberOfLine = ctx.start.getLine();
+            FunctionCallOperator functionCallOperator = new FunctionCallOperator(numberOfLine, programBlockData, FUNCTION_CALL);
+            functionCallOperator.setFunctionName(ctx.id_expression(0).getText());
+            programBlockData.addOperator(numberOfLine, functionCallOperator);
+        }
+    }
+
+    private boolean isGeneralElementPartInSelectListElements(PlSqlParser.General_element_partContext ctx) {
+        RuleContext parent = ctx.parent;
+        while (parent != null) {
+            if (parent instanceof PlSqlParser.Select_list_elementsContext)
+                return true;
+            parent = parent.parent;
+        }
+        return false;
+    }
+
+    @Override
+    public void exitAssignment_statement(PlSqlParser.Assignment_statementContext ctx) {
         int numberOfLine = ctx.start.getLine();
-        //  programBlockData.addOperator(new Operator(FUNCTION_CALL, numberOfLine));
+        SqlOperator sqlOperator = programBlockData.getOperators().get(numberOfLine);
+        if (sqlOperator.getOperatorType() == FUNCTION_CALL) {
+            FunctionCallOperator functionCallOperator = ((FunctionCallOperator) sqlOperator);
+            functionCallOperator.setAssignableVariable(ctx.general_element().getText());
+            relationalExpressionToLineMap.get(numberOfLine).forEach(functionArgument -> functionCallOperator.getFunctionArguments().add(functionArgument));
+        }
     }
 
     @Override

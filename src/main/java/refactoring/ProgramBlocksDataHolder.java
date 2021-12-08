@@ -8,16 +8,18 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import refactoring.operator.FunctionCallOperator;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static refactoring.enums.OperatorType.FUNCTION_CALL;
 
 public class ProgramBlocksDataHolder {
     private final List<ProgramBlockData> programBlocksData;
@@ -51,6 +53,15 @@ public class ProgramBlocksDataHolder {
             e.printStackTrace();
         } finally {
             executorService.shutdown();
+            Map<String, ProgramBlockData> programBlockDataMap = programBlocksData.stream().collect(Collectors.toMap(ProgramBlockData::getProgramBlockName, Function.identity()));
+            //добавляем необходимые данные о программных блоках во все операторы вызова функций
+            programBlockDataMap.values().forEach(programBlockData ->
+                    programBlockData.getOperators().values().stream()
+                            .filter(sqlOperator -> sqlOperator.getOperatorType() == FUNCTION_CALL)
+                            .forEach(sqlOperator -> {
+                                FunctionCallOperator functionCallOperator = ((FunctionCallOperator) sqlOperator);
+                                functionCallOperator.setCalledFunction(programBlockDataMap.get(functionCallOperator.getFunctionName()));
+                            }));
         }
     }
 
