@@ -1,10 +1,10 @@
 package util;
 
-import refactoring.ProgramBlockData;
-import refactoring.Table;
-import refactoring.Variable;
-import refactoring.enums.OperatorType;
-import refactoring.operator.SqlOperator;
+import generation.ProgramBlockData;
+import generation.Table;
+import generation.Variable;
+import generation.enums.OperatorType;
+import generation.operator.SqlOperator;
 
 import java.util.*;
 import java.util.stream.Collectors;

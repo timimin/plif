@@ -37,16 +37,10 @@ CONSTANT  U,         (******************************************************)
  Session_number      (******************************************************)
                      (* the number of user sessions                        *)
                      (******************************************************)
-
-VARIABLES StateE,    (******************************************************)
-                     (* described in Paralocks module                      *)
-                     (******************************************************)
-          Sessions,  (******************************************************)
+             
+VARIABLES Sessions,  (******************************************************)
                      (* Sessions environment.  Maps user sessions to       *)
                      (* respective buffers.                                *)
-                     (******************************************************)
-          New2Old,   (******************************************************)
-                     (* described in Paralocks module                      *)
                      (******************************************************)
           XLocks,    (******************************************************)
                      (* Represents exclusive locks for immitating the      *)
@@ -66,13 +60,26 @@ VARIABLES StateE,    (******************************************************)
                      (* representing short-time IF locks which must be     *)
                      (* closed immediately after we leave the session      *)
                      (******************************************************)
-          Ignore     (******************************************************)
+          Ignore,    (******************************************************)
                      (* The flag which is used to ignore an ifc policy     *)
                      (* violation warning (false alarm)                    *)
+                     (******************************************************)
+          StateE,    (******************************************************)
+                     (* the set of open locks (for concrete actors)        *)
+                     (******************************************************)
+          New2Old    (******************************************************)
+                     (* this is the tuple of the form <<old, new>>, where  *)
+                     (* old - the policy of the changed variable, new -    *)
+                     (* the policy of the expression assigned specified to *)
+                     (* the current lock state                             *)
                      (******************************************************)
                      
 vars == <<Sessions, SLocks, StateE,
           New2Old, XLocks, VPol, Trace, Ignore>>
+          
+INSTANCE Paralocks WITH
+         U <- U, UU <- UU, NONE <- NONE, E0 <- E0, E1 <- E1, 
+         Undef <- Undef, GPol <- GPol
 
 (***************************************************************************)
 (* The most liberal policy                                                 *)
@@ -141,7 +148,7 @@ col_sections_end_date           == [loc|->"persistence", policy |-> min]
 col_sections_description        == [loc|->"persistence", policy |-> min] 
 
 col_allocations_allocation_id   == [loc|->"persistence", policy |-> min]
-col_allocations_paper_id        == [loc|->"persistence", policy |-> min]
+col_allocations_submission_id   == [loc|->"persistence", policy |-> min]
 col_allocations_section_id      == [loc|->"persistence", policy |-> min]
 col_allocations_allocation_date == [loc|->"persistence", policy |-> min] 
                    
@@ -153,22 +160,32 @@ Calls         == {"p_submit_paper", "p_add_paper", "p_allocate",
 (* have any_caller policy.                                                 *)
 (***************************************************************************)                       
 
-p_sp_p_s_id(x)          == [loc|->"mem", offs |->0, policy |-> any_caller(x)]
-p_sp_p_p_id(x)          == [loc|->"mem", offs |->1, policy |-> any_caller(x)]
-p_sp_p_c_id(x)          == [loc|->"mem", offs |->2, policy |-> any_caller(x)]
-p_sp_p_sub_date(x)      == [loc|->"mem", offs |->3, policy |-> any_caller(x)]
-p_sp_p_stat(x)          == [loc|->"mem", offs |->4, policy |-> any_caller(x)]               
+p_sp_p_s_id(x)          == [loc|->"mem", offs |->0, policy |-> any_caller(x), 
+                                                      name |-> "p_sp_p_s_id"]
+p_sp_p_p_id(x)          == [loc|->"mem", offs |->1, policy |-> any_caller(x), 
+                                                      name |-> "p_sp_p_p_id"]
+p_sp_p_c_id(x)          == [loc|->"mem", offs |->2, policy |-> any_caller(x), 
+                                                      name |-> "p_sp_p_c_id"]
+p_sp_p_sub_date(x)      == [loc|->"mem", offs |->3, policy |-> any_caller(x), 
+                                                  name |-> "p_sp_p_sub_date"]
+p_sp_p_stat(x)          == [loc|->"mem", offs |->4, policy |-> any_caller(x), 
+                                                      name |-> "p_sp_p_stat"]               
                          
 (***************************************************************************)
 (* PROCEDURE p_add_paper markup.  All input parameters have any_caller     *)
 (* policy.  The OTHER exception policy is min.                             *)
 (***************************************************************************)                       
 
-p_ap_p_p_id(x)          == [loc|->"mem", offs |->0, policy |-> any_caller(x)]
-p_ap_p_papers_tit(x)    == [loc|->"mem", offs |->1, policy |-> any_caller(x)]
-p_ap_p_papers_abst(x)   == [loc|->"mem", offs |->2, policy |-> any_caller(x)] 
-p_ap_p_t(x)             == [loc|->"mem", offs |->3, policy |-> any_caller(x)]  
-p_ap_p_auth(x)          == [loc|->"mem", offs |->4, policy |-> any_caller(x)] 
+p_ap_p_p_id(x)          == [loc|->"mem", offs |->0, policy |-> any_caller(x),
+                                                      name |-> "p_ap_p_p_id"]
+p_ap_p_papers_tit(x)    == [loc|->"mem", offs |->1, policy |-> any_caller(x),
+                                                name |-> "p_ap_p_papers_tit"]
+p_ap_p_papers_abst(x)   == [loc|->"mem", offs |->2, policy |-> any_caller(x),
+                                               name |-> "p_ap_p_papers_abst"] 
+p_ap_p_t(x)             == [loc|->"mem", offs |->3, policy |-> any_caller(x),
+                                                      name |-> "p_ap_p_t"]  
+p_ap_p_auth(x)          == [loc|->"mem", offs |->4, policy |-> any_caller(x),
+                                                      name |-> "p_ap_p_auth"] 
 
 (***************************************************************************)
 (* FUNCTION f_is_accepted markup.  All input parameters and return value   *)
@@ -176,12 +193,16 @@ p_ap_p_auth(x)          == [loc|->"mem", offs |->4, policy |-> any_caller(x)]
 (* be corrected during analisys.                                           *)
 (***************************************************************************)                       
 
-f_ia_p_s_id(x)          == [loc|->"mem", offs |->0, policy |-> any_caller(x)]
-f_ia_v_v_status(x)      == [loc|->"mem", offs |->1, policy |-> min]
+f_ia_p_s_id(x)          == [loc|->"mem", offs |->0, policy |-> 
+                           {<<x,<<[t_expire |-> {NONE}], [guest |-> {NONE},
+                            reviewer |-> {NONE}, manager |-> {x}, 
+                            organizer |-> {NONE}]>> >>}, name |-> "f_ia_p_s_id"]
+f_ia_v_v_status(x)      == [loc|->"mem", offs |->1, policy |-> min,
+                                                  name |-> "f_ia_v_v_status"]
 f_ia_r(x)               == [loc|->"mem", offs |->2, policy |-> 
                            {<<x,<<[t_expire |-> {NONE}], [guest |-> {NONE},
                             reviewer |-> {NONE}, manager |-> {x}, 
-                            organizer |-> {NONE}]>> >>}]
+                            organizer |-> {NONE}]>> >>}, name |-> "f_ia_r"]
                                        
 (***************************************************************************)
 (* PROCEDURE p_allocate markup.  Global policy states: grant execute on    *)
@@ -194,30 +215,37 @@ p_al_p_a_id(x) ==
                [loc    |->"mem", offs |-> 0,
                 policy |-> {<<x,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
                                      reviewer |-> {NONE}, manager |-> {x}, 
-                                     organizer |-> {NONE}]>> >>}]                                     
+                                     organizer |-> {NONE}]>> >>},
+                                     name |-> "p_al_p_a_id"]                                     
 p_al_p_s_id(x) == 
                [loc    |->"mem", offs |-> 1, 
                 policy |-> {<<x,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
                                      reviewer |-> {NONE}, manager |-> {x}, 
-                                     organizer |-> {NONE}]>> >>}]
+                                     organizer |-> {NONE}]>> >>},
+                                     name |-> "p_al_p_s_id"]
 p_al_p_sec_id(x) == 
                [loc    |->"mem", offs |-> 2,
                 policy |-> {<<x,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
                                      reviewer |-> {NONE}, manager |-> {x}, 
-                                     organizer |-> {NONE}]>> >>}]
+                                     organizer |-> {NONE}]>> >>},
+                                     name |-> "p_al_p_sec_id"]
 p_al_p_alloc_date(x) == 
                [loc    |->"mem", offs |-> 3,
                 policy |-> {<<x,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
                                      reviewer |-> {NONE}, manager |-> {x}, 
-                                     organizer |-> {NONE}]>> >>}]
+                                     organizer |-> {NONE}]>> >>},
+                                     name |-> "p_al_p_alloc_date"]
                                      
-p_al_v_p_id(x)               == [loc|->"mem", offs |-> 4, policy |-> min]                        
-p_al_e_PAPER_NOT_ACCEPTED(x) == [loc|->"mem", offs |-> 5, policy |-> min]
+p_al_v_p_id(x)               == [loc|->"mem", offs |-> 4, policy |-> min,
+                                              name |-> "p_al_v_p_id"]                        
+p_al_e_PAPER_NOT_ACCEPTED(x) == [loc|->"mem", offs |-> 5, policy |-> min,
+                                 name |-> "p_al_e_PAPER_NOT_ACCEPTED"]
 
 
 \* для каждого вызова функции в выражении создаем отдельную переменную
 
-p_al_v_is_acc(x) == [loc|->"mem", offs |-> 5, policy |-> min]
+p_al_v_is_acc(x) == [loc|->"mem", offs |-> 6, policy |-> min,
+                     name |-> "p_al_v_is_acc"]
 
 (***************************************************************************)
 (* PROCEDURE p_chahge_status markup.  Global policy states: grant execute  *)
@@ -229,13 +257,15 @@ p_cs_p_s_id(x) ==
                [loc    |->"mem", offs |->0, 
                 policy |-> {<<x,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
                                      reviewer |-> {x}, manager |-> {NONE}, 
-                                     organizer |-> {NONE}]>> >>}]
+                                     organizer |-> {NONE}]>> >>},
+                                     name |-> "p_cs_p_s_id"]
 
 p_cs_p_stat(x) == 
                [loc    |->"mem", offs |->1,
                 policy |-> {<<x,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
                                      reviewer |-> {x}, manager |-> {NONE}, 
-                                     organizer |-> {NONE}]>> >>}]
+                                     organizer |-> {NONE}]>> >>},
+                                     name |-> "p_cs_p_stat"]
 
 (***************************************************************************)
 (* FUNCTION f_getsection_program markup.  A section program is available   *)
@@ -246,29 +276,49 @@ p_cs_p_stat(x) ==
 (* of 5 columns                                                            *)
 (***************************************************************************)
 
-f_gsp_p_s_id (x)       == [loc|->"mem", offs |-> 0, policy |-> any_caller(x)]
-f_gsp_v_v_program(x)   == [loc|->"mem", offs |-> 1, policy |-> min]    
-f_gsp_r_arr_e1_c1(x)   == [loc|->"mem", offs |-> 2, policy |-> any_caller(x)]
-f_gsp_r_arr_e1_c2(x)   == [loc|->"mem", offs |-> 3, policy |-> any_caller(x)]  
-f_gsp_r_arr_e1_c3(x)   == [loc|->"mem", offs |-> 4, policy |-> any_caller(x)]  
-f_gsp_r_arr_e1_c4(x)   == [loc|->"mem", offs |-> 5, policy |-> any_caller(x)]  
-f_gsp_r_arr_e1_c5(x)   == [loc|->"mem", offs |-> 6, policy |-> any_caller(x)]
-f_gsp_r_arr_e2_c1(x)   == [loc|->"mem", offs |-> 7, policy |-> any_caller(x)]  
-f_gsp_r_arr_e2_c2(x)   == [loc|->"mem", offs |-> 8, policy |-> any_caller(x)]  
-f_gsp_r_arr_e2_c3(x)   == [loc|->"mem", offs |-> 9, policy |-> any_caller(x)]  
-f_gsp_r_arr_e2_c4(x)  == [loc|->"mem", offs |-> 10, policy |-> any_caller(x)]  
-f_gsp_r_arr_e2_c5(x)  == [loc|->"mem", offs |-> 11, policy |-> any_caller(x)]
+f_gsp_p_s_id (x)       == [loc|->"mem", offs |-> 0, policy |-> any_caller(x),
+                                                      name |-> "f_gsp_p_s_id"]
+f_gsp_r_arr_e1_c1(x)   == [loc|->"mem", offs |-> 1, policy |-> any_caller(x),
+                                                      name |-> "f_gsp_r_arr_e1_c1"]
+f_gsp_r_arr_e1_c2(x)   == [loc|->"mem", offs |-> 2, policy |-> any_caller(x),
+                                                    name |-> "f_gsp_r_arr_e1_c2"]  
+f_gsp_r_arr_e1_c3(x)   == [loc|->"mem", offs |-> 3, policy |-> any_caller(x),
+                                                      name |-> "f_gsp_r_arr_e1_c3"]  
+f_gsp_r_arr_e1_c4(x)   == [loc|->"mem", offs |-> 4, policy |-> any_caller(x),
+                                                      name |-> "f_gsp_r_arr_e1_c4"]  
+f_gsp_r_arr_e1_c5(x)   == [loc|->"mem", offs |-> 5, policy |-> any_caller(x),
+                                                      name |-> "f_gsp_r_arr_e1_c5"]
+f_gsp_r_arr_e2_c1(x)   == [loc|->"mem", offs |-> 6, policy |-> any_caller(x),
+                                                      name |-> "f_gsp_r_arr_e2_c1"]  
+f_gsp_r_arr_e2_c2(x)   == [loc|->"mem", offs |-> 7, policy |-> any_caller(x),
+                                                      name |-> "f_gsp_r_arr_e2_c2"]  
+f_gsp_r_arr_e2_c3(x)   == [loc|->"mem", offs |-> 8, policy |-> any_caller(x),
+                                                      name |-> "f_gsp_r_arr_e2_c3"]  
+f_gsp_r_arr_e2_c4(x)  == [loc|->"mem", offs |-> 9,  policy |-> any_caller(x),
+                                                      name |-> "f_gsp_r_arr_e2_c4"]  
+f_gsp_r_arr_e2_c5(x)  == [loc|->"mem", offs |-> 10, policy |-> any_caller(x),
+                                                      name |-> "f_gsp_r_arr_e2_c5"]
 
-f_gsp_v_program_arr_e1_c1(x)    == [loc|->"mem", offs |-> 12, policy |-> min]
-f_gsp_v_program_arr_e1_c2(x)    == [loc|->"mem", offs |-> 13, policy |-> min]  
-f_gsp_v_program_arr_e1_c3(x)    == [loc|->"mem", offs |-> 14, policy |-> min]  
-f_gsp_v_program_arr_e1_c4(x)    == [loc|->"mem", offs |-> 15, policy |-> min]  
-f_gsp_v_program_arr_e1_c5(x)    == [loc|->"mem", offs |-> 16, policy |-> min]
-f_gsp_v_program_arr_e2_c1(x)    == [loc|->"mem", offs |-> 17, policy |-> min]  
-f_gsp_v_program_arr_e2_c2(x)    == [loc|->"mem", offs |-> 18, policy |-> min]  
-f_gsp_v_program_arr_e2_c3(x)    == [loc|->"mem", offs |-> 19, policy |-> min]  
-f_gsp_v_program_arr_e2_c4(x)    == [loc|->"mem", offs |-> 20, policy |-> min]  
-f_gsp_v_program_arr_e2_c5(x)    == [loc|->"mem", offs |-> 21, policy |-> min]                     
+f_gsp_v_program_arr_e1_c1(x)    == [loc|->"mem", offs |-> 11, policy |-> min,
+                                                 name |-> "f_gsp_v_program_arr_e1_c1"]
+f_gsp_v_program_arr_e1_c2(x)    == [loc|->"mem", offs |-> 12, policy |-> min,
+                                                 name |-> "f_gsp_v_program_arr_e1_c2"]  
+f_gsp_v_program_arr_e1_c3(x)    == [loc|->"mem", offs |-> 13, policy |-> min,
+                                                 name |-> "f_gsp_v_program_arr_e1_c3"]  
+f_gsp_v_program_arr_e1_c4(x)    == [loc|->"mem", offs |-> 14, policy |-> min,
+                                                 name |-> "f_gsp_v_program_arr_e1_c4"]  
+f_gsp_v_program_arr_e1_c5(x)    == [loc|->"mem", offs |-> 15, policy |-> min,
+                                                 name |-> "f_gsp_v_program_arr_e1_c5"]
+f_gsp_v_program_arr_e2_c1(x)    == [loc|->"mem", offs |-> 16, policy |-> min,
+                                                 name |-> "f_gsp_v_program_arr_e2_c1"]  
+f_gsp_v_program_arr_e2_c2(x)    == [loc|->"mem", offs |-> 17, policy |-> min,
+                                                 name |-> "f_gsp_v_program_arr_e2_c2"]  
+f_gsp_v_program_arr_e2_c3(x)    == [loc|->"mem", offs |-> 18, policy |-> min,
+                                                 name |-> "f_gsp_v_program_arr_e2_c3"]  
+f_gsp_v_program_arr_e2_c4(x)    == [loc|->"mem", offs |-> 19, policy |-> min,
+                                                 name |-> "f_gsp_v_program_arr_e2_c4"]  
+f_gsp_v_program_arr_e2_c5(x)    == [loc|->"mem", offs |-> 20, policy |-> min,
+                                                 name |-> "f_gsp_v_program_arr_e2_c5"]                     
                          
 (***************************************************************************)
 (* FUNCTION f_get_paper markup.  A paper is available to all users.  So    *)
@@ -276,24 +326,33 @@ f_gsp_v_program_arr_e2_c5(x)    == [loc|->"mem", offs |-> 21, policy |-> min]
 (* variable (v_paper) has min policy.                                      *)
 (***************************************************************************)
 
-f_gp_p_p_id (x)        == [loc|->"mem", offs |-> 0, policy |-> any_caller(x)]
-f_gp_v_v_paper(x)      == [loc|->"mem", offs |-> 1, policy |-> min]    
-f_gp_r_rec_c1(x)       == [loc|->"mem", offs |-> 2, policy |-> any_caller(x)]
-f_gp_r_rec_c2(x)       == [loc|->"mem", offs |-> 3, policy |-> any_caller(x)]  
-f_gp_r_rec_c3(x)       == [loc|->"mem", offs |-> 4, policy |-> any_caller(x)]  
-f_gp_r_rec_c4(x)       == [loc|->"mem", offs |-> 5, policy |-> any_caller(x)]  
-f_gp_r_rec_c5(x)       == [loc|->"mem", offs |-> 5, policy |-> any_caller(x)]
+f_gp_p_p_id (x)        == [loc|->"mem", offs |-> 0, policy |-> any_caller(x),
+                                                    name |-> "f_gp_p_p_id"]
+f_gp_v_v_paper(x)      == [loc|->"mem", offs |-> 1, policy |-> min,
+                                                    name |-> "f_gp_v_v_paper"]    
+f_gp_r_rec_c1(x)       == [loc|->"mem", offs |-> 2, policy |-> any_caller(x),
+                                                    name |-> "f_gp_r_rec_c1"]
+f_gp_r_rec_c2(x)       == [loc|->"mem", offs |-> 3, policy |-> any_caller(x),
+                                                    name |-> "f_gp_r_rec_c2"]  
+f_gp_r_rec_c3(x)       == [loc|->"mem", offs |-> 4, policy |-> any_caller(x),
+                                                    name |-> "f_gp_r_rec_c3"]  
+f_gp_r_rec_c4(x)       == [loc|->"mem", offs |-> 5, policy |-> any_caller(x),
+                                                    name |-> "f_gp_r_rec_c4"]  
+f_gp_r_rec_c5(x)       == [loc|->"mem", offs |-> 5, policy |-> any_caller(x),
+                                                    name |-> "f_gp_r_rec_c5"]
 
-f_gp_v_paper_rec_c1(x)           == [loc|->"mem", offs |-> 7, policy |-> min]
-f_gp_v_paper_rec_c2(x)           == [loc|->"mem", offs |-> 8, policy |-> min]  
-f_gp_v_paper_rec_c3(x)           == [loc|->"mem", offs |-> 9, policy |-> min]  
-f_gp_v_paper_rec_c4(x)          == [loc|->"mem", offs |-> 10, policy |-> min]  
-f_gp_v_paper_rec_c5(x)          == [loc|->"mem", offs |-> 11, policy |-> min]
+f_gp_v_paper_rec_c1(x)           == [loc|->"mem", offs |-> 7, policy |-> min,
+                                                  name |-> "f_gp_v_paper_rec_c1"]
+f_gp_v_paper_rec_c2(x)           == [loc|->"mem", offs |-> 8, policy |-> min,
+                                                  name |-> "f_gp_v_paper_rec_c2"]  
+f_gp_v_paper_rec_c3(x)           == [loc|->"mem", offs |-> 9, policy |-> min,
+                                                  name |-> "f_gp_v_paper_rec_c3"]  
+f_gp_v_paper_rec_c4(x)          == [loc|->"mem", offs |-> 10, policy |-> min,
+                                                  name |-> "f_gp_v_paper_rec_c4"]  
+f_gp_v_paper_rec_c5(x)          == [loc|->"mem", offs |-> 11, policy |-> min,
+                                                  name |-> "f_gp_v_paper_rec_c5"]
                                                                                       
-INSTANCE Paralocks WITH
-         U <- U, UU <- UU, NONE <- NONE, E0 <- E0, E1 <- E1, 
-         Undef <- Undef, GPol <- GPol, New2Old <- New2Old,
-         StateE <- StateE
+
          
 (***************************************************************************)
 (* The set of session users for specified session number                   *)
@@ -343,7 +402,7 @@ TypeOK ==
 
 =============================================================================
 \* Modification History
-\* Last modified Sat Jun 19 13:00:08 MSK 2021 by user-sc
+\* Last modified Thu Nov 04 17:27:38 MSK 2021 by user-sc
 \* Last modified Tue Oct 13 11:26:10 MSK 2020 by user-sc
 \* Last modified Wed Aug 19 14:25:25 MSK 2020 by User
 \* Created Tue Aug 04 12:15:07 MSK 2020 by User

@@ -1,14 +1,14 @@
 package util;
 
-import refactoring.ProgramBlockData;
-import refactoring.Variable;
+import generation.ProgramBlockData;
+import generation.Variable;
 
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static refactoring.enums.ProgramBlockVariableType.RETURN_VARIABLE;
+import static generation.enums.ProgramBlockVariableType.RETURN_VARIABLE;
 import static util.Constants.*;
 
 public class CommonUtil {

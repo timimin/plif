@@ -1,4 +1,4 @@
------------------------ MODULE ConferenceProcFS_final -----------------------
+--------------------------- MODULE ConferenceProcFS_final--------------------------------
 (***************************************************************************)
 (* The specification describes intercation of the conference system's      *)
 (* users with a database via a set of PL/SQL stored procedures and         *)
@@ -85,14 +85,21 @@ p_submit_paper4(id) ==
                  "insert into SUBMISSIONS (SUBMISSION_ID, PAPER_ID, " \o 
                  "CONFERENCE_ID, SUBMISSION_DATE, STATUS) values " \o
                  "(s_id, p_id, c_id, sub_date, stat)",
-                 [from |-> <<<<p_sp_p_s_id(id)>>, <<p_sp_p_p_id(id)>>,
-                             <<p_sp_p_c_id(id)>>, <<p_sp_p_sub_date(id)>>,
-                             <<p_sp_p_stat(id)>>>>,
-                  to |-> <<col_submissions_submission_id,
-                           col_submissions_paper_id,
-                           col_submissions_conference_id,
-                           col_submissions_submission_date,
-                           col_submissions_status>>]>>)
+                 [from |-> <<<<[policy |-> load(id, p_sp_p_s_id(id)), 
+                                name |-> p_sp_p_s_id(id).name]>>, 
+                             <<[policy |-> load(id, p_sp_p_p_id(id)),
+                                name |-> p_sp_p_p_id(id).name]>>,
+                             <<[policy |-> load(id, p_sp_p_c_id(id)),
+                                name |-> p_sp_p_c_id(id).name]>>, 
+                             <<[policy |-> load(id, p_sp_p_sub_date(id)),
+                                name |-> p_sp_p_sub_date(id).name]>>,
+                             <<[policy |-> load(id, p_sp_p_stat(id)),
+                                name |-> p_sp_p_stat(id).name]>>>>,
+                  to |-> <<VPol.col_submissions_submission_id,
+                           VPol.col_submissions_paper_id,
+                           VPol.col_submissions_conference_id,
+                           VPol.col_submissions_submission_date,
+                           VPol.col_submissions_status>>]>>)
     /\ Ignore' = 0
     /\ SLocks' = SLocks
     /\ StateE' = SLocks'[id]  
@@ -167,17 +174,25 @@ p_add_paper4(id) ==
                       load(id, p_ap_p_auth(id))>>,
                     <<"p_add_paper","exit">>)
    /\ Trace' = Append(Trace, <<id, "p_add_paper4", 
-                             "insert into PAPERS " \o
+                             "INSERT INTO PAPERS " \o
                              "(PAPER_ID, TITLE, ABSTRACT, TEXT, AUTHORS )"\o
                              "VALUES (p_id, tit, absr, t, auth)",
-                             [from |-> <<<<p_ap_p_p_id(id)>>, <<p_ap_p_papers_tit(id)>>,
-                              <<p_ap_p_papers_abst(id)>>, <<p_ap_p_t(id)>>,
-                              <<p_ap_p_auth(id)>>>>,
-                              to |-> <<col_papers_paper_id,
-                              col_papers_title,
-                              col_papers_abstract,
-                              col_papers_text,
-                              col_papers_authors>>]>>)
+                             [from |-> 
+                            <<<<[policy |-> load(id, p_ap_p_p_id(id)),
+                                 name |-> p_ap_p_p_id(id).name]>>, 
+                              <<[policy |-> load(id, p_ap_p_papers_tit(id)),
+                                 name |-> p_ap_p_papers_tit(id).name]>>,
+                              <<[policy |-> load(id, p_ap_p_papers_abst(id)),
+                                 name |-> p_ap_p_papers_abst(id).name]>>, 
+                              <<[policy |-> load(id, p_ap_p_t(id)),
+                                 name |-> p_ap_p_t(id).name]>>,
+                              <<[policy |-> load(id, p_ap_p_auth(id)),
+                                 name |-> p_ap_p_auth(id).name]>>>>,
+                              to |-> <<VPol.col_papers_paper_id,
+                              VPol.col_papers_title,
+                              VPol.col_papers_abstract,
+                              VPol.col_papers_text,
+                              VPol.col_papers_authors>>]>>)
    /\ Ignore' = 0
    /\ SLocks' = SLocks
    /\ StateE' = SLocks'[id]  
@@ -248,10 +263,13 @@ p_change_status4(id) ==
                                      "update SUBMISSIONS " \o
                                      "set STATUS = stat " \o
                                      "where SUBMISSION_ID = s_id",
-                               [from |-> <<<<p_cs_p_stat(id),
-                                             col_submissions_submission_id,
-                                             p_cs_p_s_id(id)>>>>,
-                                to |-> <<col_submissions_status>>]>>) 
+                               [from |-> 
+                               <<<<[policy |-> load(id, p_cs_p_stat(id)),
+                                    name |-> p_cs_p_stat(id).name],
+                                   VPol.col_submissions_submission_id,
+                                   [policy |-> load(id, p_cs_p_s_id(id)),
+                                    name |-> p_cs_p_s_id(id).name]>>>>,
+                                to |-> <<VPol.col_submissions_status>>]>>) 
     /\ Ignore' = 0
     /\ SLocks' = SLocks
     /\ StateE' = SLocks'[id]  
@@ -315,10 +333,12 @@ f_is_accepted5(id) ==
                     "SELECT STATUS into v_status, " \o
                     "FROM SUBMISSIONS " \o
                     "WHERE SUBMISSION_ID = s_id",
-                           [from |-> <<<<col_submissions_status, 
-                                         col_submissions_submission_id, 
-                                         f_ia_p_s_id(id)>>>>, 
-                            to |-> <<f_ia_v_v_status(id)>>]>>) 
+                           [from |-> <<<<VPol.col_submissions_status, 
+                                         VPol.col_submissions_submission_id, 
+                                         [policy |-> load(id, f_ia_p_s_id(id)),
+                                          name |-> f_ia_p_s_id(id).name]>>>>, 
+                            to |-> <<[policy |-> load(id, f_ia_v_v_status(id)),
+                                      name |-> f_ia_v_v_status(id).name]>>]>>) 
     /\ Ignore'    = 0
     /\ SLocks'    = SLocks
     /\ StateE'    = SLocks'[id]  
@@ -327,15 +347,19 @@ f_is_accepted5(id) ==
 f_is_accepted8(id) ==   
     /\ if(id, load(id, f_ia_v_v_status(id)), <<"f_is_accepted", "lbl_9_10">>)
     /\ Trace' = Append(Trace, <<id,"f_is_accepted8","if v_status = 1",
-                       [from |-> <<<<f_ia_v_v_status(id), "c14">>>>, 
-                        to   |-> <<Sessions[id]["PCLabel"]>>]>>)    
+                       [from |-> <<<<[policy |-> load(id, f_ia_v_v_status(id)), 
+                                      name |-> f_ia_v_v_status(id).name],
+                                     [policy |-> min, name |-> "l1"]>>>>, 
+                        to   |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
+                                    name |-> "PCLabel"]>>]>>)    
     /\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>> 
          
 f_is_accepted9_10(id) ==
     \/ /\ return(id, <<f_ia_r(id)>>, <<min>>, <<"f_is_accepted","lbl_11">>)
        /\ Trace'    = Append(Trace, <<id, "f_is_accepted9","then return TRUE",
-                             [from |-> <<<<"c15">>>>, 
-                              to   |-> <<f_ia_r(id)>>]>>) 
+                             [from |-> <<<<[policy |-> min, name |-> "l2"]>>>>, 
+                              to   |-> <<[policy |-> load(id, f_ia_r(id)),
+                                          name |-> f_ia_r(id).name]>>]>>) 
        /\ Ignore'   = 0
        /\ SLocks'   = SLocks
        /\ StateE'   = SLocks'[id]  
@@ -344,8 +368,9 @@ f_is_accepted9_10(id) ==
     \/ /\ return(id, <<f_ia_r(id)>>, <<min>>, <<"f_is_accepted","lbl_11">>)
        /\ Trace'    = Append(Trace, <<id, "f_is_accepted10",
                                           "else return FALSE",
-                             [from |-> <<<<"c16">>>>, 
-                              to   |-> <<f_ia_r(id)>>]>>) 
+                             [from |-> <<<<[policy |-> min, name |-> "l3"]>>>>, 
+                              to   |-> <<[policy |-> load(id, f_ia_r(id)),
+                                          name |-> f_ia_r(id).name]>>]>>) 
        /\ Ignore'   = 0
        /\ SLocks'   = SLocks
        /\ StateE'   = SLocks'[id]  
@@ -355,8 +380,10 @@ f_is_accepted9_10(id) ==
 f_is_accepted11(id) ==
     /\ ifend(id, <<"f_is_accepted","exit">>)
     /\ Trace' = Append(Trace, <<id,"f_is_accepted11","endif",
-                       [from |-> <<<<Sessions[id]["PCLabel"]>>>>, 
-                        to   |-> <<Sessions[id]["PCLabel"]>>]>>) 
+                       [from |-> <<<<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
+                                      name |-> "PCLabel"]>>>>, 
+                        to   |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
+                                    name |-> "PCLabel"]>>]>>) 
     /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>
 
 f_is_accepted_exit(id) ==
@@ -419,11 +446,23 @@ p_allocate_load(id) ==
 
 p_allocate7(id) ==   
     /\ call(id, <<"f_is_accepted", "lbl_5">>, "lbl_7r", 
-                                               <<load(id, p_al_p_s_id(id)), 
-                                                 f_ia_v_v_status(id).policy,
-                                                 f_ia_r(id).policy>>) 
+                     <<LUB4Seq(Sessions[id]["PCLabel"] \o <<load(id, p_al_p_s_id(id))>>), 
+                       LUB4Seq(Sessions[id]["PCLabel"] \o <<f_ia_v_v_status(id).policy>>),
+                       LUB4Seq(Sessions[id]["PCLabel"]\o <<f_ia_r(id).policy>>)>>)
     /\ Trace'    = Append(Trace, <<id, "f_is_accepted_call", 
-                                       "is_accepted_call">>) 
+                                       "is_accepted_call",
+                         [from |-> <<<<[policy |-> load(id, p_al_p_s_id(id)),
+                                        name |-> p_al_p_s_id(id).name]>>, 
+                                     <<[policy |-> load(id, f_ia_v_v_status(id)),
+                                        name |-> f_ia_v_v_status(id).name]>>,
+                                     <<[policy |-> load(id, f_ia_r(id)),
+                                        name |-> f_ia_r(id).name]>>>>, 
+                          to   |-> <<[policy |-> load(id, f_ia_p_s_id(id)),
+                                      name |-> f_ia_p_s_id(id).name], 
+                                     [policy |-> load(id, f_ia_v_v_status(id)),
+                                      name |-> f_ia_v_v_status(id).name],
+                                     [policy |-> load(id, f_ia_r(id)),
+                                      name |-> f_ia_r(id).name]>>]>>)                           
     /\ Ignore' = 0
     /\ SLocks' = SLocks
     /\ StateE'    = SLocks'[id]             
@@ -431,7 +470,11 @@ p_allocate7(id) ==
 
 p_allocate7r(id) ==   
     /\ exit_call(id, <<p_al_v_is_acc(id)>>, <<"p_allocate", "lbl_8">>) 
-    /\ Trace'    = Append(Trace, <<id, "p_allocate7r", "is_accepted_exit">>) 
+    /\ Trace'    = Append(Trace, <<id, "p_allocate7r", "is_accepted_exit",
+                          [from |-> <<<<[policy |-> Sessions[id]["Ret"][1], 
+                                         name   |-> f_ia_r(id).name]>>>>, 
+                           to   |-> <<[policy |-> load(id, p_al_v_is_acc(id)),
+                                       name |-> p_al_v_is_acc(id).name]>>]>>) 
     /\ Ignore' = 0
     /\ SLocks' = SLocks
     /\ StateE'    = SLocks'[id]             
@@ -439,60 +482,131 @@ p_allocate7r(id) ==
 
 p_allocate8(id) == 
     /\ if(id, load(id, p_al_v_is_acc(id)), <<"p_allocate", "lbl_10_15">>)
-    /\ Trace' = Append(Trace, <<id,"p_allocate_8", "if v_is_acc">>)    
+    /\ Trace' = Append(Trace, <<id,"p_allocate_8", "if v_is_acc",
+                       [from |-> <<<<[policy |-> load(id, p_al_v_is_acc(id)),
+                                      name |-> p_al_v_is_acc(id).name]>>>>, 
+                        to   |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
+                                    name |-> "PCLabel"]>>]>>)    
     /\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>> 
     
+\*p_allocate10_15(id) ==     
+\*    \/ /\  select (id, <<p_al_v_p_id(id)>>,
+\*                            <<VPol["col_submissions_paper_id"].policy>>,
+\*                        LUB (VPol["col_submissions_submission_id"].policy, 
+\*                        load(id, p_al_p_s_id(id))), 
+\*                            <<"p_allocate","lbl_13">>)
+\*       /\ Trace'     = Append(Trace, <<id, "p_allocate_10",
+\*                              "THEN SELECT paper_id into v_p_id " \o
+\*                              "FROM SUBMISSIONS WHERE submission_id = s_id",
+\*                             [from |-> <<<<VPol.col_submissions_submission_id,
+\*                                           VPol.col_submissions_paper_id,
+\*                                           [policy |-> load(id, p_al_p_s_id(id)),
+\*                                            name |-> p_al_p_s_id(id).name]>>>>, 
+\*                              to   |-> <<[policy |-> load(id, p_al_v_p_id(id)),
+\*                                          name |-> p_al_v_p_id(id).name]>>]>>) 
+\*       /\ Ignore'    = 0
+\*       /\ SLocks'    = SLocks
+\*       /\ StateE'    = SLocks'[id]  
+\*       /\ UNCHANGED <<XLocks, VPol>>
+\*    \/ /\ skip(id, <<"p_allocate","lbl_17">>)
+\*       /\ Trace'    = Append(Trace, <<id, "p_allocate_15", 
+\*                                          "ELSE RAISE PAPER_NOT_ACCEPTED",
+\*                            [from |-> << >>, to |-> << >>]>>) 
+\*       /\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>> 
 p_allocate10_15(id) ==     
+    \/ /\ skip(id, <<"p_allocate", "lbl_10">>)
+       /\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore, Trace>> 
+    \/ /\ skip(id, <<"p_allocate","lbl_17">>)
+\*       /\ Trace'    = Append(Trace, <<id, "p_allocate_15", 
+\*                                          "ELSE RAISE PAPER_NOT_ACCEPTED",
+\*                            [from |-> << >>, to |-> << >>]>>) 
+       /\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore, Trace>> 
+       
+p_allocate10(id) ==    
     \/ /\  select (id, <<p_al_v_p_id(id)>>,
                             <<VPol["col_submissions_paper_id"].policy>>,
                         LUB (VPol["col_submissions_submission_id"].policy, 
                         load(id, p_al_p_s_id(id))), 
                             <<"p_allocate","lbl_13">>)
        /\ Trace'     = Append(Trace, <<id, "p_allocate_10",
-                            "then select paper_id into v_p_id " \o
-                            "from SUBMISSIONS where submission_id = s_id">>) 
+                              "THEN SELECT paper_id into v_p_id " \o
+                              "FROM SUBMISSIONS WHERE submission_id = s_id",
+                             [from |-> <<<<VPol.col_submissions_submission_id,
+                                           VPol.col_submissions_paper_id,
+                                           [policy |-> load(id, p_al_p_s_id(id)),
+                                            name |-> p_al_p_s_id(id).name]>>>>, 
+                              to   |-> <<[policy |-> load(id, p_al_v_p_id(id)),
+                                          name |-> p_al_v_p_id(id).name]>>]>>) 
        /\ Ignore'    = 0
        /\ SLocks'    = SLocks
        /\ StateE'    = SLocks'[id]  
        /\ UNCHANGED <<XLocks, VPol>>
-    \/ /\ skip(id, <<"p_allocate","lbl_17">>)
-       /\ Trace'    = Append(Trace, <<id, "p_allocate_15", 
-                                          "else raise PAPER_NOT_ACCEPTED">>) 
-       /\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>> 
 
+       
 p_allocate13(id) ==
     /\  insert (id, <<"col_allocations_allocation_id",
-                      "col_allocations_paper_id",
+                      "col_allocations_submission_id",
                       "col_allocations_section_id",
                       "col_allocations_allocation_date">>,
                     <<load(id, p_al_p_a_id(id)), 
                            load(id, p_al_p_s_id(id)),
                            load(id, p_al_p_sec_id(id)),
                            load(id, p_al_p_alloc_date(id))>>,
-                    <<"p_allocate","exit">>)
+                    <<"p_allocate","lbl_16">>)
     /\ Trace'  = Append(Trace, <<id, "p_allocate_13", 
-                 "insert into ALLOCATIONS " \o
-                 "(ALLOCATION_ID, PAPER_ID, SESSION_ID, ALLOCATION_DATE)" \o
-                 "VALUES (id, p_id, sec_id, alloc_date)">>)
+                 "INSERT INTO ALLOCATIONS " \o
+                 "(ALLOCATION_ID, SUBMISSION_ID, "\o
+                 "SECTION_ID, ALLOCATION_DATE)" \o
+                 "VALUES (id, s_id, sec_id, alloc_date)",
+                 [from |-> <<<<[policy |-> load(id, p_al_p_a_id(id)),
+                                name |-> p_al_p_a_id(id).name]>>, 
+                             <<[policy |-> load(id, p_al_p_s_id(id)),
+                                name |-> p_al_p_s_id(id).name]>>,
+                             <<[policy |-> load(id, p_al_p_sec_id(id)),
+                                name |-> p_al_p_sec_id(id).name]>>,
+                             <<[policy |-> load(id, p_al_p_alloc_date(id)),
+                                name |-> p_al_p_alloc_date(id).name]>>>>,
+                  to   |-> <<VPol.col_allocations_allocation_id,
+                             VPol.col_allocations_submission_id,
+                             VPol.col_allocations_section_id,
+                             VPol.col_allocations_allocation_date>>]>>)
     /\ Ignore' = 0
     /\ SLocks' = SLocks
     /\ StateE' = SLocks'[id]  
     /\ XLocks' = XLocks 
 
+p_allocate16(id) ==
+    /\ ifend(id, <<"p_allocate","exit">>)
+    /\ Trace' = Append(Trace, <<id,"p_allocate16","endif",
+                       [from |-> <<<<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
+                                      name |-> "PCLabel"]>>>>, 
+                        to   |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
+                                    name |-> "PCLabel"]>>]>>) 
+    /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>
+   
 p_allocate17(id) ==
     /\ whenexc(id, load(id, p_al_e_PAPER_NOT_ACCEPTED(id)), 
                                            <<"p_allocate", "lbl_18">>)
-    /\ Trace' = Append(Trace, <<id,"p_allocate_17",
-                "when PAPER_NOT_ACCEPTED">>)    
+    /\ Trace' = Append(Trace, <<id,"p_allocate_17", "WHEN PAPER_NOT_ACCEPTED",
+                      [from |-> <<<<[policy |-> load(id, p_al_e_PAPER_NOT_ACCEPTED(id)),
+                                     name |-> p_al_e_PAPER_NOT_ACCEPTED(id).name]>>>>, 
+                       to   |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
+                                    name |-> "PCLabel"]>>]>>)    
     /\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>> 
 
 p_allocate18(id) ==
-    /\  insert (id, <<"col_logs_event_id",
-                      "col_logs_err_info">>,
-                    <<min, load(id, p_al_e_PAPER_NOT_ACCEPTED(id))>>,
-                    <<"p_allocate","exit">>)
+    /\ insert (id, <<"col_logs_event_id",
+                     "col_logs_err_info">>,
+                   <<min, load(id, p_al_e_PAPER_NOT_ACCEPTED(id))>>,
+                   <<"p_allocate","exit">>)
     /\ Trace'  = Append(Trace, <<id, "p_allocate_18",
-                 "insert into LOGS valuse ('error')">>)
+                 "INSERT INTO LOGS " \o
+                 "VALUES (1, 'an attempt was made to allocate unaccepted submission ' " \o
+                 "|| s_id || ', ' || sysdate || '.')",
+                       [from |-> <<<<[policy |-> min, name |-> "l4"]>>, 
+                                   <<[policy |-> min, name |-> "l5"]>>>>,
+                        to   |-> <<VPol.col_logs_event_id,
+                                   VPol.col_logs_err_info>>]>>)
     /\ Ignore' = 0
     /\ SLocks' = SLocks
     /\ StateE' = SLocks'[id]  
@@ -507,7 +621,8 @@ p_allocate_exit(id) ==
             ![id]["StateRegs"] = Tail(Sessions[id]["StateRegs"]) \o <<>>,
             ![id]["SessionM"] = SubSeq(Sessions[id]["SessionM"], 1, 
                                        Len(Sessions[id]["SessionM"])-7)]        
-    /\ Trace' = Append(Trace, <<id, "p_allocate_exit", "allocate_exit" >>)
+    /\ Trace' = Append(Trace, <<id, "p_allocate_exit", "allocate_exit",
+                       [from |-> << >>, to |-> << >>]>>)
     /\ Ignore'= 1
     /\ SLocks' = SLocks
     /\ StateE'    = SLocks'[id]  
@@ -518,7 +633,9 @@ p_allocate(id,st)  ==
     [] Head(st).pc[2]   = "lbl_7r" -> p_allocate7r(id)
     [] Head(st).pc[2]   = "lbl_8" -> p_allocate8(id)
     [] Head(st).pc[2]   = "lbl_10_15" -> p_allocate10_15(id)
+    [] Head(st).pc[2]   = "lbl_10" -> p_allocate10(id)
     [] Head(st).pc[2]   = "lbl_13" -> p_allocate13(id)
+    [] Head(st).pc[2]   = "lbl_16" -> p_allocate16(id)
     [] Head(st).pc[2]   = "lbl_17" -> p_allocate17(id)
     [] Head(st).pc[2]   = "lbl_18" -> p_allocate18(id)
     [] Head(st).pc[2]   = "exit" -> p_allocate_exit(id)   
@@ -535,7 +652,6 @@ f_get_section_program_load(id) ==
     /\ Sessions' = 
                [Sessions EXCEPT ![id]["SessionM"] = 
                 Sessions[id]["SessionM"] \o <<min,
-                                              f_gsp_v_v_program(id).policy, 
                                               f_gsp_r_arr_e1_c1(id).policy, 
                                               f_gsp_r_arr_e1_c2(id).policy,  
                                               f_gsp_r_arr_e1_c3(id).policy,
@@ -558,7 +674,7 @@ f_get_section_program_load(id) ==
                                       f_gsp_v_program_arr_e2_c5(id).policy>>]
     
     /\ New2Old'  = <<
-                   <<f_gsp_p_s_id (id).policy, f_gsp_v_v_program(id).policy, 
+                   <<f_gsp_p_s_id (id).policy,  
                      f_gsp_r_arr_e1_c1(id).policy, 
                      f_gsp_r_arr_e1_c2(id).policy,  
                      f_gsp_r_arr_e1_c3(id).policy, 
@@ -579,7 +695,7 @@ f_get_section_program_load(id) ==
                      f_gsp_v_program_arr_e2_c3(id).policy,  
                      f_gsp_v_program_arr_e2_c4(id).policy,
                      f_gsp_v_program_arr_e2_c5(id).policy>>,
-                   <<min, f_gsp_v_v_program(id).policy, 
+                   <<min,
                      f_gsp_r_arr_e1_c1(id).policy, 
                      f_gsp_r_arr_e1_c2(id).policy,  
                      f_gsp_r_arr_e1_c3(id).policy, 
@@ -620,20 +736,129 @@ f_get_section_program5(id) ==
                       f_gsp_v_program_arr_e2_c5(id)>>,
                     <<VPol["col_papers_paper_id"].policy,
                       VPol["col_papers_title"].policy,
+                      VPol["col_papers_abstract"].policy,
                       VPol["col_papers_text"].policy,
-                      min, VPol["col_papers_paper_id"].policy,
-                      min, min, min, min, min>>,
+                      min, 
+                      VPol["col_papers_paper_id"].policy,
+                      VPol["col_papers_title"].policy,
+                      VPol["col_papers_abstract"].policy,
+                      VPol["col_papers_text"].policy,
+                      min>>,
                       LUB4Seq (<<VPol["col_papers_paper_id"].policy, 
-                                 VPol["col_allocations_paper_id"].policy,
+                                 VPol["col_allocations_submission_id"].policy,
                                  VPol["col_allocations_section_id"].policy,
+                                 VPol["col_submissions_paper_id"].policy,
+                                 VPol["col_submissions_submission_id"].policy,
                                  load(id, f_gsp_p_s_id (id))>>), 
                                <<"f_get_section_program","lbl_9">>)
     /\ Trace'     = Append(Trace, <<id, "f_get_section_program_5",
-                    "SELECT BULK COLLECT PAPER_ID, TITLE, ABSTRACT, " \o
-                    "TEXT, 'UNKNOWN_AUTH' into v_submissions " \o
-                    "FROM PAPERS WHERE PAPER_ID in " \o
-                    "(SELECT PAPER_ID FROM ALLOCATIONS " \o
-                    "WHERE CONFERENCE_ID = c_id)">>) 
+                    "SELECT paper_typ(PAPER_ID, TITLE, ABSTRACT,  " \o
+                    "TEXT, 'UNKNOWN_AUTH' BULK COLLECT " \o 
+                    "INTO v_program FROM PAPERS " \o
+                    "FROM PAPERS WHERE PAPER_ID IN (SELECT PAPER_ID " \o
+                    "FROM ALLOCATIONS a JOIN SUBMISSIONS s " \o
+                    "ON a.submission_id = s.submission_id " \o
+                    "WHERE a.SECTION_ID = s_id)",
+                     [from |-> <<<<VPol.col_papers_paper_id, 
+                                   VPol.col_papers_paper_id,
+                                   VPol.col_allocations_submission_id,
+                                   VPol.col_allocations_section_id,
+                                   VPol.col_submissions_paper_id,
+                                   VPol.col_submissions_submission_id,
+                                   [policy |-> load(id, f_gsp_p_s_id(id)),
+                                    name |-> f_gsp_p_s_id(id).name]>>,
+                                 <<VPol.col_papers_title, 
+                                   VPol.col_papers_paper_id,
+                                   VPol.col_allocations_submission_id,
+                                   VPol.col_allocations_section_id,
+                                   VPol.col_submissions_paper_id,
+                                   VPol.col_submissions_submission_id,
+                                   [policy |-> load(id, f_gsp_p_s_id(id)),
+                                    name |-> f_gsp_p_s_id(id).name]>>,
+                                 <<VPol.col_papers_abstract, 
+                                   VPol.col_papers_paper_id,
+                                   VPol.col_allocations_submission_id,
+                                   VPol.col_allocations_section_id,
+                                   VPol.col_submissions_paper_id,
+                                   VPol.col_submissions_submission_id,
+                                   [policy |-> load(id, f_gsp_p_s_id(id)),
+                                    name |-> f_gsp_p_s_id(id).name]>>,
+                                 <<VPol.col_papers_text, 
+                                   VPol.col_papers_paper_id,
+                                   VPol.col_allocations_submission_id,
+                                   VPol.col_allocations_section_id,
+                                   VPol.col_submissions_paper_id,
+                                   VPol.col_submissions_submission_id,
+                                   [policy |-> load(id, f_gsp_p_s_id(id)),
+                                    name |-> f_gsp_p_s_id(id).name]>>,
+                                 <<[policy |-> min, name |-> "l6"], 
+                                   VPol.col_papers_paper_id,
+                                   VPol.col_allocations_submission_id,
+                                   VPol.col_allocations_section_id,
+                                   VPol.col_submissions_paper_id,
+                                   VPol.col_submissions_submission_id,
+                                   [policy |-> load(id, f_gsp_p_s_id(id)),
+                                    name |-> f_gsp_p_s_id(id).name]>>,
+                                 <<VPol.col_papers_paper_id, 
+                                   VPol.col_papers_paper_id,
+                                   VPol.col_allocations_submission_id,
+                                   VPol.col_allocations_section_id,
+                                   VPol.col_submissions_paper_id,
+                                   VPol.col_submissions_submission_id,
+                                   [policy |-> load(id, f_gsp_p_s_id(id)),
+                                    name |-> f_gsp_p_s_id(id).name]>>,
+                                 <<VPol.col_papers_title, 
+                                   VPol.col_papers_paper_id,
+                                   VPol.col_allocations_submission_id,
+                                   VPol.col_allocations_section_id,
+                                   VPol.col_submissions_paper_id,
+                                   VPol.col_submissions_submission_id,
+                                   [policy |-> load(id, f_gsp_p_s_id(id)),
+                                    name |-> f_gsp_p_s_id(id).name]>>,
+                                 <<VPol.col_papers_abstract, 
+                                   VPol.col_papers_paper_id,
+                                   VPol.col_allocations_submission_id,
+                                   VPol.col_allocations_section_id,
+                                   VPol.col_submissions_paper_id,
+                                   VPol.col_submissions_submission_id,
+                                   [policy |-> load(id, f_gsp_p_s_id(id)),
+                                    name |-> f_gsp_p_s_id(id).name]>>,
+                                 <<VPol.col_papers_text, 
+                                   VPol.col_papers_paper_id,
+                                   VPol.col_allocations_submission_id,
+                                   VPol.col_allocations_section_id,
+                                   VPol.col_submissions_paper_id,
+                                   VPol.col_submissions_submission_id,
+                                   [policy |-> load(id, f_gsp_p_s_id(id)),
+                                    name |-> f_gsp_p_s_id(id).name]>>,
+                                 <<[policy |-> min, name |-> "l7"], 
+                                   VPol.col_papers_paper_id,
+                                   VPol.col_allocations_submission_id,
+                                   VPol.col_allocations_section_id,
+                                   VPol.col_submissions_paper_id,
+                                   VPol.col_submissions_submission_id,
+                                   [policy |-> load(id, f_gsp_p_s_id(id)),
+                                    name |-> f_gsp_p_s_id(id).name]>>>>, 
+                      to   |-> <<[policy |-> load(id, f_gsp_v_program_arr_e1_c1(id)),
+                                  name |-> f_gsp_v_program_arr_e1_c1(id).name],
+                                 [policy |-> load(id, f_gsp_v_program_arr_e1_c2(id)),
+                                  name |-> f_gsp_v_program_arr_e1_c2(id).name],
+                                 [policy |-> load(id, f_gsp_v_program_arr_e1_c3(id)),
+                                  name |-> f_gsp_v_program_arr_e1_c3(id).name],
+                                 [policy |-> load(id, f_gsp_v_program_arr_e1_c4(id)),
+                                  name |-> f_gsp_v_program_arr_e1_c4(id).name],
+                                 [policy |-> load(id, f_gsp_v_program_arr_e1_c5(id)),
+                                  name |-> f_gsp_v_program_arr_e1_c5(id).name],
+                                 [policy |-> load(id, f_gsp_v_program_arr_e2_c1(id)),
+                                  name |-> f_gsp_v_program_arr_e2_c1(id).name],
+                                 [policy |-> load(id, f_gsp_v_program_arr_e2_c2(id)),
+                                  name |-> f_gsp_v_program_arr_e2_c2(id).name],
+                                 [policy |-> load(id, f_gsp_v_program_arr_e2_c3(id)),
+                                  name |-> f_gsp_v_program_arr_e2_c3(id).name],
+                                 [policy |-> load(id, f_gsp_v_program_arr_e2_c4(id)),
+                                  name |-> f_gsp_v_program_arr_e2_c4(id).name],
+                                 [policy |-> load(id, f_gsp_v_program_arr_e2_c5(id)),
+                                  name |-> f_gsp_v_program_arr_e2_c5(id).name]>>]>>) 
     /\ Ignore'    = 0
     /\ SLocks'    = SLocks
     /\ StateE'    = SLocks'[id]  
@@ -662,7 +887,48 @@ f_get_section_program9(id) ==
                       load(id, f_gsp_v_program_arr_e2_c5(id))>>, 
                     <<"f_get_section_program","exit">>)
     /\ Trace'    = Append(Trace, <<id, "f_get_section_program_9", 
-                                       "return v_submissions">>) 
+                                       "return v_submissions",
+                         [from |-> <<
+                                  <<[policy |-> load(id, f_gsp_v_program_arr_e1_c1(id)),
+                                     name |-> f_gsp_v_program_arr_e1_c1(id).name]>>,
+                                  <<[policy |-> load(id, f_gsp_v_program_arr_e1_c2(id)),
+                                     name |-> f_gsp_v_program_arr_e1_c2(id).name]>>,
+                                  <<[policy |-> load(id, f_gsp_v_program_arr_e1_c3(id)),
+                                     name |-> f_gsp_v_program_arr_e1_c3(id).name]>>,
+                                  <<[policy |-> load(id, f_gsp_v_program_arr_e1_c4(id)),
+                                     name |-> f_gsp_v_program_arr_e1_c4(id).name]>>,
+                                  <<[policy |-> load(id, f_gsp_v_program_arr_e1_c5(id)),
+                                     name |-> f_gsp_v_program_arr_e1_c5(id).name]>>,
+                                  <<[policy |-> load(id, f_gsp_v_program_arr_e2_c1(id)),
+                                     name |-> f_gsp_v_program_arr_e2_c1(id).name]>>,
+                                  <<[policy |-> load(id, f_gsp_v_program_arr_e2_c2(id)),
+                                     name |-> f_gsp_v_program_arr_e2_c2(id).name]>>,
+                                  <<[policy |-> load(id, f_gsp_v_program_arr_e2_c3(id)),
+                                     name |-> f_gsp_v_program_arr_e2_c3(id).name]>>,
+                                  <<[policy |-> load(id, f_gsp_v_program_arr_e2_c4(id)),
+                                     name |-> f_gsp_v_program_arr_e2_c4(id).name]>>,
+                                  <<[policy |-> load(id, f_gsp_v_program_arr_e2_c5(id)),
+                                     name |-> f_gsp_v_program_arr_e2_c5(id).name]>>>>,
+                          to   |-> <<[policy |-> load(id, f_gsp_r_arr_e1_c1(id)),
+                                      name |-> f_gsp_r_arr_e1_c1(id).name], 
+                                     [policy |-> load(id, f_gsp_r_arr_e1_c2(id)),
+                                      name |-> f_gsp_r_arr_e1_c2(id).name],  
+                                     [policy |-> load(id, f_gsp_r_arr_e1_c3(id)),
+                                      name |-> f_gsp_r_arr_e1_c3(id).name], 
+                                     [policy |-> load(id, f_gsp_r_arr_e1_c4(id)),
+                                      name |-> f_gsp_r_arr_e1_c4(id).name],
+                                     [policy |-> load(id, f_gsp_r_arr_e1_c5(id)),
+                                      name |-> f_gsp_r_arr_e1_c5(id).name], 
+                                     [policy |-> load(id, f_gsp_r_arr_e2_c1(id)),
+                                      name |-> f_gsp_r_arr_e2_c1(id).name],
+                                     [policy |-> load(id, f_gsp_r_arr_e2_c2(id)),
+                                      name |-> f_gsp_r_arr_e2_c2(id).name], 
+                                     [policy |-> load(id, f_gsp_r_arr_e2_c3(id)),
+                                      name |-> f_gsp_r_arr_e2_c3(id).name],  
+                                     [policy |-> load(id, f_gsp_r_arr_e2_c4(id)),
+                                      name |-> f_gsp_r_arr_e2_c4(id).name], 
+                                     [policy |-> load(id, f_gsp_r_arr_e2_c5(id)),
+                                      name |-> f_gsp_r_arr_e2_c5(id).name]>>]>>) 
     /\ Ignore'   = 0
     /\ SLocks'   = SLocks
     /\ StateE'   = SLocks'[id]  
@@ -677,12 +943,31 @@ f_get_section_program_exit(id) ==
        [Sessions EXCEPT 
             ![id]["StateRegs"] = Tail(Sessions[id]["StateRegs"]) \o <<>>,
             ![id]["Ret"] = 
-                <<Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp
-                 + f_ia_r(id).offs]>>,
+             <<Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp 
+                                             + f_gsp_r_arr_e1_c1(id).offs],
+               Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp 
+                                             + f_gsp_r_arr_e1_c2(id).offs],
+               Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp 
+                                             + f_gsp_r_arr_e1_c3(id).offs],
+               Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp 
+                                             + f_gsp_r_arr_e1_c4(id).offs],
+               Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp 
+                                             + f_gsp_r_arr_e1_c5(id).offs],
+               Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp 
+                                             + f_gsp_r_arr_e2_c1(id).offs],
+               Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp 
+                                             + f_gsp_r_arr_e2_c2(id).offs],
+               Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp 
+                                             + f_gsp_r_arr_e2_c3(id).offs],
+               Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp 
+                                             + f_gsp_r_arr_e2_c4(id).offs],
+               Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp 
+                                             + f_gsp_r_arr_e2_c5(id).offs]>>,
             ![id]["SessionM"] = SubSeq(Sessions[id]["SessionM"], 1, 
-                                       Len(Sessions[id]["SessionM"])-22)] 
+                                       Len(Sessions[id]["SessionM"])-21)] 
     /\ Trace'  = Append(Trace, <<id, "f_get_section_program_exit",
-                                     "get_section_program_exit">>)
+                                     "get_section_program_exit",
+                       [from |-> << >>, to |-> << >>]>>)
     /\ Ignore' = 1
     /\ SLocks' = SLocks
     /\ StateE' = SLocks'[id]  
@@ -764,7 +1049,8 @@ f_get_paper5(id) ==
                                <<"f_get_paper","lbl_8">>)
             /\ Trace' = Append(Trace, <<id, "f_get_paper_5",
                         "select PAPER_ID, TITLE, ABSTRACT, TEXT, AUTHORS " \o
-                        "into v_paper from PAPERS where PAPER_ID = p_id">>) 
+                        "into v_paper from PAPERS where PAPER_ID = p_id",
+                               [from |-> << >>, to |-> << >>]>>) 
             /\ Ignore'    = 0
             /\ SLocks'    = SLocks
             /\ StateE'    = SLocks'[id]  
@@ -784,7 +1070,8 @@ f_get_paper8(id) ==
                   >>, 
                   <<"f_get_paper","exit">>)
     /\ Trace'    = Append(Trace, <<id, "f_get_paper_8",
-                                       "return v_paper">>) 
+                                       "return v_paper",
+                         [from |-> << >>, to |-> << >>]>>) 
     /\ Ignore'   = 0
     /\ SLocks'   = SLocks
     /\ StateE'   = SLocks'[id]  
@@ -800,11 +1087,20 @@ f_get_paper_exit(id) ==
             ![id]["StateRegs"] = Tail(Sessions[id]["StateRegs"]) \o <<>>,
             ![id]["Ret"] = 
                 <<Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp
-                 + f_ia_r(id).offs]>>,
+                                                    + f_gp_r_rec_c1(id).offs],
+                  Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp
+                                                    + f_gp_r_rec_c2(id).offs],
+                  Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp
+                                                    + f_gp_r_rec_c3(id).offs],
+                  Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp
+                                                    + f_gp_r_rec_c4(id).offs],
+                  Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp
+                                                    + f_gp_r_rec_c5(id).offs]>>,
             ![id]["SessionM"] = SubSeq(Sessions[id]["SessionM"], 1, 
                                        Len(Sessions[id]["SessionM"])-12)] 
     /\ Trace'  = Append(Trace, <<id, "f_get_section_program_exit",
-                                     "get_section_program_exit">>)
+                                     "get_section_program_exit",
+                       [from |-> << >>, to |-> << >>]>>)
     /\ Ignore' = 1
     /\ SLocks' = SLocks
     /\ StateE' = SLocks'[id]  
@@ -822,8 +1118,11 @@ dispatch(id,st) ==
             /\ p_submit_paper_load (id)
             /\ Trace' = Append(Trace,<<id,"p_submit_paper_load", 
                                           "submit_paper_load",
-                         [from |-> <<<<"c1">>, <<"c2">>, 
-                                     <<"c3">>, <<"c4">>, <<"c5">>>>, 
+                         [from |-> <<<<[policy |-> min, name |-> "c1"]>>, 
+                                     <<[policy |-> min, name |-> "c2"]>>, 
+                                     <<[policy |-> min, name |-> "c3"]>>, 
+                                     <<[policy |-> min, name |-> "c4"]>>, 
+                                     <<[policy |-> min, name |-> "c5"]>>>>, 
                          to   |-> <<p_sp_p_s_id(id), p_sp_p_p_id(id), 
                                     p_sp_p_c_id(id), p_sp_p_sub_date(id),
                                     p_sp_p_stat(id)>>]>>)
@@ -835,7 +1134,8 @@ dispatch(id,st) ==
             /\ p_change_status_load(id)
             /\ Trace' = Append(Trace, <<id, "p_change_status_load",
                                             "change_status_load",
-                               [from |-> <<<<"c11">>, <<"c12">>>>, 
+                               [from |-> <<<<[policy |-> min, name |-> "c11"]>>, 
+                                           <<[policy |-> min, name |-> "c12"]>>>>, 
                                 to   |-> <<p_cs_p_s_id(id), 
                                            p_cs_p_stat(id)>>]>>) 
       [] /\ Head(st).pc[1] = "p_change_status" 
@@ -846,8 +1146,9 @@ dispatch(id,st) ==
             /\ f_is_accepted_load(id)
             /\ Trace' = Append(Trace, <<id, "f_is_accepted_load",
                                             "is_accepted_load",
-                        [from |-> <<<<"c13">>, <<f_ia_v_v_status(id)>>,
-                                    <<f_ia_r(id).policy>>>>, 
+                        [from |-> <<<<[policy |-> min, name |-> "c13"]>>, 
+                                    <<f_ia_v_v_status(id)>>,
+                                    <<f_ia_r(id)>>>>, 
                          to   |-> <<f_ia_p_s_id(id), f_ia_v_v_status(id),
                                     f_ia_r(id)>>]>>)
       [] /\ Head(st).pc[1] = "f_is_accepted" 
@@ -856,14 +1157,59 @@ dispatch(id,st) ==
          /\ Sessions[id]["SessionM"] = <<>> -> 
             /\ p_allocate_load(id)
             /\ Trace' = Append(Trace, <<id, "p_allocate_load",
-                                            "allocate_load">>)
+                                            "allocate_load", 
+               [from |-> <<<<[policy |-> min, name |-> "c14"]>>, 
+                           <<[policy |-> min, name |-> "c15"]>>,
+                           <<[policy |-> min, name |-> "c16"]>>, 
+                           <<[policy |-> min, name |-> "c17"]>>,
+                         <<p_al_v_p_id(id)>>,<<p_al_e_PAPER_NOT_ACCEPTED(id)>>>>, 
+                to   |-> <<p_al_p_a_id(id), p_al_p_s_id(id),
+                           p_al_p_sec_id(id), p_al_p_alloc_date(id),
+                           p_al_v_p_id(id), p_al_e_PAPER_NOT_ACCEPTED(id)>>]>>)
       [] /\ Head(st).pc[1] = "p_allocate" 
          /\ Sessions[id]["SessionM"] # <<>> -> p_allocate(id,st)
       [] /\ Head(st).pc[1] = "f_get_section_program" 
          /\ Sessions[id]["SessionM"] = <<>> -> 
             /\ f_get_section_program_load(id)
             /\ Trace' = Append(Trace, <<id, "f_get_section_program_load",
-                                            "get_section_program_load">>)
+                                            "get_section_program_load",
+                    [from |-> <<<<[policy |-> min, name |-> "c18"]>>,
+                                         <<f_gsp_r_arr_e1_c1(id)>>, 
+                                          <<f_gsp_r_arr_e1_c2(id)>>,  
+                                          <<f_gsp_r_arr_e1_c3(id)>>,
+                                          <<f_gsp_r_arr_e1_c4(id)>>,
+                                          <<f_gsp_r_arr_e1_c5(id)>>,
+                                          <<f_gsp_r_arr_e2_c1(id)>>,
+                                          <<f_gsp_r_arr_e2_c2(id)>>,
+                                          <<f_gsp_r_arr_e2_c3(id)>>,  
+                                          <<f_gsp_r_arr_e2_c4(id)>>,
+                                          <<f_gsp_r_arr_e2_c5(id)>>,
+                                      <<f_gsp_v_program_arr_e1_c1(id)>>, 
+                                      <<f_gsp_v_program_arr_e1_c2(id)>>,  
+                                      <<f_gsp_v_program_arr_e1_c3(id)>>,
+                                      <<f_gsp_v_program_arr_e1_c4(id)>>,
+                                      <<f_gsp_v_program_arr_e1_c5(id)>>,
+                                      <<f_gsp_v_program_arr_e2_c1(id)>>,
+                                      <<f_gsp_v_program_arr_e2_c2(id)>>,
+                                      <<f_gsp_v_program_arr_e2_c3(id)>>,  
+                                      <<f_gsp_v_program_arr_e2_c4(id)>>,
+                                      <<f_gsp_v_program_arr_e2_c5(id)>>>>, 
+                     to   |-> <<f_gsp_p_s_id (id), f_gsp_r_arr_e1_c1(id), 
+                                f_gsp_r_arr_e1_c2(id), f_gsp_r_arr_e1_c3(id),
+                                f_gsp_r_arr_e1_c4(id), f_gsp_r_arr_e1_c5(id),
+                                f_gsp_r_arr_e2_c1(id), f_gsp_r_arr_e2_c2(id),
+                                f_gsp_r_arr_e2_c3(id), f_gsp_r_arr_e2_c4(id),
+                                f_gsp_r_arr_e2_c5(id), 
+                                f_gsp_v_program_arr_e1_c1(id), 
+                                f_gsp_v_program_arr_e1_c2(id),  
+                                f_gsp_v_program_arr_e1_c3(id),
+                                f_gsp_v_program_arr_e1_c4(id),
+                                f_gsp_v_program_arr_e1_c5(id),
+                                f_gsp_v_program_arr_e2_c1(id),
+                                f_gsp_v_program_arr_e2_c2(id),
+                                f_gsp_v_program_arr_e2_c3(id),  
+                                f_gsp_v_program_arr_e2_c4(id),
+                                f_gsp_v_program_arr_e2_c5(id)>>]>>)
       [] /\ Head(st).pc[1] = "f_get_section_program" 
          /\ Sessions[id]["SessionM"] # <<>> -> f_get_section_program(id,st)
       [] /\ Head(st).pc[1] = "f_get_paper" 
@@ -878,8 +1224,11 @@ dispatch(id,st) ==
             /\ p_add_paper_load (id)
             /\ Trace' = Append(Trace,<<id,"p_add_paper_load",
                                           "add_paper_load",
-                               [from |-> <<<<"c6">>, <<"c7">>, <<"c8">>, 
-                                           <<"c9">>, <<"c10">>>>, 
+                               [from |-> <<<<[policy |-> min, name |-> "c6"]>>, 
+                                           <<[policy |-> min, name |-> "c7"]>>, 
+                                           <<[policy |-> min, name |-> "c8"]>>, 
+                                           <<[policy |-> min, name |-> "c9"]>>, 
+                                           <<[policy |-> min, name |-> "c10"]>>>>, 
                                 to   |-> <<p_ap_p_p_id(id), p_ap_p_papers_tit(id), 
                                            p_ap_p_papers_abst(id), 
                                            p_ap_p_t(id), p_ap_p_auth(id)>>]>>)                                          
@@ -934,43 +1283,71 @@ Init ==
                      
                    /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
                    /\ e2 = "manager"  ->  {s}
+                [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_allocate"
+                   /\ e2 = "manager"  ->  {s}
                 [] OTHER -> {}]]                         
         /\ New2Old  = <<>>
         /\ Ignore   = 0
         /\ XLocks   = Undef
         /\ VPol     = 
            [
-            col_submissions_submission_id   |-> [ext|->0, policy |-> min],
-            col_submissions_paper_id        |-> [ext|->0, policy |-> min],
-            col_submissions_conference_id   |-> [ext|->0, policy |-> min],
-            col_submissions_submission_date |-> [ext|->0, policy |-> min],
-            col_submissions_status          |-> [ext|->0, policy |-> min],
+            col_submissions_submission_id   |-> [ext|->0, policy |-> min,
+                                       name |-> "col_submissions_submission_id"],
+            col_submissions_paper_id        |-> [ext|->0, policy |-> min,
+                                       name |-> "col_submissions_paper_id"],
+            col_submissions_conference_id   |-> [ext|->0, policy |-> min,
+                                       name |-> "col_submissions_conference_id"],
+            col_submissions_submission_date |-> [ext|->0, policy |-> min,
+                                       name |-> "col_submissions_submission_date"],
+            col_submissions_status          |-> [ext|->0, policy |-> min,
+                                       name |-> "col_submissions_status"],
            
-            col_logs_event_id               |-> [ext|->0, policy |-> min],
-            col_logs_err_info               |-> [ext|->0, policy |-> min],
+            col_logs_event_id               |-> [ext|->0, policy |-> min,
+                                       name |-> "col_logs_event_id"],
+            col_logs_err_info               |-> [ext|->0, policy |-> min,
+                                       name |-> "col_logs_err_info"],
 
-            col_papers_paper_id             |-> [ext|->0, policy |-> min],
-            col_papers_title                |-> [ext|->0, policy |-> min],
-            col_papers_abstract             |-> [ext|->0, policy |-> min], 
-            col_papers_text                 |-> [ext|->0, policy |-> min], 
-            col_papers_authors              |-> [ext|->0, policy |-> min], 
+            col_papers_paper_id             |-> [ext|->0, policy |-> min,
+                                       name |-> "col_papers_paper_id"],
+            col_papers_title                |-> [ext|->0, policy |-> min,
+                                       name |-> "col_papers_title"],
+            col_papers_abstract             |-> [ext|->0, policy |-> min,
+                                       name |-> "col_papers_abstract"], 
+            col_papers_text                 |-> [ext|->0, policy |-> min,
+                                       name |-> "col_papers_text"], 
+            col_papers_authors              |-> [ext|->0, policy |-> min,
+                                       name |-> "col_papers_authors"], 
 
-            col_conferences_conference_id   |-> [ext|->0, policy |-> min],
-            col_conferences_name            |-> [ext|->0, policy |-> min],
-            col_conferences_start_date      |-> [ext|->0, policy |-> min],
-            col_conferences_end_date        |-> [ext|->0, policy |-> min], 
-            col_conferences_description     |-> [ext|->0, policy |-> min], 
+            col_conferences_conference_id   |-> [ext|->0, policy |-> min,
+                                       name |-> "col_conferences_conference_id"],
+            col_conferences_name            |-> [ext|->0, policy |-> min,
+                                       name |-> "col_conferences_name"],
+            col_conferences_start_date      |-> [ext|->0, policy |-> min,
+                                       name |-> "col_conferences_start_date"],
+            col_conferences_end_date        |-> [ext|->0, policy |-> min,
+                                       name |-> "col_conferences_end_date"], 
+            col_conferences_description     |-> [ext|->0, policy |-> min,
+                                       name |-> "col_conferences_description"], 
 
-            col_sections_paper_id           |-> [ext|->0, policy |-> min],
-            col_sections_title              |-> [ext|->0, policy |-> min],
-            col_sections_start_date         |-> [ext|->0, policy |-> min],
-            col_sections_end_date           |-> [ext|->0, policy |-> min], 
-            col_sections_description        |-> [ext|->0, policy |-> min], 
+            col_sections_paper_id           |-> [ext|->0, policy |-> min,
+                                       name |-> "col_sections_paper_id"],
+            col_sections_title              |-> [ext|->0, policy |-> min,
+                                       name |-> "col_sections_title"],
+            col_sections_start_date         |-> [ext|->0, policy |-> min,
+                                       name |-> "col_sections_start_date"],
+            col_sections_end_date           |-> [ext|->0, policy |-> min,
+                                       name |-> "col_sections_end_date"], 
+            col_sections_description        |-> [ext|->0, policy |-> min,
+                                       name |-> "col_sections_description"], 
 
-            col_allocations_allocation_id   |-> [ext|->0, policy |-> min],
-            col_allocations_paper_id        |-> [ext|->0, policy |-> min],
-            col_allocations_section_id      |-> [ext|->0, policy |-> min],
-            col_allocations_allocation_date |-> [ext|->0, policy |-> min]
+            col_allocations_allocation_id   |-> [ext|->0, policy |-> min,
+                                       name |-> "col_allocations_allocation_id"],
+            col_allocations_submission_id   |-> [ext|->0, policy |-> min,
+                                       name |-> "col_allocations_submission_id"],
+            col_allocations_section_id      |-> [ext|->0, policy |-> min,
+                                       name |-> "col_allocations_section_id"],
+            col_allocations_allocation_date |-> [ext|->0, policy |-> min,
+                                       name |-> "col_allocations_allocation_date"]
            ] 
                        
 Next(K(_,_)) == 
@@ -990,5 +1367,7 @@ SpecFS == Init /\ [] [Next(dispatch)]_vars
                   
 =============================================================================
 \* Modification History
-\* Last modified Mon Sep 13 00:09:37 MSK 2021 by user-sc
+\* Last modified Sat Dec 04 14:43:29 MSK 2021 by fvd
+\* Last modified Sun Nov 28 19:06:14 MSK 2021 by fvd
+\* Last modified Thu Nov 04 17:25:12 MSK 2021 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc

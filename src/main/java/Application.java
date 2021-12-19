@@ -1,7 +1,7 @@
-import refactoring.*;
-import refactoring.specification.creator.MainSpecificationCreator;
-import refactoring.specification.creator.ParametersSpecificationCreator;
-import refactoring.specification.creator.TlaSpecificationCreator;
+import generation.*;
+import generation.specification.creator.MainSpecificationCreator;
+import generation.specification.creator.ParametersSpecificationCreator;
+import generation.specification.creator.TlaSpecificationCreator;
 
 import java.io.File;
 
