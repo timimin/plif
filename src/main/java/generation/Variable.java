@@ -11,8 +11,6 @@ public class Variable {
     private VariableType variableType;
     private String variableName;
     private ProgramBlockVariableType programBlockVariableType;
-
-    //TODO Возвращать список, чтобы не получать каждый раз политики для записией и массивов
     private final List<String> variablePolicies;
 
     public Variable(VariableType variableType, String variableName, ProgramBlockVariableType programBlockVariableType) {

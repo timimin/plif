@@ -106,7 +106,7 @@ public class MainSpecificationCreator implements TlaSpecificationCreator {
             initRule.append(surroundWithAngleBrackets(
                     surroundWithQuotes(pbd.getProgramBlockName())
                             + ", "
-                            + pbd.getOperators().firstEntry().getValue().getLabel())).append(",\n");//TODO Проверить правильность
+                            + pbd.getOperators().firstEntry().getValue().getLabel())).append(",\n");
         }
         initRule.setCharAt(initRule.lastIndexOf(","), '}');
         initRule.append("]\n")

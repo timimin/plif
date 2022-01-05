@@ -8,13 +8,21 @@ import java.io.File;
 public class Application {
     public static void main(String[] args) {
         long t = System.currentTimeMillis();
-        DatabaseSchema databaseSchema = new DatabaseSchema("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks");
-        ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks", databaseSchema);
+        DatabaseSchema databaseSchema = new DatabaseSchema("L:\\Диплом\\Работа над ВКР\\Проверка прототипа утилиты\\programblocks");
+        ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder("L:\\Диплом\\Работа над ВКР\\Проверка прототипа утилиты\\programblocks", databaseSchema);
         System.out.println(programBlocksDataHolder.getProgramBlocksData().size());
         TlaSpecificationCreator parametersSpecificationCreator = new ParametersSpecificationCreator(databaseSchema, programBlocksDataHolder);
         TlaSpecificationCreator mainSpecificationCreator = new MainSpecificationCreator(databaseSchema, programBlocksDataHolder);
-        parametersSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\ParametersFS.tla"));
-        mainSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\ConferenceProcFS_final.tla"));
+        Thread parametersSpecThread = new Thread(() -> parametersSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\ParametersFS.tla")));
+        Thread mainSpecThread = new Thread(() -> mainSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\ConferenceProcFS_final.tla")));
+        parametersSpecThread.start();
+        mainSpecThread.start();
+        try {
+            mainSpecThread.join();
+            parametersSpecThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println(System.currentTimeMillis() - t);
     }
 }
