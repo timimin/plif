@@ -62,6 +62,11 @@ public abstract class SqlOperator {
         this.hasElseKeyWordInThisLine = hasElseKeyWordInThisLine;
     }
 
+    protected String getTrace()
+    {
+        return "/\\ Trace' = Append(Trace, <<id";//TODO not implemented yet
+    }
+
     @Override
     public String toString() {
         return "AbstractSqlOperator{" +

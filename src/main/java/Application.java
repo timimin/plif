@@ -4,17 +4,22 @@ import generation.specification.creator.ParametersSpecificationCreator;
 import generation.specification.creator.TlaSpecificationCreator;
 
 import java.io.File;
+import java.util.Scanner;
 
 public class Application {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите путь до папки с исходными данными:");//D:\JavaProjects\AntlrTesting\src\main\resources\programblocks
+        String sourcePath = scanner.nextLine();
+        System.out.println("Введите путь до папки, в которой будут располагаться сгенерированные спецификации:");//D:\JavaProjects\AntlrTesting\src\main\resources\spec
+        String destinationPath = scanner.nextLine();
         long t = System.currentTimeMillis();
-        DatabaseSchema databaseSchema = new DatabaseSchema("L:\\Диплом\\Работа над ВКР\\Проверка прототипа утилиты\\programblocks");
-        ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder("L:\\Диплом\\Работа над ВКР\\Проверка прототипа утилиты\\programblocks", databaseSchema);
-        System.out.println(programBlocksDataHolder.getProgramBlocksData().size());
+        DatabaseSchema databaseSchema = new DatabaseSchema(sourcePath);
+        ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder(sourcePath, databaseSchema);
         TlaSpecificationCreator parametersSpecificationCreator = new ParametersSpecificationCreator(databaseSchema, programBlocksDataHolder);
         TlaSpecificationCreator mainSpecificationCreator = new MainSpecificationCreator(databaseSchema, programBlocksDataHolder);
-        Thread parametersSpecThread = new Thread(() -> parametersSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\ParametersFS.tla")));
-        Thread mainSpecThread = new Thread(() -> mainSpecificationCreator.createSpecification(new File("D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks\\ConferenceProcFS_final.tla")));
+        Thread parametersSpecThread = new Thread(() -> parametersSpecificationCreator.createSpecification(new File(destinationPath + "Parameters.tla")));
+        Thread mainSpecThread = new Thread(() -> mainSpecificationCreator.createSpecification(new File(destinationPath + "Main.tla")));
         parametersSpecThread.start();
         mainSpecThread.start();
         try {
@@ -23,6 +28,6 @@ public class Application {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println(System.currentTimeMillis() - t);
+        System.out.println("На генерацию затрачено: " + (System.currentTimeMillis() - t) +" мс");
     }
 }
