@@ -1,0 +1,230 @@
+LUB(p1, p2) == 
+    LET unionCl(c1,c2) == 
+    
+        \\ Если предикаты Flow(*) в с1 и с2 совпадают, то объединяем условия
+    
+        CASE c1[1] = c2[1] -> 
+            <<c2[1], <<[e0 \in E0 |-> 
+                
+                \\ если к непараметрической блокировке Rn в c1 или с2 предъявляются требования,
+                \\ то в итоговом предложении политики требование к открытию Rn присутствует,
+                \\ в противном случае - требование к открытию Rn отсутствует
+                
+                IF c1[2][1][e0] = {} \/ c2[2][1][e0] ={}
+                    THEN {} ELSE {NONE}],
+                       [e1 \in E1 |-> 
+                       
+                        \\ если к параметрической блокировке Rn в c1 и с2 не предъявляется требований (NONE),
+                        \\ то в итоговом предложении политики требование к открытию Rn отсутствует,
+                       
+                        IF NONE \in c1[2][2][e1] /\ NONE \in c2[2][2][e1] 
+                            THEN {NONE}
+                            
+                            \\ в противном случае - объединяем условия для Rn
+                             
+                            ELSE (ReduceSet(LAMBDA x, y: 
+                                    IF y \in DOMAIN (substMap3 (c1, c2))
+                                        THEN x \cup {substMap3 (c1, c2)[y]}
+                                        ELSE x \cup {y}
+                                        ,{}, c1[2][2][e1]) \cup c2[2][2][e1])
+                                                                \{NONE}]>>>>                      
+        
+        \\ Если предикаты Flow(*) в с1 и с2 совпадают
+        \\ после подстановки с использованием карты substMap3 (c1, c2), то объединяем условия
+        
+        [] /\ c1[1] \in DOMAIN (substMap3 (c1, c2))
+           /\ substMap3 (c1, c2)[c1[1]] = c2[1]  -> 
+            
+            <<c2[1], <<[e0 \in E0 |-> 
+                IF c1[2][1][e0] = {} \/ c2[2][1][e0] ={}
+                    THEN {} ELSE {NONE}],
+                       [e1 \in E1 |-> 
+                        IF NONE \in c1[2][2][e1] /\ NONE \in c2[2][2][e1] 
+                            THEN {NONE} 
+                            ELSE (ReduceSet(LAMBDA x, y: 
+                                    IF y \in DOMAIN (substMap3 (c1, c2))
+                                        THEN x \cup {substMap3 (c1, c2)[y]}
+                                        ELSE x \cup {y}
+                                        ,{}, c1[2][2][e1]) \cup c2[2][2][e1])
+                                                                \{NONE}]>>>>
+        
+        \\ Если предикаты Flow(*) в с1 и с2 совпадают
+        \\ после подстановки с использованием карты substMap3 (c2, c1), то объединяем условия
+        
+        [] /\ c2[1] \in DOMAIN (substMap3 (c2, c1))
+           /\ substMap3 (c2, c1)[c2[1]] = c1[1]  -> 
+            
+            <<c1[1], <<[e0 \in E0 |-> 
+                IF c1[2][1][e0] = {} \/ c2[2][1][e0] ={}
+                    THEN {} ELSE {NONE}],
+                       [e1 \in E1 |-> 
+                        IF NONE \in c1[2][2][e1] /\ NONE \in c2[2][2][e1] 
+                            THEN {NONE} 
+                            ELSE (ReduceSet(LAMBDA x, y: 
+                                    IF y \in DOMAIN (substMap3 (c2, c1))
+                                        THEN x \cup {substMap3 (c2, c1)[y]}
+                                        ELSE x \cup {y}
+                                        ,{}, c2[2][2][e1]) \cup c1[2][2][e1])
+                                                                \{NONE}]>>>>                                                                                                                         
+        [] OTHER -> <<>> 
+    IN {x \in {unionCl(c1,c2): c1 \in p1, c2\in p2} : x # <<>>}
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+/* операция JOIN для политик, включающих только условия доступа пользователей, представленных связанными переменными
+
+LUB 
+({<<"x", <<[t_expire |-> {"NONE"}], [guest |-> {"NONE"}, reviewer |-> {"NONE"}, manager |-> {"x"}, organizer |-> {"NONE"}]>>>>},                                                                     
+ {<<"x", <<[t_expire |-> {}], [guest |-> {"NONE"}, reviewer |-> {"x"}, manager |-> {"NONE"}, organizer |-> {"NONE"}]>>>>}
+) 
+
+RES:
+
+{<<"x", <<[t_expire |-> {}], [guest |-> {"NONE"}, reviewer |-> {"x"}, manager |-> {"x"}, organizer |-> {"NONE"}]>>>>}
+
+/* проверка 1
+
+comparePol 
+({<<"x", <<[t_expire |-> {"NONE"}], [guest |-> {"NONE"}, reviewer |-> {"NONE"}, manager |-> {"x"}, organizer |-> {"NONE"}]>>>>},                                                                     
+ {<<"x", <<[t_expire |-> {}], [guest |-> {"NONE"}, reviewer |-> {"x"}, manager |-> {"x"}, organizer |-> {"NONE"}]>>>>}
+) 
+
+RES:
+
+TRUE
+
+/* проверка 2
+
+comparePol 
+({<<"x", <<[t_expire |-> {}], [guest |-> {"NONE"}, reviewer |-> {"x"}, manager |-> {"NONE"}, organizer |-> {"NONE"}]>>>>},                                                                     
+ {<<"x", <<[t_expire |-> {}], [guest |-> {"NONE"}, reviewer |-> {"x"}, manager |-> {"x"}, organizer |-> {"NONE"}]>>>>}
+) 
+
+RES:
+
+TRUE
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+LUB 
+({<<"alex", <<[t_expire |-> {"NONE"}], [guest |-> {"NONE"}, manager |-> {"alex"}, reviewer |-> {"NONE"}, organizer |-> {"x"}]>>>>},                                                                 
+ {<<"x", <<[t_expire |-> {}], [guest |-> {"NONE"}, manager |-> {"alex"}, reviewer |-> {"NONE"}, organizer |-> {"x"}]>>>>})
+
+
+RES:
+
+{<<"alex", <<[t_expire |-> {}], [guest |-> {"NONE"}, manager |-> {"alex"}, reviewer |-> {"NONE"}, organizer |-> {"x", "alex"}]>>>>}
+
+/* проверка 1
+
+comparePol 
+({<<"alex", <<[t_expire |-> {"NONE"}], [guest |-> {"NONE"}, manager |-> {"alex"}, reviewer |-> {"NONE"}, organizer |-> {"x"}]>>>>},                                                                  
+ {<<"alex", <<[t_expire |-> {}], [guest |-> {"NONE"}, manager |-> {"alex"}, reviewer |-> {"NONE"}, organizer |-> {"x", "alex"}]>>>>})
+
+RES:
+
+TRUE
+
+/* проверка 2
+
+comparePol 
+({<<"x", <<[t_expire |-> {}], [guest |-> {"NONE"}, manager |-> {"alex"}, reviewer |-> {"NONE"}, organizer |-> {"x"}]>>>>},                                                                  
+ {<<"alex", <<[t_expire |-> {}], [guest |-> {"NONE"}, manager |-> {"alex"}, reviewer |-> {"NONE"}, organizer |-> {"x", "alex"}]>>>>}
+)
+
+RES:
+
+TRUE
+
+/* проверка 3
+
+comparePol 
+({<<"alex", <<[t_expire |-> {}], [guest |-> {"NONE"}, manager |-> {"alex"}, reviewer |-> {"NONE"}, organizer |-> {"x", "alex"}]>>>>},
+ {<<"x", <<[t_expire |-> {}], [guest |-> {"NONE"}, manager |-> {"alex"}, reviewer |-> {"NONE"}, organizer |-> {"x"}]>>>>}                                                                  
+)
+
+RES:
+
+FALSE
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+LUB 
+({<<"alex", <<[t_expire |-> {"NONE"}], [manager |-> {"alex"}, organizer |-> {"x"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>,                                                                  
+  <<"x", <<[t_expire |-> {"NONE"}], [manager |-> {"john"}, organizer |-> {"NONE"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>},                                                                  
+ {<<"x", <<[t_expire |-> {}], [manager |-> {"bob"}, organizer |-> {"x", "alex"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>})
+
+RES:
+
+{<<"x", <<[t_expire |-> {}], [manager |-> {"bob", "john"}, organizer |-> {"x", "alex"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>, 
+ <<"alex", <<[t_expire |-> {}], [manager |-> {"alex", "bob"}, organizer |-> {"x", "alex"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>}
+ 
+
+/* проверка 1
+
+comparePol 
+({<<"alex", <<[t_expire |-> {"NONE"}], [manager |-> {"alex"}, organizer |-> {"x"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>,                                                                  
+  <<"x", <<[t_expire |-> {"NONE"}], [manager |-> {"john"}, organizer |-> {"NONE"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>},                                                                  
+ {<<"x", <<[t_expire |-> {}], [manager |-> {"bob", "john"}, organizer |-> {"x", "alex"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>, 
+  <<"alex", <<[t_expire |-> {}], [manager |-> {"alex", "bob"}, organizer |-> {"x", "alex"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>})
+
+RES:
+
+TRUE
+
+/* проверка 2
+
+comparePol 
+({<<"x", <<[t_expire |-> {}], [manager |-> {"bob"}, organizer |-> {"x", "alex"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>},                                                                  
+ {<<"x", <<[t_expire |-> {}], [manager |-> {"bob", "john"}, organizer |-> {"x", "alex"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>, 
+  <<"alex", <<[t_expire |-> {}], [manager |-> {"alex", "bob"}, organizer |-> {"x", "alex"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>})
+
+RES:
+
+TRUE
+
+/* проверка 3
+
+comparePol 
+({<<"x", <<[t_expire |-> {}], [manager |-> {"bob", "john"}, organizer |-> {"x", "alex"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>, 
+  <<"alex", <<[t_expire |-> {}], [manager |-> {"alex", "bob"}, organizer |-> {"x", "alex"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>},
+ {<<"x", <<[t_expire |-> {}], [manager |-> {"bob"}, organizer |-> {"x", "alex"}, reviewer |-> {"NONE"}, guest |-> {"NONE"}]>>>>})
+
+RES:
+
+FALSE
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ ---NEW-------------------------------------------------------------------------------------------------------------------------------------
+
+LUB 
+({<<"allen", <<[t_expired |-> {NONE}], [guest |-> {NONE}, reviewer |-> {NONE}, manager |-> {"allen"}, organizer |-> {NONE}]>>>>,                                                                     
+  <<"allen", <<[t_expired |-> {NONE}], [guest |-> {NONE}, reviewer |-> {"allen"}, manager |-> {NONE}, organizer |-> {NONE}]>>>>},
+ {<<"allen", <<[t_expired |-> {NONE}], [guest |-> {"allen"}, reviewer |-> {NONE}, manager |-> {NONE}, organizer |-> {NONE}]>>>>}
+)
+
+RES
+{<<"allen", <<[t_expired |-> {NONE}], [guest |-> {"allen"}, reviewer |-> {NONE}, manager |-> {"allen"}, organizer |-> {NONE}]>>>>, 
+ <<"allen", <<[t_expired |-> {NONE}], [guest |-> {"allen"}, reviewer |-> {"allen"}, manager |-> {NONE}, organizer |-> {NONE}]>>>>} 
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+LUB
+(                                                                     
+  {<<"x", <<[t_expired |-> {NONE}], [guest |-> {"x"}, manager |-> {NONE}]>>>>},
+  {<<"allen", <<[t_expired |-> {NONE}], [guest |-> {"allen"}, manager |-> {NONE}]>>>>,
+   <<"allen", <<[t_expired |-> {NONE}], [guest |-> {NONE}, manager |-> {"allen"}]>>>>}
+) 
+
+
+RES
+
+{<<"allen", <<[t_expired |-> {NONE}], [guest |-> {"allen"}, manager |-> {NONE}]>>>>, 
+ <<"allen", <<[t_expired |-> {NONE}], [guest |-> {"allen"}, manager |-> {"allen"}]>>>>}
+
+
+
+

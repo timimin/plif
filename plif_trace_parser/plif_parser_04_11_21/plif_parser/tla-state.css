@@ -1,0 +1,17 @@
+.state-default{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.state-mainContent{
+  height: calc(100% - 5px);
+  overflow: scroll;
+}
+
+.state-prettyPrint{
+  text-align: left;
+  padding: 3px;
+  border: 1px solid black;
+}

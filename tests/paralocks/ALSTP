@@ -1,0 +1,184 @@
+\* формируем множество подстановок: каждая из встречающихся в предложении связанных переменных отображается либо в себя, 
+\* либо в одного из актеров из множества открытых блокировок сеанса
+
+substMap4(x, {allen, bob})
+
+
+RES:
+{(x :> allen), (x :> bob), (x :> x)}
+
+
+
+applySub({x, allen}, (x :> bob))
+
+RES:
+applySub({x, allen}, (x :> bob))
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+\* применение подстановки к предложению политики с последующим приведением
+\* в соответствие с текущим контекстом (множеством открытых блокировок)
+
+specifyWithSub (c, locks, y) == \* y - подстановка
+
+    <<IF c[1] \in DOMAIN y \* головной элемент предложения
+         THEN y[c[1]]
+         ELSE c[1], 
+                       
+         \* сбрасываем открытые непараметрические блокировки
+                        
+                <<ReduceSet(LAMBDA x1, y1: 
+                                IF locks[y1] = {}
+                                    THEN [x1 EXCEPT ![y1] = x1[y1]]
+                                    ELSE [x1 EXCEPT ![y1] = {NONE}],
+                                        c[2][1], E0),
+                                    
+          \* применяем текущую подстановку к параметрическим блокировкам
+                    
+          ReduceSet(LAMBDA x2, y2: 
+          IF locks[y2] = {}
+             THEN [x2 EXCEPT ! [y2] = applySub(x2[y2], y)]
+             ELSE IF applySub(x2[y2], y) \ locks[y2] = {}
+                  THEN [x2 EXCEPT ! [y2] = {NONE}]
+                  ELSE [x2 EXCEPT ! [y2] = applySub(x2[y2], y) \ locks[y2]],
+                                    c[2][2], E1)>>>>
+
+
+
+specifyWithSub (<<x,<<[t_expire |-> {}], [reviewer |-> {x, allen}, manager |-> {x}, organizer |-> {NONE}, guest |-> {x}]>>>>,                                                                  
+                [t_expire |-> {ALL}, reviewer |-> {bob}, manager |-> {}, guest |-> {}, organizer |->{}],
+                (x :> bob))
+
+RESULT:
+
+<<bob, <<[t_expire |-> {NONE}], [reviewer |-> {allen}, organizer |-> {NONE}, manager |-> {bob}, guest |-> {bob}]>>>>
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+contextClause (c, locks) ==
+
+\* Перебераем множество подстановок.
+\* На каждом шаге в итоговое множество добавляется предложение, полученное 
+\* в результате подстановки и приведения в соответствие с текущим контекстом 
+\* (множеством открытых блокировок), если оно оказалось не более строгим 
+\* чем уже имеющиеся предложения
+    
+    ReduceSet (LAMBDA x, y:
+               IF ~\E i \in x: 
+                  compareClause (i, 
+                  
+                  \* предложение политики, полученное в результате 
+                  \* подстановки и приведения в соответствие 
+                  \* с текущим контекстом
+                  
+                  specifyWithSub (c, locks, y))
+                  THEN (x \cup {specifyWithSub (c, locks, y)}) \ 
+                       {i \in x: 
+                              compareClause(specifyWithSub (c, locks, y), i)}
+                  ELSE x,
+                         
+                      \* предложение политики с приведенными в соответствие 
+                      \* с текущим контекстом непараметрическими блокировками
+                      \* - начальное значение аккумулятора
+                      
+                      {<<c[1], <<ReduceSet(LAMBDA x1, y1: 
+                        IF locks[y1] = {}
+                           THEN x1
+                           ELSE [x1 EXCEPT ![y1] = {NONE}],
+                                    c[2][1], E0), c[2][2]>>>>},
+                       
+                    \* множество возможных подстановок
+                    \* (формируется на основе множества связанных переменных 
+                    \* предложения и множества актеров, для которых открыты 
+                    \* в текущем контексте блокировки)
+    
+                    substMap4(CASE c[1] \in UU -> {c[1]}
+                              [] OTHER -> {}, UNION Range(locks) \cap U ) \ {<<>>} )   
+  
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+contextClause (<<x,<<[t_expire |-> {}], [reviewer |-> {x}, manager |-> {x}, organizer |-> {NONE}, guest |-> {x}]>>>>,                                                                  
+                       [t_expire |-> {ALL}, reviewer |-> {bob}, manager |-> {allen}, guest |-> {}, organizer |->{}])
+
+RESULT:
+                      
+{<<allen, <<[t_expire |-> {NONE}], [reviewer |-> {allen}, organizer |-> {NONE}, manager |-> {NONE}, guest |-> {allen}]>>>>, 
+ <<bob, <<[t_expire |-> {NONE}], [reviewer |-> {NONE}, organizer |-> {NONE}, manager |-> {bob}, guest |-> {bob}]>>>>, 
+ <<x, <<[t_expire |-> {NONE}], [reviewer |-> {x}, organizer |-> {NONE}, manager |-> {x}, guest |-> {x}]>>>>}
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ALSTP (p, SE) == 
+    FoldSet(LAMBDA x, y:
+             
+             \* полученные в результате приведения (специализации) очередного
+             \* предложения исходной политики предложения, которые не являются
+             \* более строгими, чем ранее накопленные
+             
+             LET specifiedClauses ==
+             {i \in contextClause (y, SE): 
+                ~\E g \in x: compareClause(g, i)}
+             IN
+             
+             \* добавляем в итоговое множество очередные приведенные предложения
+             \* и удаляем из полученного множества те предложения, 
+             \* которые оказались более строгими, чем добавляемые
+             
+             (x \cup specifiedClauses) \ {i \in x: \E g 
+                \in specifiedClauses: compareClause(g, i)}, 
+                     
+             \* предложения исходной политики с приведенными в соответствие 
+             \* с текущим контекстом непараметрическими блокировками       
+                     
+              FoldSet(LAMBDA x1, y1:
+                x1 \cup  
+                   {<<y1[1], <<FoldSet(LAMBDA x2, y2: 
+                               IF SE[y2] = {}
+                                    THEN [x2 EXCEPT ![y2] = x2[y2]]
+                                    ELSE [x2 EXCEPT ![y2] = {NONE}],
+                                    y1[2][1], E0), y1[2][2]>>>>}, {}, p),p)
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+ALSTP ({<<x,<<[t_expire |-> {}], [reviewer |-> {x}, manager |-> {x}, organizer |-> {NONE}, guest |-> {x}]>>>>,
+        <<bob,<<[t_expire |-> {}], [reviewer |-> {bob}, manager |-> {jorge}, organizer |-> {NONE}, guest |-> {jorge}]>>>>},                                                                  
+                       [t_expire |-> {ALL}, reviewer |-> {bob}, manager |-> {allen}, guest |-> {}, organizer |->{}])
+
+RESULT:
+
+{<<allen, <<[t_expire |-> {NONE}], [reviewer |-> {allen}, organizer |-> {NONE}, manager |-> {NONE}, guest |-> {allen}]>>>>, 
+ <<bob, <<[t_expire |-> {NONE}], [reviewer |-> {bob}, organizer |-> {NONE}, manager |-> {jorge}, guest |-> {jorge}]>>>>, 
+ <<bob, <<[t_expire |-> {NONE}], [reviewer |-> {NONE}, organizer |-> {NONE}, manager |-> {bob}, guest |-> {bob}]>>>>, 
+ <<x, <<[t_expire |-> {NONE}], [reviewer |-> {x}, organizer |-> {NONE}, manager |-> {x}, guest |-> {x}]>>>>}
+ 
+
+Проверка:
+
+
+comparePol ({<<allen, <<[t_expire |-> {NONE}], [reviewer |-> {allen}, organizer |-> {NONE}, manager |-> {NONE}, guest |-> {allen}]>>>>, 
+             <<bob, <<[t_expire |-> {NONE}], [reviewer |-> {bob}, organizer |-> {NONE}, manager |-> {jorge}, guest |-> {jorge}]>>>>, 
+             <<bob, <<[t_expire |-> {NONE}], [reviewer |-> {NONE}, organizer |-> {NONE}, manager |-> {bob}, guest |-> {bob}]>>>>, 
+             <<x, <<[t_expire |-> {NONE}], [reviewer |-> {x}, organizer |-> {NONE}, manager |-> {x}, guest |-> {x}]>>>>},
+            {<<x,<<[t_expire |-> {}], [reviewer |-> {x}, manager |-> {x}, organizer |-> {NONE}, guest |-> {x}]>>>>,
+             <<bob,<<[t_expire |-> {}], [reviewer |-> {bob}, manager |-> {jorge}, organizer |-> {NONE}, guest |-> {jorge}]>>>>}                                                                  
+             )
+RESULT:
+
+TRUE
+
+
+comparePol ( {<<x,<<[t_expire |-> {}], [reviewer |-> {x}, manager |-> {x}, organizer |-> {NONE}, guest |-> {x}]>>>>,
+        <<bob,<<[t_expire |-> {}], [reviewer |-> {bob}, manager |-> {jorge}, organizer |-> {NONE}, guest |-> {jorge}]>>>>},
+
+
+             {<<allen, <<[t_expire |-> {NONE}], [reviewer |-> {allen}, organizer |-> {NONE}, manager |-> {NONE}, guest |-> {allen}]>>>>, 
+              <<bob, <<[t_expire |-> {NONE}], [reviewer |-> {bob}, organizer |-> {NONE}, manager |-> {jorge}, guest |-> {jorge}]>>>>, 
+              <<bob, <<[t_expire |-> {NONE}], [reviewer |-> {NONE}, organizer |-> {NONE}, manager |-> {bob}, guest |-> {bob}]>>>>, 
+              <<x, <<[t_expire |-> {NONE}], [reviewer |-> {x}, organizer |-> {NONE}, manager |-> {x}, guest |-> {x}]>>>>}
+)
+
+RESULT:
+
+FALSE
+
+

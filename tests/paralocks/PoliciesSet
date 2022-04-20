@@ -1,0 +1,43 @@
+
+\* ClausesSet for 1 UU, 1 U
+
+{<<allen, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, 
+ <<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, 
+ <<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, 
+ <<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, 
+ <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, 
+ <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>, 
+ <<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, 
+ <<x, <<[t_expire |-> {}], [guest |-> {allen, x}]>>>>, 
+ <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, 
+ <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>, 
+ <<x, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, 
+ <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}
+ 
+ 
+ 
+ 
+ 
+ *\ PoliciesSet for 1 UU, 1U
+ 
+ {{}, 
+  {<<allen, <<[t_expire |-> {}], [guest |-> {allen}]>>>>}, 
+  {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>}, 
+  {<<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>}, 
+  {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>}, 
+  {<<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>}, 
+  {<<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>}, 
+  {<<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>}, 
+  {<<x, <<[t_expire |-> {}], [guest |-> {allen, x}]>>>>}, 
+  {<<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>}, 
+  {<<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, 
+  {<<x, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>}, 
+  {<<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, 
+  {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, 
+   <<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>}, 
+  {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>}, {<<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, {<<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>}, {<<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>}, {<<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, {<<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, {<<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<allen, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>}, {<<allen, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {x}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen, x}]>>>>}, {<<allen, <<[t_expire |-> {NONE}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {}], [guest |-> {NONE}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {allen}]>>>>, <<x, <<[t_expire |-> {NONE}], [guest |-> {x}]>>>>}}
+ 
+ 
+ 
+ 
+ 
