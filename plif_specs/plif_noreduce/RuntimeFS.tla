@@ -343,7 +343,7 @@ skip(id, next_stmt) ==
                           Tail(Sessions[id]["StateRegs"])]
 
 (***************************************************************************)
-(* assign operator implements C-ASSN abstarct semantics rule               *)
+(* assign operator implements C-ASSGN abstarct semantics rule              *)
 (***************************************************************************)
 
 (*
