@@ -341,6 +341,11 @@ skip(id, next_stmt) ==
             <<[Head(Sessions[id]["StateRegs"]) 
                                             EXCEPT !["pc"] = next_stmt]>> \o
                           Tail(Sessions[id]["StateRegs"])]
+
+(***************************************************************************)
+(* assign operator implements C-ASSGN abstarct semantics rule              *)
+(***************************************************************************)
+
 (*
 ParalocksInv == 
     LET
