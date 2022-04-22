@@ -63,14 +63,15 @@ which essentually means that an actor _x_ can only read labeled data iff the loc
 
 3. Create a new _TLC_ model and set values for nessecary constants (more details see /publications/...) .
 
-![Configuring the model](https://github.com/timimin/plif/blobs/screen_plif_parser_1.png?raw=true)
-![Configuring the model](https://github.com/timimin/plif/blobs/screen_plif_parser_2.png?raw=true)
+![Configuring the model](https://github.com/timimin/plif/blob/main/blobs/screen_plif_parser_1.png?raw=true)
+           
+![Configuring the model](https://github.com/timimin/plif/blob/main/blobs/screen_plif_parser_2.png?raw=true)
 
 Replay the model accordinally to the algo described in (/publications/...).
 
 4. In case of ParalocksInv violation explore the error trace with _plifparser_. To run it choose _trace-explorer.html_ in _plifparser_ home directory.
 
-![Configuring the model](https://github.com/timimin/plif/blobs/screen_plif_model.png?raw=true)
+![Configuring the model](https://github.com/timimin/plif/blob/main/blobs/screen_plif_model.png?raw=true)
 
 Fix the model and apply source code instrumentation or change the global policy if needed (see /publications/...).
 
