@@ -1,14 +1,14 @@
 package generation;
 
+import generation.enums.OperatorType;
+import generation.enums.ProgramBlockVariableType;
+import generation.operator.*;
 import grammar.PlSqlParser;
 import grammar.PlSqlParserBaseListener;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import generation.enums.OperatorType;
-import generation.enums.ProgramBlockVariableType;
-import generation.operator.*;
 
 import java.util.*;
 
@@ -18,6 +18,7 @@ import static generation.enums.ProgramBlockType.PROCEDURE;
 import static generation.enums.ProgramBlockVariableType.*;
 import static generation.enums.VariableType.*;
 import static util.CommonUtil.surroundWithQuotes;
+import static util.extenstion.RuleContextExtension.getText;
 
 public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     private final ProgramBlockData programBlockData;
@@ -51,7 +52,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     public void enterSelect_statement(PlSqlParser.Select_statementContext ctx) {
         if (selectNotInFromClause(ctx)) {
             int numberOfLine = ctx.start.getLine();
-            SelectIntoOperator selectIntoOperator = new SelectIntoOperator(numberOfLine, programBlockData, SELECT_INTO);
+            SelectIntoOperator selectIntoOperator = new SelectIntoOperator(numberOfLine, getText(ctx), programBlockData, SELECT_INTO);
             selectIntoOperatorMap.putIfAbsent(numberOfLine, selectIntoOperator);
             programBlockData.addOperator(numberOfLine, selectIntoOperator);
         }
@@ -71,7 +72,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     @Override
     public void enterInsert_statement(PlSqlParser.Insert_statementContext ctx) {
         int numberOfLine = ctx.start.getLine();
-        InsertOperator insertOperator = new InsertOperator(numberOfLine, programBlockData, INSERT);
+        InsertOperator insertOperator = new InsertOperator(numberOfLine, getText(ctx), programBlockData, INSERT);
         insertOperatorMap.putIfAbsent(numberOfLine, insertOperator);
         programBlockData.addOperator(numberOfLine, insertOperator);
     }
@@ -80,7 +81,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     @Override
     public void enterUpdate_statement(PlSqlParser.Update_statementContext ctx) {
         int numberOfLine = ctx.start.getLine();
-        UpdateOperator updateOperator = new UpdateOperator(numberOfLine, programBlockData, UPDATE);
+        UpdateOperator updateOperator = new UpdateOperator(numberOfLine, getText(ctx), programBlockData, UPDATE);
         updateOperatorMap.putIfAbsent(numberOfLine, updateOperator);
         programBlockData.addOperator(numberOfLine, updateOperator);
     }
@@ -361,7 +362,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     @Override
     public void enterIf_statement(PlSqlParser.If_statementContext ctx) {
         int numberOfStartCtxLine = ctx.start.getLine();
-        IfOperator ifOperator = new IfOperator(numberOfStartCtxLine, programBlockData, IF);
+        IfOperator ifOperator = new IfOperator(numberOfStartCtxLine, "if " + getText(ctx.condition()), programBlockData, IF);
         ifOperator.setNumberOfThenLine(ctx.seq_of_statements().start.getLine());
         ifOperator.setNumberOfElseLine(ctx.else_part().start.getLine());
         int numberOfEndCtxLine = ctx.stop.getLine();

@@ -5,9 +5,11 @@ import generation.Table;
 import generation.enums.OperatorType;
 
 import static util.CommonUtil.surroundWithQuotes;
+import static util.Constants.UNCHANGED_TRACE;
 
 public abstract class SqlOperator {
     protected final int numberOfLineInProgramBlock;
+    protected String queryCode;
     protected final ProgramBlockData programBlockData;
     protected Table involvedTable;
     private final OperatorType operatorType;
@@ -15,6 +17,13 @@ public abstract class SqlOperator {
 
     public SqlOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {
         this.numberOfLineInProgramBlock = numberOfLineInProgramBlock;
+        this.programBlockData = programBlockData;
+        this.operatorType = operatorType;
+    }
+
+    public SqlOperator(int numberOfLineInProgramBlock, String queryCode, ProgramBlockData programBlockData, OperatorType operatorType) {
+        this.numberOfLineInProgramBlock = numberOfLineInProgramBlock;
+        this.queryCode = queryCode;
         this.programBlockData = programBlockData;
         this.operatorType = operatorType;
     }
@@ -46,12 +55,16 @@ public abstract class SqlOperator {
         return surroundWithQuotes("lbl_" + numberOfLineInProgramBlock);
     }
 
+    public String getOperatorRuleNameWithId() {
+        return getOperatorRuleName() + "(id)";
+    }
+
     public String getOperatorRuleName() {
-        return programBlockData.getProgramBlockName() + numberOfLineInProgramBlock + "(id)";
+        return programBlockData.getProgramBlockName() + numberOfLineInProgramBlock;
     }
 
     public String getOperatorDispatcherRule() {
-        return "Head(st).pc[2] = " + getLabel() + " -> " + getOperatorRuleName();
+        return "Head(st).pc[2] = " + getLabel() + " -> " + getOperatorRuleNameWithId();
     }
 
     public boolean hasElseKeyWordInThisLine() {
@@ -62,9 +75,8 @@ public abstract class SqlOperator {
         this.hasElseKeyWordInThisLine = hasElseKeyWordInThisLine;
     }
 
-    protected String getTrace()
-    {
-        return "/\\ Trace' = Append(Trace, <<id";//TODO not implemented yet
+    protected String getTrace() {
+        return UNCHANGED_TRACE;
     }
 
     @Override

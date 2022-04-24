@@ -65,4 +65,27 @@ public class OperatorUtil {
             }
         });
     }
+
+    public static String getConditionalExpressionsTrace(Set<String> conditionalExpressions, ProgramBlockData programBlockData, Table involvedTable) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Map<String, Variable> variables = programBlockData.getVariables();
+        conditionalExpressions.forEach(conditionalExpression ->
+        {
+            String expColumnPolicy = involvedTable != null ? involvedTable.getColumnPolicy(conditionalExpression) : null;
+            Variable expVariable = variables.get(conditionalExpression);
+            if (conditionalExpression.startsWith("\"col_")) {
+                stringBuilder.append("VPol.").append(conditionalExpression, 1, conditionalExpression.length() - 1).append(COMMA_WITH_LINE_BREAK);
+            } else {
+                if (expColumnPolicy != null) {
+                    stringBuilder.append("VPol.").append(expColumnPolicy).append(COMMA_WITH_LINE_BREAK);
+                } else if (expVariable != null) {
+                    //TODO как для каждой политики следует дописывать load в условии?
+                    expVariable.getVariablePolicies().forEach(variablePolicy ->
+                            stringBuilder.append("[policy |-> load(id, ").append(variablePolicy).append("(id)),\n name |-> ")
+                                    .append(variablePolicy).append("(id).name]").append(COMMA_WITH_LINE_BREAK));
+                }
+            }
+        });
+        return replaceEndOfString(stringBuilder, COMMA_WITH_LINE_BREAK, "").toString();
+    }
 }

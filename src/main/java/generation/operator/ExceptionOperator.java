@@ -43,7 +43,7 @@ public class ExceptionOperator extends SqlOperator {
         if (lineHandlingException == 0) {
             lineHandlingException = numberOfLineHandlingException;
         }
-        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ skip(id, <<");
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleNameWithId()).append(" ==\n/\\ skip(id, <<");
         String quotedProgramBlockName = surroundWithQuotes(programBlockData.getProgramBlockName());
         //диспетчер исключения - после выбрасывания(raise) переходит к правилу обработки when Exception
         operatorRule.append(quotedProgramBlockName).append(", ").append(surroundWithQuotes("lbl_" + numberOfLineHandlingException))
@@ -58,7 +58,7 @@ public class ExceptionOperator extends SqlOperator {
 
     @Override
     public String getOperatorDispatcherRule() {
-        return "Head(st).pc[2] = " + getLabel() + " -> " + getOperatorRuleName() + "\n" +
+        return "Head(st).pc[2] = " + getLabel() + " -> " + getOperatorRuleNameWithId() + "\n" +
                 "[] Head(st).pc[2] = " + surroundWithQuotes("lbl_" + lineHandlingException) + " -> "
                 + programBlockData.getProgramBlockName() + lineHandlingException + "(id)";
     }

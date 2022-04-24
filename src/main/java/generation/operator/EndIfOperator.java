@@ -14,7 +14,7 @@ public class EndIfOperator extends SqlOperator {
 
     @Override
     public String getOperatorRule() {
-        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ ifend(id, <<");
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleNameWithId()).append(" ==\n/\\ ifend(id, <<");
         String unchangedVariablesInEndIf = "/\\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>\n\n";
         appendNextRuleLabel(operatorRule, programBlockData, numberOfLineInProgramBlock);
         operatorRule.append(">>)\n").append(UNCHANGED_TRACE).append(unchangedVariablesInEndIf);

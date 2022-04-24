@@ -25,9 +25,13 @@ public class IfOperator extends SqlOperator {
         super(numberOfLineInProgramBlock, programBlockData, operatorType);
     }
 
+    public IfOperator(int numberOfLineInProgramBlock, String queryCode, ProgramBlockData programBlockData, OperatorType operatorType) {
+        super(numberOfLineInProgramBlock, queryCode, programBlockData, operatorType);
+    }
+
     @Override
     public String getOperatorRule() {
-        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ if(id, LUB4Seq(<<\n ");
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleNameWithId()).append(" ==\n/\\ if(id, LUB4Seq(<<\n ");
         appendConditionalExpressions(operatorRule, conditionalExpressions, programBlockData, null);
         replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>),\n <<\n ");
         String programBlockName = programBlockData.getProgramBlockName();
@@ -44,13 +48,14 @@ public class IfOperator extends SqlOperator {
                 .append(", ").append(surroundWithQuotes("lbl_" + numberOfThenLine)).append(">>)\n")
                 .append(unchangedVariablesInSkipBranch).append("\\/ /\\ skip(id, <<").append(quotedProgramBlockName).append(", ")
                 .append(surroundWithQuotes("lbl_" + numberOfElseLine)).append(">>)\n").append(unchangedVariablesInSkipBranch).append("\n\n");
+        System.out.println(programBlockData.getProgramBlockName() + " " + numberOfLineInProgramBlock + " " + queryCode);
         return operatorRule.toString();
     }
 
     @Override
     public String getOperatorDispatcherRule() {
         String ifDispatcherInterval = numberOfThenLine + "_" + numberOfElseLine;
-        return "Head(st).pc[2] = " + getLabel() + " -> " + getOperatorRuleName() + "\n" +
+        return "Head(st).pc[2] = " + getLabel() + " -> " + getOperatorRuleNameWithId() + "\n" +
                 "[] Head(st).pc[2] = " + surroundWithQuotes("lbl_" + ifDispatcherInterval) + " -> "
                 + programBlockData.getProgramBlockName() + ifDispatcherInterval + "(id)";
     }

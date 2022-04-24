@@ -31,7 +31,7 @@ public class FunctionCallOperator extends SqlOperator {
 
     @Override
     public String getOperatorRule() {
-        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ call(id, <<\n ");
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleNameWithId()).append(" ==\n/\\ call(id, <<\n ");
         appendNextRuleLabel(operatorRule, calledFunction, 0);
         String lubForSeq = "\n LUB4Seq(Sessions[id][\"PCLabel\"] \\o <<";
         String endOfRule = UNCHANGED_TRACE + "/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<XLocks, VPol";
@@ -85,7 +85,7 @@ public class FunctionCallOperator extends SqlOperator {
 
     @Override
     public String getOperatorDispatcherRule() {
-        return "Head(st).pc[2] = " + getLabel() + " -> " + getOperatorRuleName() + "\n" +
+        return "Head(st).pc[2] = " + getLabel() + " -> " + getOperatorRuleNameWithId() + "\n" +
                 "[] Head(st).pc[2] = " + surroundWithQuotes("lbl_" + numberOfLineInProgramBlock + "r") + " -> "
                 + programBlockData.getProgramBlockName() + numberOfLineInProgramBlock + "r(id)";
     }

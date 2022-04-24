@@ -22,7 +22,7 @@ public class ReturnOperator extends SqlOperator {
 
     @Override
     public String getOperatorRule() {
-        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ return(id, <<\n ");
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleNameWithId()).append(" ==\n/\\ return(id, <<\n ");
         List<Variable> returnVariables = programBlockData.getVariables().values().stream()
                 .filter(variable -> variable.getProgramBlockVariableType() == RETURN_VARIABLE).collect(Collectors.toList());
         if (returnVariables.size() != 1) {

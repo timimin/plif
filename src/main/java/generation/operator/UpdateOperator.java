@@ -26,16 +26,20 @@ public class UpdateOperator extends SqlOperator {
         super(numberOfLineInProgramBlock, programBlockData, operatorType);
     }
 
+    public UpdateOperator(int numberOfLineInProgramBlock, String queryCode, ProgramBlockData programBlockData, OperatorType operatorType) {
+        super(numberOfLineInProgramBlock, queryCode, programBlockData, operatorType);
+    }
 
     @Override
     public String getOperatorRule() {
-        StringBuilder operatorRule = new StringBuilder(getOperatorRuleName()).append(" ==\n/\\ update(id, <<\n ");
+        StringBuilder operatorRule = new StringBuilder(getOperatorRuleNameWithId()).append(" ==\n/\\ update(id, <<\n ");
         Map<String, Variable> variables = programBlockData.getVariables();
         appendColumnAndExpressionPolicies(operatorRule, updatableColumnPolicies, variables, updatingExpressions, ">>,\n LUB4Seq(<<\n ");
         appendConditionalExpressions(operatorRule, conditionalExpressions, programBlockData, involvedTable);
         replaceEndOfString(operatorRule, COMMA_WITH_LINE_BREAK, ">>),\n <<\n ");
         appendNextRuleLabel(operatorRule, programBlockData, numberOfLineInProgramBlock);
         operatorRule.append("\n >>)\n").append(UNCHANGED_TRACE).append("/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ XLocks' = XLocks\n\n");
+        System.out.println(programBlockData.getProgramBlockName() + " " + numberOfLineInProgramBlock + " " + queryCode);
         return operatorRule.toString();
     }
 

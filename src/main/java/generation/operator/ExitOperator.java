@@ -18,7 +18,7 @@ public class ExitOperator extends SqlOperator {
 
     @Override
     public String getOperatorRule() {
-        StringBuilder exitRule = new StringBuilder(getOperatorRuleName())
+        StringBuilder exitRule = new StringBuilder(getOperatorRuleNameWithId())
                 .append(" ==\n/\\ IF Len(Sessions[id][\"StateRegs\"]) = 1\n THEN XLocks' = Undef\n ELSE XLocks' = XLocks\n/\\ Sessions' =\n [Sessions EXCEPT\n ![id][\"StateRegs\"] = Tail(Sessions[id][\"StateRegs\"]) \\o <<>>,\n ");
         if (programBlockData.getProgramBlockType() == ProgramBlockType.FUNCTION) {
             Optional<Variable> returnVariable = getReturnVariable(programBlockData);
@@ -44,6 +44,6 @@ public class ExitOperator extends SqlOperator {
 
     @Override
     public String getOperatorRuleName() {
-        return programBlockData.getProgramBlockName() + "_exit(id)";
+        return programBlockData.getProgramBlockName() + "_exit";
     }
 }
