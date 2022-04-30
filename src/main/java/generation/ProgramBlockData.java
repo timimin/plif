@@ -3,6 +3,7 @@ package generation;
 import generation.enums.ProgramBlockType;
 import generation.enums.ProgramBlockVariableType;
 import generation.operator.SqlOperator;
+import util.CommonUtil;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -14,7 +15,6 @@ import static generation.enums.VariableType.CUSTOM_RECORD;
 import static generation.enums.VariableType.CUSTOM_VARRAY;
 
 public class ProgramBlockData {
-    private File sourceFile;
     private String programBlockName;
     private int numberOfColumnsInRecord;
     private String varrayTypeName;
@@ -24,14 +24,15 @@ public class ProgramBlockData {
     private final Map<String, Variable> variables;
     private ProgramBlockType programBlockType;
     private int numberOfLineOfExceptionKeyWord;
+    private ProgramBlocksDataHolder programBlocksDataHolder;
 
     {
         variables = new LinkedHashMap<>();
         operators = new TreeMap<>();
     }
 
-    public ProgramBlockData(File sourceFile) {
-        this.sourceFile = sourceFile;
+    public ProgramBlockData(ProgramBlocksDataHolder programBlocksDataHolder) {
+        this.programBlocksDataHolder = programBlocksDataHolder;
     }
 
     public ProgramBlockData() {
@@ -102,10 +103,6 @@ public class ProgramBlockData {
         this.programBlockType = programBlockType;
     }
 
-    public File getSourceFile() {
-        return sourceFile;
-    }
-
     public void addVariable(Variable variable) {
         ProgramBlockVariableType programBlockVariableType = variable.getProgramBlockVariableType();
         String policy = programBlockName + "_" + programBlockVariableType.getShortName()
@@ -138,6 +135,10 @@ public class ProgramBlockData {
                 operator -> programBlockDispatcher.append(operator.getOperatorDispatcherRule()).append("\n[] "));
         programBlockDispatcher.append("OTHER -> UNCHANGED vars\n\n");
         return programBlockDispatcher.toString();
+    }
+
+    public String getNextLiteralLabel() {
+        return CommonUtil.surroundWithQuotes("literal_" + programBlocksDataHolder.getLiteralCounter().incrementAndGet());
     }
 
     @Override

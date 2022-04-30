@@ -67,7 +67,9 @@ public class InsertOperator extends SqlOperator {
                             trace.append("<<[policy |-> load(id, ").append(policy).append("(id)),\n ")
                                     .append("name |-> ").append(policy).append("(id).name]>>,\n ")));
         } else {
-            trace.append("<<[policy |-> min, name |-> \"someLabel\">>,\n ".repeat(involvedColumnsPolicies.size()));//TODO в спеке l4, l5 откуда берутся? заменить someLabel
+            for (int i = 0; i < involvedColumnsPolicies.size(); i++) {
+                trace.append("<<[policy |-> min, name |-> ").append(programBlockData.getNextLiteralLabel()).append(">>,\n ");
+            }
         }
         replaceEndOfString(trace, ">>,\n ", ">>\n >>,\n to |-> <<\n ");
         involvedColumnsPolicies.forEach(columnPolicy -> trace.append("VPol.").append(columnPolicy).append(COMMA_WITH_LINE_BREAK));

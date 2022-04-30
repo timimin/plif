@@ -16,6 +16,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,8 @@ import static generation.enums.OperatorType.FUNCTION_CALL;
 public class ProgramBlocksDataHolder {
     private final List<ProgramBlockData> programBlocksData;
     private final DatabaseSchema databaseSchema;
+
+    private final AtomicInteger literalCounter = new AtomicInteger(0);
 
     public ProgramBlocksDataHolder(String sourceDirectory, DatabaseSchema databaseSchema) {
         programBlocksData = new ArrayList<>();
@@ -66,7 +69,7 @@ public class ProgramBlocksDataHolder {
     }
 
     //TODO Разобраться с видимостью/типом класса и модификаторами
-    private static class ProgramBlockDataFiller implements Callable<ProgramBlockData> {
+    private class ProgramBlockDataFiller implements Callable<ProgramBlockData> {
         private final File programBlockSourceFile;
         private final DatabaseSchema databaseSchema;//TODO может использовать внешний параметр?
 
@@ -77,7 +80,7 @@ public class ProgramBlocksDataHolder {
 
         @Override
         public ProgramBlockData call() {
-            ProgramBlockData programBlockData = new ProgramBlockData(programBlockSourceFile);
+            ProgramBlockData programBlockData = new ProgramBlockData(ProgramBlocksDataHolder.this);
             StringBuilder plSqlCode = new StringBuilder();
             try (BufferedReader sqlScriptSourceReader = new BufferedReader(new FileReader(programBlockSourceFile))) {
                 while (sqlScriptSourceReader.ready()) {
@@ -101,5 +104,9 @@ public class ProgramBlocksDataHolder {
 
     public List<ProgramBlockData> getProgramBlocksData() {
         return programBlocksData;
+    }
+
+    public AtomicInteger getLiteralCounter() {
+        return literalCounter;
     }
 }

@@ -95,7 +95,7 @@ public class SelectIntoOperator extends SqlOperator {
             for (int i = 0; i < timesToRepeat; i++) {
                 selectedExpressions.forEach(expression -> {
                     String columnPolicy = involvedTable.getColumnPolicy(expression);
-                    String appendedPolicy = columnPolicy == null ? "[policy |-> min, name |-> someLabel]" : "VPol." + columnPolicy;
+                    String appendedPolicy = columnPolicy == null ? "[policy |-> min, name |-> "+ programBlockData.getNextLiteralLabel()+ "]" : "VPol." + columnPolicy;
                     trace.append("<<\n ").append(appendedPolicy).append(",\n ").append(conditionalExpressionsTrace).append("\n >>,\n ");
                 });
             }
