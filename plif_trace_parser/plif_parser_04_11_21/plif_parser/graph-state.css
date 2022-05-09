@@ -173,5 +173,16 @@ div.newStateTable {
   height: 20px;
   bottom: 10px;
   right: 0px;
-  font: "20px sans-serif"
+  font: "20px sans-serif";
+}
+
+.graphButton2{
+  display: flex;
+  position: absolute;
+  z-index: 300;
+  width: 80px;
+  height: 20px;
+  bottom: 10px;
+  left: 0px;
+  font: "20px sans-serif";
 }

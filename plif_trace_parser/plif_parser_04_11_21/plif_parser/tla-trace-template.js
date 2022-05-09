@@ -66,5 +66,8 @@ document.write(`
       <button class="graphButton" id="graphFullScreenButton">
          text
       </button>
+      <button class="graphButton2" id="fixTraceFullScreen">
+         text2
+      </button>
    </template>
 `)
