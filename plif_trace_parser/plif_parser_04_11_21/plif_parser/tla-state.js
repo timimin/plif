@@ -31,6 +31,8 @@ nodes_adjustment = 0;
 name_len = 4
 
 
+
+
 // Representing variables created in one borders of one session
 class Session{
   static #eId = 0;
@@ -208,7 +210,7 @@ class Session{
   //Get current nodes layout
   get layout(){
     let res = [];
-    for(const [key, value] of Object.entries(this.dots)){
+    for( const [key, value] of Object.entries(this.dots) ){
       res.push(Object.assign({id: key}, value["dot"]));
     }
     return res;
@@ -247,6 +249,16 @@ class GraphClass{
     }
   }
 
+  paintEdges(to_id) {
+    for(edge of this.edges){
+      if(edge.to == to_id){
+        edge.color = {
+          color: GColors.general.hightlightColor
+        }
+      }
+    }
+  }
+
   //Add new layer of transitions to graph
   processLayer(sessionName, data){
     this.layersNum += 1;
@@ -267,7 +279,7 @@ class GraphClass{
       }
     }
 
-    //Paint all nodes grey
+    //Paint all nodes in gray
     for(const i of Object.keys(this.sessions)){
       this.sessions[i].PaintInGrey();
     }
@@ -305,6 +317,7 @@ class GraphClass{
         }
       }
       
+
       //Painting nodes that was used in current iteration
       let nodesIds = Array.from( new Set(fromNodes.concat(inNodes)) );
       for(const i of Object.keys(this.sessions)){
@@ -318,6 +331,7 @@ class GraphClass{
     let lastSession = this.sessions[keys[keys.length-1]];
     let adj = 0;
     if(lastSession != undefined){
+      // Update vertival lines
       for(; adj<4; adj++){
         this.tableNodes.push(
           {
@@ -351,6 +365,7 @@ class GraphClass{
         )
       }
 
+      // Update horizontal lines
       for(const key of keys){
         this.tableNodes.push(
           {
@@ -365,7 +380,7 @@ class GraphClass{
           {
             id: this.id + ++adj,
             label: "",
-            x: nodes_number*node_spacing*3 + group_spacing*2,
+            x: nodes_number*node_spacing*2 + group_spacing,
             y: this.sessions[key].posY + this.sessions[key].height*node_spacing,
             shape: 'dot',
             size: 0,
@@ -553,14 +568,97 @@ function drawNew2OldState(content, stateStr){
     ignoreFlag.innerHTML = ignoreFlag.innerHTML + " " + vars.get("Ignore");
   }
 
-
-
-
-
   content.innerHTML = "";
   content.appendChild(result1);
   content.appendChild(result2);
 }
+
+
+var toggleble = true
+var selected_nodes = []
+var selectable_nodes = []
+var debug_flag = true
+//function canBeSelected
+//.."#A40808 #c95555
+//"rgba(136, 136, 136, 0.5)"
+
+var onNodeSelect = ( values, id, selected, hovering) => {
+  delete_flag = false;
+  console.log(selected_nodes)
+  console.log(Number(id))
+  if ( selected && FixTraceMode && selected_nodes.includes(Number(id)) ){
+    console.log("delete noncense")
+    selectable_nodes = selectable_nodes.filter(function(value, index, arr){
+      return value != Number(id)
+    })
+    delete_flag = true
+  }
+  if ( selected && FixTraceMode && ( selectable_nodes.includes(Number(id)) || selected_nodes.length == 0)){
+    // Add new node to tree
+    if(!delete_flag)
+      selected_nodes.push(Number(id))
+    selectable_nodes = []
+    for(edge of graphInst.Edges){     
+      if( selected_nodes.includes(edge.to) && selected_nodes.includes(edge.from) ){
+        edge.color = {
+          color: "#A40808"
+        }
+        edge.width = 4;
+      } else if( selected_nodes.includes(edge.to) ) {
+        console.log("(%d %d) edge is selectable", edge.to, edge.from)
+        edge.color = {
+          color: "#824e4e"
+        }
+        edge.width = 1;
+        if( !selected_nodes.includes(edge.from) )
+          selectable_nodes.push(edge.from)
+      } else {
+        console.log("(%d %d) edge is gray", edge.to, edge.from);
+        edge.color= {
+          color: "rgba(136, 136, 136, 0.5)"
+        };
+        edge.width = 1;
+      }
+    }    
+    edges.update(graphInst.Edges);
+
+  }else if(selected && toggleble && !FixTraceMode){
+    values.color = {
+      color: "#A40808"
+    }
+    for(edge of graphInst.Edges){
+      if(edge.to == id){
+        edge.color = {
+          color: "#A40808"
+        }
+      } else {
+        edge.color= {
+          color: "rgba(136, 136, 136, 0.5)"
+        }
+      }
+    }
+    toggleble = false
+    edges.update(graphInst.Edges);
+  }
+}
+
+var onNodeDeselect = (e) => {
+  if(!FixTraceMode){
+    selected_nodes = []
+    selectable_nodes = []
+  }
+  if(toggleble || FixTraceMode)
+    return true
+  for(edge of graphInst.Edges){
+      edge.color = {
+        color: "#888888"
+      }
+  }
+  console.log('called')
+  toggleble = true
+  edges.update(graphInst.Edges);
+}
+
 
 var GraphData;
 var options = {
@@ -571,6 +669,7 @@ var options = {
       hover: GColors.edges.color,
       highlight: GColors.general.hightlightColor
     },
+    chosen: false
   },
   nodes: {
     color:{
@@ -582,7 +681,10 @@ var options = {
       strokeWidth: 1,
       strokeColor: "#000000"
     },
-    shape: 'circle'
+    shape: 'circle',
+    chosen: {
+      node: onNodeSelect
+    }
   },
   physics: false,
   interaction: {
@@ -591,6 +693,7 @@ var options = {
 };
 
 var Gwindow = undefined;
+var FixTraceMode = false;
 
 function createGraphWindow(){
   if(Gwindow == undefined || Gwindow.closed){
@@ -600,6 +703,9 @@ function createGraphWindow(){
   }
 }
 
+function toggleFixTraceMode(){
+  FixTraceMode = !FixTraceMode;
+}
 
 function drawGraphInNewWindow(){
   if(Gwindow != undefined && Gwindow.closed){
@@ -620,6 +726,10 @@ function drawGraphInNewWindow(){
   new vis.Network(temp, GraphData, options);
 }
 
+var graphInst = undefined;
+var network = undefined;
+var nodes = undefined;
+var edges = undefined;
 
 function drawGraph(content, stateStr){
   let template = document.getElementById("GraphTemplate");
@@ -630,19 +740,22 @@ function drawGraph(content, stateStr){
   graphButton.innerHTML = "full screen";
   graphButton.onclick = createGraphWindow;
 
+  let FixButton = result.querySelector("#fixTraceFullScreen");
+  FixButton.innerHTML = "Fix trace";
+  FixButton.onclick = toggleFixTraceMode;
 
   let str = new String(stateStr);
   let vars = parseVars(str);
   let trace = vars.get("Trace");
-  let graphInst =  new GraphClass();
+  graphInst =  new GraphClass();
 
   if(trace.length > 0){
     for(const t of trace){
       graphInst.processLayer(t[0], t[3]);
     }
   }
-  let nodes = new vis.DataSet(graphInst.Nodes);  
-  let edges = new vis.DataSet(graphInst.Edges); 
+  nodes = new vis.DataSet(graphInst.Nodes);  
+  edges = new vis.DataSet(graphInst.Edges); 
 
   let data = {
     nodes: nodes,
@@ -653,8 +766,10 @@ function drawGraph(content, stateStr){
   content.appendChild(graphCont);
   let temp = content.querySelector("#graphMainContainer");
   GraphData = data;
-  var network = new vis.Network(temp, data, options);
+  network = new vis.Network(temp, data, options);
+  network.on('click', onNodeDeselect)
   temp.appendChild(graphButton);
+  temp.appendChild(FixButton);
   if(Gwindow != undefined){
     drawGraphInNewWindow();
   }
