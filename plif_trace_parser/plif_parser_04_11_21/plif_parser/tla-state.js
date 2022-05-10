@@ -577,24 +577,31 @@ function drawNew2OldState(content, stateStr){
 var toggleble = true
 var selected_nodes = []
 var selectable_nodes = []
-var debug_flag = true
+var mousedown_flag = false
 //function canBeSelected
 //.."#A40808 #c95555
 //"rgba(136, 136, 136, 0.5)"
 
+
 var onNodeSelect = ( values, id, selected, hovering) => {
   delete_flag = false;
-  console.log(selected_nodes)
+  console.log(selected_nodes )
   console.log(Number(id))
-  if ( selected && FixTraceMode && selected_nodes.includes(Number(id)) ){
-    console.log("delete noncense")
-    selectable_nodes = selectable_nodes.filter(function(value, index, arr){
-      return value != Number(id)
+  if ( selected && FixTraceMode && selected_nodes.includes(Number(id)) && !mousedown_flag){
+    toDelete = true
+    for(edge of graphInst.Edges){ 
+      if( Number(edge.to) == Number(id) && selected_nodes.includes(Number(edge.from)))
+        toDelete = false
+    }
+    console.log(toDelete)
+    selected_nodes = selected_nodes.filter(function(value, index, arr){
+      return value != Number(id) || !toDelete
     })
     delete_flag = true
   }
-  if ( selected && FixTraceMode && ( selectable_nodes.includes(Number(id)) || selected_nodes.length == 0)){
+  if ( (selected && FixTraceMode && ( selectable_nodes.includes(Number(id)) || selected_nodes.length == 0) || delete_flag )&& !mousedown_flag){
     // Add new node to tree
+    mousedown_flag = true  
     if(!delete_flag)
       selected_nodes.push(Number(id))
     selectable_nodes = []
@@ -619,7 +626,8 @@ var onNodeSelect = ( values, id, selected, hovering) => {
         };
         edge.width = 1;
       }
-    }    
+    }
+  
     edges.update(graphInst.Edges);
 
   }else if(selected && toggleble && !FixTraceMode){
@@ -640,6 +648,7 @@ var onNodeSelect = ( values, id, selected, hovering) => {
     toggleble = false
     edges.update(graphInst.Edges);
   }
+  mousedown_flag = true
 }
 
 var onNodeDeselect = (e) => {
@@ -736,6 +745,10 @@ function drawGraph(content, stateStr){
   let result = template.content.cloneNode(true);
 
   let graphCont = result.querySelector("#graphMainContainer");
+  graphCont.addEventListener('mouseup', e => {
+    console.log("event called")
+    mousedown_flag = false
+  })
   let graphButton = result.querySelector("#graphFullScreenButton");
   graphButton.innerHTML = "full screen";
   graphButton.onclick = createGraphWindow;
