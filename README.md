@@ -27,17 +27,17 @@ The overall analysis process includes the following stages:
 
 # INSTALLATION
 
-The instrumental basis of the framework includes _TLA+ toolbox_, _plif2tla_ and _plifparser_ utilities. 
-The ideas for plif2tla design were benefited from [c2tla](). 
+The instrumental basis of the framework includes _TLA+ toolbox_, _plsql2tla_ and _plifparser_ utilities. 
+The ideas for plsql2tla design were benefited from [c2tla](). 
 plif_parser is in fact a customization of [tla+ trace explorer]().
 
 ## INSTALLING TLA+ toolbox
 
 To install _TLA+ toolbox_ see [Tla+ toolbox]
 
-## INSTALLING plif2tla
+## INSTALLING plsql2tla
 
-Copy _plif2tla_ folder to some location on your hard drive.
+Copy _plsql2tla_ folder to some location on your hard drive.
 
 ## INSTALLING plifparser
 
