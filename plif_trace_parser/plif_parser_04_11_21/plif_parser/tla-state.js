@@ -174,12 +174,30 @@ class Session{
     }
   }
 
+  genHtmlTitle(html, policy) {
+    const container = document.createElement("div");
+    container.setAttribute('class', 'graphTitleContaner');
+
+    const nameHeader = document.createElement("div");
+    nameHeader.innerHTML = html;
+    nameHeader.setAttribute('class', 'graphTitleName');
+    
+    const policyC = document.createElement("div");
+    policyC.innerHTML = policy;
+    policyC.setAttribute('class', 'graphTitlePolicy');
+    
+    container.appendChild(nameHeader);
+    container.appendChild(policyC);
+    return container;
+  }
+
   //Add new node to the session
-  AddNode(id, name){
+  AddNode(id, name, policy){
     let a =  this.#checkNameAffiliation(name);
     let [graph_name, type] = this.#generateNodename(name);
     const [coords, res] = this.#generatePosition(a);
     this.dots[id] = {
+      layer: this.layer,
       affil: a,
       type: type,
       //occurrences: [layer],  
@@ -188,7 +206,7 @@ class Session{
         group: this.sessionName + "_" + a,
         x: coords[0]*node_spacing + (group_spacing +nodes_number*node_spacing)*a,
         y: coords[1]*node_spacing + this.posY + coords[0]*nodes_adjustment,
-        title: name,
+        title: this.genHtmlTitle(`<b>${name}</b>`, policy),
         borderWidth: 2,
         color: {
           border: "#000000",
@@ -224,9 +242,10 @@ class GraphClass{
     this.nodeNames = [];
     this.id = 0;
     this.edges = [];
-    this.layersNum = 0;
+    this.layersNum = -1;
     this.tableEdges = [];
     this.tableNodes = [];
+    this.layers2Nodes = []
   }
 
   #getNodeId(name){
@@ -259,6 +278,29 @@ class GraphClass{
     }
   }
 
+  parsePolicy(node){
+    console.log(node)
+    let unsetted = [...node['policy']][0]
+    let ToName = unsetted[0]
+    let t_expire = [...unsetted[1][0]['t_expire']][0].toString()
+    console.log(t_expire)
+    let guest = [...unsetted[1][1]['guest']][0]
+    console.log(guest)
+    let manager = [...unsetted[1][1]['manager']][0]
+    console.log(manager)
+    let organizer = [...unsetted[1][1]['organizer']][0]
+    console.log(organizer)
+    let reviewer = [...unsetted[1][1]['reviewer']][0]
+    console.log(reviewer)
+
+    let ToShow = `${ToName}:</br>t_expire(${t_expire})`
+    ToShow += `</br>guest(${guest})`
+    ToShow += `</br>manager(${manager})`
+    ToShow += `</br>organizer(${organizer})`
+    ToShow += `</br>reviewer(${reviewer})`
+    return ToShow
+  }
+
   //Add new layer of transitions to graph
   processLayer(sessionName, data){
     this.layersNum += 1;
@@ -284,13 +326,16 @@ class GraphClass{
       this.sessions[i].PaintInGrey();
     }
 
+    let num = 0;
     //process from\to fields
-    for(let i=0; i<data["from"].length; i++){
+    for(let i=0; i < data["from"].length; i++){
       let fromNodes = [], inNodes = [];
       for(const v of data["from"][i]){
         if(!this.nodeNames.includes( v["name"]?.slice(1, -1) )){
-          if(this.sessions[sessionName].AddNode(++this.id, v["name"]?.slice(1, -1)))
+          if(this.sessions[sessionName].AddNode(++this.id, v["name"]?.slice(1, -1))){
             this.#pushSessions(sessionName);
+          }
+          this.layers2Nodes.push({id:this.id, layer: this.layersNum})
           this.nodeNames.push(v["name"]?.slice(1, -1));
           fromNodes.push(this.id);
         } else {
@@ -298,8 +343,11 @@ class GraphClass{
         }
       }
       if(!(this.nodeNames.includes(data["to"][i]["name"]?.slice(1, -1)))){
-        if(this.sessions[sessionName].AddNode(++this.id,  data["to"][i]["name"]?.slice(1, -1)))
+        let policy = this.parsePolicy(data["to"][i])
+        if(this.sessions[sessionName].AddNode(++this.id,  data["to"][i]["name"]?.slice(1, -1), policy) ){
           this.#pushSessions(sessionName);
+        }
+        this.layers2Nodes.push({id:this.id, layer: this.layersNum})
         this.nodeNames.push( data["to"][i]["name"]?.slice(1, -1));
         inNodes.push(this.id);
       } else {
@@ -444,6 +492,7 @@ function drawState(content, stateStr){
 }
 
 function drawTrace(content, stateStr){
+ 
   let str = new String(stateStr);
   let vars = parseVars(str);
   let template = document.getElementById("traceTemplate");
@@ -455,6 +504,7 @@ function drawTrace(content, stateStr){
   for(x of vars.get("Trace")){
 
     let row = row_template.content.cloneNode(true);
+    row.querySelector("#c0").id = "layer" 
     let c1 = row.querySelector("#c1");
     let c2 = row.querySelector("#c2");
     let c3 = row.querySelector("#c3");
@@ -465,10 +515,19 @@ function drawTrace(content, stateStr){
 
     traceTab.appendChild(row);
   }
-
   content.innerHTML = "";
   content.appendChild(result);
+  let n = 0
+  let a = content.querySelector("#layer");
+  while(a != null){
+    a.id = "layer_" + n.toString();
+    n+= 1
+    a = content.querySelector("#layer");
+  }
+  layer_num += 1;
 }
+
+var layer_num = 0
 
 function drawNew2OldState(content, stateStr){
   let str = new String(stateStr);
@@ -630,7 +689,7 @@ var onNodeSelect = ( values, id, selected, hovering) => {
   
     edges.update(graphInst.Edges);
 
-  }else if(selected && toggleble && !FixTraceMode){
+  } else if(selected && toggleble && !FixTraceMode) {
     values.color = {
       color: "#A40808"
     }
@@ -648,6 +707,21 @@ var onNodeSelect = ( values, id, selected, hovering) => {
     toggleble = false
     edges.update(graphInst.Edges);
   }
+  if(hovering){
+    let trace = document.getElementById('trace').children[0].children[1]
+    for(row of trace.children){
+      row.style.border = "1px solid #AAAAAA"
+    }
+    for(n of graphInst.layers2Nodes){
+      if(n['id'] == Number(id)){
+        console.log('found ya')
+        let b = 'layer_' + n['id'].toString()
+        console.log(b)
+        let row = trace.children[n['layer']].style.border = "3px solid #0dbde0"
+      }
+    }
+  }
+
   mousedown_flag = true
 }
 
@@ -697,7 +771,8 @@ var options = {
   },
   physics: false,
   interaction: {
-    dragNodes: true, 
+    dragNodes: true,
+    hover: true, 
   }
 };
 
@@ -760,11 +835,13 @@ function drawGraph(content, stateStr){
   let str = new String(stateStr);
   let vars = parseVars(str);
   let trace = vars.get("Trace");
+  console.log(trace)
   graphInst =  new GraphClass();
 
   if(trace.length > 0){
     for(const t of trace){
       graphInst.processLayer(t[0], t[3]);
+      console.log(t[3])
     }
   }
   nodes = new vis.DataSet(graphInst.Nodes);  
