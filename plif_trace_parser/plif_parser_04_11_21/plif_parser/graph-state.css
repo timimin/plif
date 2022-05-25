@@ -186,3 +186,39 @@ div.newStateTable {
   left: 0px;
   font: "20px sans-serif";
 }
+
+.graphTitleContaner{
+  display: flex;
+  position: relative;
+  width: 150px;
+  height: 200px;
+  align-items: center;
+  justify-content: center;
+  background-color: #888888;
+  border-radius: 2px;
+  border: 1px solid rgb(13, 189, 224);
+  flex-direction: row;
+  flex-grow: 1;
+}
+
+.graphTitleName{
+  top: 0px;
+  height: 20px;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  text-align: center;
+  justify-content: center;
+  border-bottom: 2px solid rgb(13, 189, 224);
+  overflow: hidden;
+}
+.graphTitlePolicy{
+  top: 22px;
+  display:flex;
+  position: absolute;
+  width: auto;
+  height: 10px;
+  flex-grow: 1;
+  text-align: left;
+  justify-content: left;
+}

@@ -13,7 +13,7 @@ document.write(`
       </div>
    </template>
    <template id = "traceRowTemplate">
-      <div class="divTableRow">
+      <div id="c0" class="divTableRow">
          <div id="c1" class="divTableCell"></div>
          <div id="c2" class="divTableCell"></div>
          <div id="c3" class="divTableCell"></div>
