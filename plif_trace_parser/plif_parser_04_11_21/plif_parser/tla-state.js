@@ -191,16 +191,19 @@ class Session{
     return container;
   }
 
+  UpdatePolicy(id, name, policy){
+    this.dots[id]["dot"]["title"] = this.genHtmlTitle(`<b>${name}</b>`, policy);
+  }
+
   //Add new node to the session
   AddNode(id, name, policy){
     let a =  this.#checkNameAffiliation(name);
     let [graph_name, type] = this.#generateNodename(name);
     const [coords, res] = this.#generatePosition(a);
     this.dots[id] = {
-      layer: this.layer,
+      layer: [this.layer],
       affil: a,
-      type: type,
-      //occurrences: [layer],  
+      type: type, 
       dot: {
         label: `<b>${graph_name}</b>`,
         group: this.sessionName + "_" + a,
@@ -335,10 +338,16 @@ class GraphClass{
           if(this.sessions[sessionName].AddNode(++this.id, v["name"]?.slice(1, -1))){
             this.#pushSessions(sessionName);
           }
-          this.layers2Nodes.push({id:this.id, layer: this.layersNum})
+          //this.layers2Nodes.push({id:this.id, layer: this.layersNum})
           this.nodeNames.push(v["name"]?.slice(1, -1));
           fromNodes.push(this.id);
         } else {
+          //let id_l = this.#getNodeId(v["name"]?.slice(1, -1))
+          //for(a of this.layers2Nodes){
+          //  if(id_l == a["id"]){
+          //    a["layer"].push(id_l)
+          //  }
+          //}
           fromNodes.push(this.#getNodeId(v["name"]?.slice(1, -1)))
         }
       }
@@ -347,11 +356,24 @@ class GraphClass{
         if(this.sessions[sessionName].AddNode(++this.id,  data["to"][i]["name"]?.slice(1, -1), policy) ){
           this.#pushSessions(sessionName);
         }
-        this.layers2Nodes.push({id:this.id, layer: this.layersNum})
+        this.layers2Nodes.push({id:this.id, layer: [this.layersNum]})
         this.nodeNames.push( data["to"][i]["name"]?.slice(1, -1));
         inNodes.push(this.id);
       } else {
-        inNodes.push(this.#getNodeId( data["to"][i]["name"]?.slice(1, -1)))
+          let policy = this.parsePolicy(data["to"][i])
+          let id_l = this.#getNodeId( data["to"][i]["name"]?.slice(1, -1))
+          let f = false;
+          for(const a of this.layers2Nodes){
+            if(id_l == a["id"]){
+              a["layer"].push(this.layersNum)
+              f = true;
+            }
+          }
+          if(!f){
+            this.layers2Nodes.push({ id: id_l, layer: [this.layersNum] })
+          }
+          this.sessions[sessionName].UpdatePolicy(id_l, data["to"][i]["name"]?.slice(1, -1), policy);
+          inNodes.push(this.#getNodeId( data["to"][i]["name"]?.slice(1, -1)))
       }    
 
       //Adding new edjes that was added at the previouse step
@@ -715,9 +737,14 @@ var onNodeSelect = ( values, id, selected, hovering) => {
     for(n of graphInst.layers2Nodes){
       if(n['id'] == Number(id)){
         console.log('found ya')
-        let b = 'layer_' + n['id'].toString()
-        console.log(b)
-        let row = trace.children[n['layer']].style.border = "3px solid #0dbde0"
+        for(id_l of n["layer"]){
+          let b = 'layer_' + n["id"].toString()
+          console.log(b)
+          let row = trace.children[id_l].style.border = "3px solid #0d29a3"
+        }
+        //let b = 'layer_' + n['id'].toString()
+        //console.log(b)
+        //let row = trace.children[n['layer']].style.border = "3px solid #0dbde0"
       }
     }
   }
