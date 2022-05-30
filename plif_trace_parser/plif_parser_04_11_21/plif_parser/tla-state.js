@@ -285,7 +285,7 @@ class GraphClass{
     console.log(node)
     let unsetted = [...node['policy']][0]
     let ToName = unsetted[0]
-    let t_expire = [...unsetted[1][0]['t_expire']][0].toString()
+    let t_expire = [...unsetted[1][0]['t_expire']][0]
     console.log(t_expire)
     let guest = [...unsetted[1][1]['guest']][0]
     console.log(guest)
