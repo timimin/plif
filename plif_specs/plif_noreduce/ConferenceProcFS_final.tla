@@ -1285,7 +1285,13 @@ dispatch(id,st) ==
                                [from |-> <<<<[policy |-> min, name |-> "c11"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                               name |-> id]>>, 
-                                           <<[policy |-> min, name |-> "c12"],
+                                           <<[policy |-> 
+                                             {<<u1,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {u1}, 
+                                                organizer |-> {NONE}]>> >>,
+                                              <<u1,<<[t_expire |-> {}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {NONE}, 
+                                                organizer |-> {NONE}]>> >>}, name |-> "c12"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>>>, 
                                 to   |-> <<p_cs_p_s_id(id), 
@@ -1491,7 +1497,10 @@ dispatch(id,st) ==
                                            <<[policy |-> min, name |-> "c9"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                               name |-> id]>>, 
-                                           <<[policy |-> min, name |-> "c10"],
+                                           <<[policy |-> 
+                                             {<<u1,<<[t_expire |-> {}], [guest |-> {NONE},
+                                                      reviewer |-> {NONE}, manager |-> {NONE}, 
+                                                      organizer |-> {NONE}]>> >>}, name |-> "c10"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                               name |-> id]>>>>, 
                                 to   |-> <<p_ap_p_p_id(id), p_ap_p_papers_tit(id), 
@@ -1644,5 +1653,5 @@ SpecFS == Init /\ [] [Next]_vars
                   
 =============================================================================
 \* Modification History
-\* Last modified Tue May 10 18:52:40 MSK 2022 by user-sc
+\* Last modified Thu May 26 19:08:54 MSK 2022 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc
