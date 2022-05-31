@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class RuleContextExtension {
-    public static String getText(RuleContext ruleContext) {
+    public static String getSpaceSeparatedText(RuleContext ruleContext) {
         return getTextSpaceSeparatedWithTrailingSpace(ruleContext).trim();
     }
 

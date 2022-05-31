@@ -18,7 +18,7 @@ import static generation.enums.ProgramBlockType.PROCEDURE;
 import static generation.enums.ProgramBlockVariableType.*;
 import static generation.enums.VariableType.*;
 import static util.CommonUtil.surroundWithQuotes;
-import static util.extenstion.RuleContextExtension.getText;
+import static util.extenstion.RuleContextExtension.getSpaceSeparatedText;
 
 public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     private final ProgramBlockData programBlockData;
@@ -52,7 +52,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     public void enterSelect_statement(PlSqlParser.Select_statementContext ctx) {
         if (selectNotInFromClause(ctx)) {
             int numberOfLine = ctx.start.getLine();
-            SelectIntoOperator selectIntoOperator = new SelectIntoOperator(numberOfLine, getText(ctx), programBlockData, SELECT_INTO);
+            SelectIntoOperator selectIntoOperator = new SelectIntoOperator(numberOfLine, getSpaceSeparatedText(ctx), programBlockData, SELECT_INTO);
             selectIntoOperatorMap.putIfAbsent(numberOfLine, selectIntoOperator);
             programBlockData.addOperator(numberOfLine, selectIntoOperator);
         }
@@ -72,7 +72,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     @Override
     public void enterInsert_statement(PlSqlParser.Insert_statementContext ctx) {
         int numberOfLine = ctx.start.getLine();
-        InsertOperator insertOperator = new InsertOperator(numberOfLine, getText(ctx), programBlockData, INSERT);
+        InsertOperator insertOperator = new InsertOperator(numberOfLine, getSpaceSeparatedText(ctx), programBlockData, INSERT);
         insertOperatorMap.putIfAbsent(numberOfLine, insertOperator);
         programBlockData.addOperator(numberOfLine, insertOperator);
     }
@@ -81,7 +81,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     @Override
     public void enterUpdate_statement(PlSqlParser.Update_statementContext ctx) {
         int numberOfLine = ctx.start.getLine();
-        UpdateOperator updateOperator = new UpdateOperator(numberOfLine, getText(ctx), programBlockData, UPDATE);
+        UpdateOperator updateOperator = new UpdateOperator(numberOfLine, getSpaceSeparatedText(ctx), programBlockData, UPDATE);
         updateOperatorMap.putIfAbsent(numberOfLine, updateOperator);
         programBlockData.addOperator(numberOfLine, updateOperator);
     }
@@ -362,7 +362,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     @Override
     public void enterIf_statement(PlSqlParser.If_statementContext ctx) {
         int numberOfStartCtxLine = ctx.start.getLine();
-        IfOperator ifOperator = new IfOperator(numberOfStartCtxLine, "if " + getText(ctx.condition()), programBlockData, IF);
+        IfOperator ifOperator = new IfOperator(numberOfStartCtxLine, "if " + getSpaceSeparatedText(ctx.condition()), programBlockData, IF);
         ifOperator.setNumberOfThenLine(ctx.seq_of_statements().start.getLine());
         ifOperator.setNumberOfElseLine(ctx.else_part().start.getLine());
         int numberOfEndCtxLine = ctx.stop.getLine();
@@ -405,7 +405,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     @Override
     public void enterRaise_statement(PlSqlParser.Raise_statementContext ctx) {
         int numberOfLine = ctx.start.getLine();
-        ExceptionOperator exceptionOperator = new ExceptionOperator(numberOfLine, programBlockData, OperatorType.EXCEPTION);
+        ExceptionOperator exceptionOperator = new ExceptionOperator(numberOfLine, getSpaceSeparatedText(ctx), programBlockData, OperatorType.EXCEPTION);//TODO какой queryCode должен быть
         exceptionOperator.setExceptionName(ctx.exception_name().getText());
         exceptionOperatorMap.putIfAbsent(numberOfLine, exceptionOperator);
         programBlockData.addOperator(numberOfLine, exceptionOperator);

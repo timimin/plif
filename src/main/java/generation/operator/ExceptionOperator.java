@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import static util.CommonUtil.loadVariablePolicies;
 import static util.CommonUtil.surroundWithQuotes;
-import static util.Constants.UNCHANGED_TRACE;
+import static util.Constants.COMMA_WITH_LINE_BREAK;
 import static util.OperatorUtil.appendNextRuleLabel;
 
 public class ExceptionOperator extends SqlOperator {
@@ -22,11 +22,15 @@ public class ExceptionOperator extends SqlOperator {
     private int lineHandlingException;
 
     {
-        handledExceptions = new LinkedHashMap<>();
+        handledExceptions = new LinkedHashMap<>();//TODO handledExceptions,lineHandlingException мб должны быть общие на все эксепшны?
     }
 
     public ExceptionOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {
         super(numberOfLineInProgramBlock, programBlockData, operatorType);
+    }
+
+    public ExceptionOperator(int numberOfLineInProgramBlock, String queryCode, ProgramBlockData programBlockData, OperatorType operatorType) {
+        super(numberOfLineInProgramBlock, queryCode, programBlockData, operatorType);
     }
 
     @Override
@@ -52,8 +56,21 @@ public class ExceptionOperator extends SqlOperator {
         loadVariablePolicies(operatorRule, exceptionVariable);
         operatorRule.append("<<\n ");
         appendNextRuleLabel(operatorRule, programBlockData, numberOfLineHandlingException);
-        operatorRule.append("\n >>)\n").append(UNCHANGED_TRACE).append("/\\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>\n\n");
+        operatorRule.append("\n >>)\n").append(getTrace()).append("/\\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>\n\n");
         return operatorRule.toString();
+    }
+
+    @Override
+    protected String getTrace() {//TODO проверить корректность
+        Variable exceptionVariable = programBlockData.getVariables().get(exceptionName);
+        StringBuilder trace = new StringBuilder("/\\ Trace' = Append(Trace,<<id,\n ");
+        trace.append(surroundWithQuotes(getOperatorRuleName())).append(COMMA_WITH_LINE_BREAK).append(surroundWithQuotes(queryCode))
+                .append(COMMA_WITH_LINE_BREAK).append("[from |-> <<\n <<[policy |-> ");
+        loadVariablePolicies(trace, exceptionVariable, ",\n name |-> ");
+        trace.append(exceptionVariable.getVariablePolicies().get(0)).append("(id).name]>>>>").append(COMMA_WITH_LINE_BREAK)
+                .append(" to |-> <<[policy |-> LUB4Seq(Sessions[id][\"PCLabel\"]), name |-> \"PCLabel\"]>>]>>)\n ");
+        return trace.toString();
+
     }
 
     @Override

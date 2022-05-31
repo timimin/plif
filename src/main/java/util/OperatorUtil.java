@@ -83,6 +83,8 @@ public class OperatorUtil {
                     expVariable.getVariablePolicies().forEach(variablePolicy ->
                             stringBuilder.append("[policy |-> load(id, ").append(variablePolicy).append("(id)),\n name |-> ")
                                     .append(variablePolicy).append("(id).name]").append(COMMA_WITH_LINE_BREAK));
+                } else {
+                    stringBuilder.append("[policy |-> min, name |-> ").append(programBlockData.getNextLiteralLabel()).append("]").append(COMMA_WITH_LINE_BREAK);
                 }
             }
         });

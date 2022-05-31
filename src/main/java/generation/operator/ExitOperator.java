@@ -1,14 +1,15 @@
 package generation.operator;
 
-import generation.enums.OperatorType;
-import generation.enums.ProgramBlockType;
 import generation.ProgramBlockData;
 import generation.Variable;
+import generation.enums.OperatorType;
+import generation.enums.ProgramBlockType;
 
 import java.util.List;
 import java.util.Optional;
 
 import static util.CommonUtil.*;
+import static util.Constants.COMMA_WITH_LINE_BREAK;
 
 public class ExitOperator extends SqlOperator {
 
@@ -33,8 +34,13 @@ public class ExitOperator extends SqlOperator {
         }
         exitRule.append("![id][\"SessionM\"] = SubSeq(Sessions[id][\"SessionM\"], 1, Len(Sessions[id][\"SessionM\"]) - ")
                 .append(programBlockData.getVariables().values().stream().mapToInt(variable -> variable.getVariablePolicies().size()).sum())
-                .append(")]\n/\\ Trace' = Append(Trace,<<>>)\n/\\ Ignore' = 1\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<New2Old, VPol>>\n\n");
+                .append(")]\n").append(getTrace()).append("/\\ Ignore' = 1\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ UNCHANGED <<New2Old, VPol>>\n\n");
         return exitRule.toString();
+    }
+
+    @Override
+    protected String getTrace() {
+        return "/\\ Trace' = Append(Trace, <<id," + (surroundWithQuotes(getOperatorRuleName()) + COMMA_WITH_LINE_BREAK).repeat(2) + "[from |-> << >>, to |-> << >>]>>)\n ";
     }
 
     @Override
