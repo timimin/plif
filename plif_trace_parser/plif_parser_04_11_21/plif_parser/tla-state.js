@@ -183,17 +183,46 @@ class Session{
     nameHeader.setAttribute('class', 'graphTitleName');
     
     const policyC = document.createElement("div");
-    policyC.innerHTML = policy;
     policyC.setAttribute('class', 'graphTitlePolicy');
-    
+
+    let c = 0;
+    let strings_num = 0
+    let total_len = 0
+    for(const pol of policy){
+      if(pol == undefined)
+        continue
+      strings_num = pol.split("br").length;
+      total_len += strings_num*20;
+      const onePolC = document.createElement("div");
+      onePolC.innerHTML = pol;
+      onePolC.setAttribute('class', `graphTitlePolicyInner${c%2}`);
+      onePolC.style.height = `${20*strings_num}px`;
+      policyC.appendChild(onePolC);
+      c+=1;
+    }
+    policyC.style.height =  `${total_len}px`
+    container.height = `${total_len + 20}px`
     container.appendChild(nameHeader);
     container.appendChild(policyC);
     return container;
   }
 
+
   UpdatePolicy(id, name, policy){
-    this.dots[id]["dot"]["title"] = this.genHtmlTitle(`<b>${name}</b>`, policy);
+    console.log("updatePolicy")
+    this.dots[id]["policy"].push(policy)
+    console.log( this.dots[id]["policy"])
+    this.dots[id]["dot"]["title"] = this.genHtmlTitle(`<b>${name}</b>`,  this.dots[id]["policy"]);
+    console.log(this.dots[id]["dot"]["title"])
   }
+
+  //generate_policy_rep(policy){
+  //  let c = 0;
+  //  let res = ""
+  //  for(const a of policy){
+  //    res = `<div class=graphTitlePolicyInner${c%2}>${}`
+  //  }
+  //}
 
   //Add new node to the session
   AddNode(id, name, policy){
@@ -204,12 +233,13 @@ class Session{
       layer: [this.layer],
       affil: a,
       type: type, 
+      policy: [policy],
       dot: {
         label: `<b>${graph_name}</b>`,
         group: this.sessionName + "_" + a,
         x: coords[0]*node_spacing + (group_spacing +nodes_number*node_spacing)*a,
         y: coords[1]*node_spacing + this.posY + coords[0]*nodes_adjustment,
-        title: this.genHtmlTitle(`<b>${name}</b>`, policy),
+        title: this.genHtmlTitle(`<b>${name}</b>`, [policy]),
         borderWidth: 2,
         color: {
           border: "#000000",
@@ -281,34 +311,77 @@ class GraphClass{
     }
   }
 
-  parsePolicy(node){
-    console.log(node)
-    let unsetted = [...node['policy']][0]
-    let ToName = unsetted[0]
-    let t_expire = [...unsetted[1][0]['t_expire']][0]
-    console.log(t_expire)
-    let guest = [...unsetted[1][1]['guest']][0]
-    console.log(guest)
-    let manager = [...unsetted[1][1]['manager']][0]
-    console.log(manager)
-    let organizer = [...unsetted[1][1]['organizer']][0]
-    console.log(organizer)
-    let reviewer = [...unsetted[1][1]['reviewer']][0]
-    console.log(reviewer)
+  GetPolicyFromVPol(name, VPol){
+    console.log("GetPolicyFromVPol")
+    console.log(name)
+    console.log(VPol[name])
+    return VPol[name]["policy"]
+  }
 
-    let ToShow = `${ToName}:</br>t_expire(${t_expire})`
-    ToShow += `</br>guest(${guest})`
-    ToShow += `</br>manager(${manager})`
-    ToShow += `</br>organizer(${organizer})`
-    ToShow += `</br>reviewer(${reviewer})`
-    return ToShow
+  getPolicyFromSessionM(sessionName, nodeName, sessions, NodeSessionId, offset){
+    console.log("Get policy from session")
+    let fp, policy = undefined;
+    console.log(nodeName)
+    console.log(sessions)
+    console.log(offset)
+    console.log(NodeSessionId)
+    try{
+      //fp = sessions[NodeSessionId].get(sessionName)["StateRegs"][0]["fp"]
+      console.log([...sessions[NodeSessionId].get(sessionName)["SessionM"]])
+      policy = [...sessions[NodeSessionId].get(sessionName)["SessionM"][offset]]
+      console.log()
+    } catch(e){
+      policy = undefined
+    }
+    console.log(policy)
+    return policy
+  }
+
+  parsePolicy2(policy){
+    if(!policy)
+      return undefined
+    let ToShow = "";
+    for(const pol of policy){
+      let ToName = pol[0];
+      let t_expire = [...pol[1][0]['t_expire']][0];
+      let guest = [...pol[1][1]['guest']][0];
+      let manager = [...pol[1][1]['manager']][0];
+      let organizer = [...pol[1][1]['organizer']][0];
+      let reviewer = [...pol[1][1]['reviewer']][0];
+      ToShow += `${ToName}:`;
+      if(t_expire != 'NONE')
+        ToShow += `</br>t_expire(${t_expire})`;
+      if(guest != 'NONE')
+        ToShow += `</br>guest(${guest})`;
+      if(manager != 'NONE')
+        ToShow += `</br>manager(${manager})`;
+      if(organizer != 'NONE')
+        ToShow += `</br>organizer(${organizer})`;
+      if(reviewer != 'NONE')
+        ToShow += `</br>reviewer(${reviewer})`;
+      ToShow += "</br>"
+    }
+    console.log("TSHOW");
+    console.log(ToShow);
+    return ToShow.slice(0,-5);
+  }
+  parsePolicy(node, from_node = false){
+    console.log("Parse Policy")
+    console.log(node)
+    let unsetted = undefined
+    if(from_node)
+      unsetted = [...node[0]['policy']][0];
+    else
+      unsetted = [...node['policy']][0];
+    return this.parsePolicy2([unsetted])
   }
 
   //Add new layer of transitions to graph
-  processLayer(sessionName, data){
+  processLayer(sessionName, data, TraceSessions, VPol){
     this.layersNum += 1;
     this.tableEdges = [];
     this.tableNodes = [];
+    const persReg = new RegExp('^col_[\\w\\d_]+');
     
     //Check if this Session already exist, otherwise add new one
     let keys = Object.keys(this.sessions);
@@ -335,7 +408,16 @@ class GraphClass{
       let fromNodes = [], inNodes = [];
       for(const v of data["from"][i]){
         if(!this.nodeNames.includes( v["name"]?.slice(1, -1) )){
-          if(this.sessions[sessionName].AddNode(++this.id, v["name"]?.slice(1, -1))){
+          let tmp_pol = undefined
+          if(persReg.test(v["name"]?.slice(1, -1))){
+            console.log('tested')
+            console.log(v["name"]?.slice(1, -1))
+            tmp_pol = this.GetPolicyFromVPol(v["name"]?.slice(1, -1), VPol);
+          } else {
+            tmp_pol = data["from"][i];
+          }
+          let policy = this.parsePolicy(data["from"][i], true)
+          if(this.sessions[sessionName].AddNode(++this.id, v["name"]?.slice(1, -1), policy )){
             this.#pushSessions(sessionName);
           }
           //this.layers2Nodes.push({id:this.id, layer: this.layersNum})
@@ -352,7 +434,15 @@ class GraphClass{
         }
       }
       if(!(this.nodeNames.includes(data["to"][i]["name"]?.slice(1, -1)))){
-        let policy = this.parsePolicy(data["to"][i])
+        let EndPol = undefined//this.getPolicyFromSessionM(sessionName, data["to"][i]["name"], TraceSessions, this.layersNum, data["to"][i]["offs"]);
+        if(persReg.test(data["to"][i]["name"]?.slice(1, -1))){
+          console.log('tested')
+          console.log(data["to"][i]["name"]?.slice(1, -1))
+          EndPol = this.GetPolicyFromVPol(data["to"][i]["name"]?.slice(1, -1), VPol);
+        } else {
+          EndPol = this.getPolicyFromSessionM(sessionName, data["to"][i]["name"], TraceSessions, this.layersNum, data["to"][i]["offs"]);
+        }
+        let policy = this.parsePolicy2(EndPol)
         if(this.sessions[sessionName].AddNode(++this.id,  data["to"][i]["name"]?.slice(1, -1), policy) ){
           this.#pushSessions(sessionName);
         }
@@ -360,7 +450,14 @@ class GraphClass{
         this.nodeNames.push( data["to"][i]["name"]?.slice(1, -1));
         inNodes.push(this.id);
       } else {
-          let policy = this.parsePolicy(data["to"][i])
+          //let EndPol = this.getPolicyFromSessionM(sessionName, data["to"][i]["name"], TraceSessions, this.layersNum, data["to"][i]["offs"]);
+          let EndPol = undefined//this.getPolicyFromSessionM(sessionName, data["to"][i]["name"], TraceSessions, this.layersNum, data["to"][i]["offs"]);
+          if(persReg.test(v["name"]?.slice(1, -1))){
+            EndPol = this.GetPolicyFromVPol(v["name"]?.slice(1, -1), VPol);
+          } else {
+            EndPol = this.getPolicyFromSessionM(sessionName, data["to"][i]["name"], TraceSessions, this.layersNum, data["to"][i]["offs"]);
+          }
+          let policy = this.parsePolicy2(EndPol)
           let id_l = this.#getNodeId( data["to"][i]["name"]?.slice(1, -1))
           let f = false;
           for(const a of this.layers2Nodes){
@@ -666,15 +763,12 @@ var mousedown_flag = false
 
 var onNodeSelect = ( values, id, selected, hovering) => {
   delete_flag = false;
-  console.log(selected_nodes )
-  console.log(Number(id))
   if ( selected && FixTraceMode && selected_nodes.includes(Number(id)) && !mousedown_flag){
     toDelete = true
     for(edge of graphInst.Edges){ 
       if( Number(edge.to) == Number(id) && selected_nodes.includes(Number(edge.from)))
         toDelete = false
     }
-    console.log(toDelete)
     selected_nodes = selected_nodes.filter(function(value, index, arr){
       return value != Number(id) || !toDelete
     })
@@ -693,7 +787,6 @@ var onNodeSelect = ( values, id, selected, hovering) => {
         }
         edge.width = 4;
       } else if( selected_nodes.includes(edge.to) ) {
-        console.log("(%d %d) edge is selectable", edge.to, edge.from)
         edge.color = {
           color: "#824e4e"
         }
@@ -701,7 +794,6 @@ var onNodeSelect = ( values, id, selected, hovering) => {
         if( !selected_nodes.includes(edge.from) )
           selectable_nodes.push(edge.from)
       } else {
-        console.log("(%d %d) edge is gray", edge.to, edge.from);
         edge.color= {
           color: "rgba(136, 136, 136, 0.5)"
         };
@@ -736,15 +828,10 @@ var onNodeSelect = ( values, id, selected, hovering) => {
     }
     for(n of graphInst.layers2Nodes){
       if(n['id'] == Number(id)){
-        console.log('found ya')
         for(id_l of n["layer"]){
           let b = 'layer_' + n["id"].toString()
-          console.log(b)
           let row = trace.children[id_l].style.border = "3px solid #0d29a3"
         }
-        //let b = 'layer_' + n['id'].toString()
-        //console.log(b)
-        //let row = trace.children[n['layer']].style.border = "3px solid #0dbde0"
       }
     }
   }
@@ -764,7 +851,6 @@ var onNodeDeselect = (e) => {
         color: "#888888"
       }
   }
-  console.log('called')
   toggleble = true
   edges.update(graphInst.Edges);
 }
@@ -832,7 +918,6 @@ function drawGraphInNewWindow(){
   newDiv.innerHTML = "";
   newDiv.appendChild(graphCont);
 
-  console.log(GraphData);
   let temp = newDiv.querySelector("#graphMainContainer");
   new vis.Network(temp, GraphData, options);
 }
@@ -841,14 +926,15 @@ var graphInst = undefined;
 var network = undefined;
 var nodes = undefined;
 var edges = undefined;
+var AllSessions = [];
 
 function drawGraph(content, stateStr){
+  console.log("Draw Graph//////////////////////////////////////////////////")
   let template = document.getElementById("GraphTemplate");
   let result = template.content.cloneNode(true);
 
   let graphCont = result.querySelector("#graphMainContainer");
   graphCont.addEventListener('mouseup', e => {
-    console.log("event called")
     mousedown_flag = false
   })
   let graphButton = result.querySelector("#graphFullScreenButton");
@@ -862,13 +948,21 @@ function drawGraph(content, stateStr){
   let str = new String(stateStr);
   let vars = parseVars(str);
   let trace = vars.get("Trace");
-  console.log(trace)
+  let session = vars.get("Sessions");
+  let VPol = vars.get("VPol");
+  console.log(vars);
+  console.log(trace);
+  
+  if(trace.length > AllSessions.length)
+    AllSessions.push(session)
+  console.log(AllSessions)
+
+  //let sessionM = vars.get("SessionM");
   graphInst =  new GraphClass();
 
   if(trace.length > 0){
     for(const t of trace){
-      graphInst.processLayer(t[0], t[3]);
-      console.log(t[3])
+      graphInst.processLayer(t[0], t[3], AllSessions, VPol);
     }
   }
   nodes = new vis.DataSet(graphInst.Nodes);  
