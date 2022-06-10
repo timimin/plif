@@ -362,7 +362,8 @@ f_is_accepted5(id) ==
                                          [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                           name |-> id]>>>>, 
                             to |-> <<[policy |-> load(id, f_ia_v_v_status(id)),
-                                      name |-> f_ia_v_v_status(id).name]>>]>>) 
+                                      name |-> f_ia_v_v_status(id).name,
+                                      offs |-> f_ia_v_v_status(id).offs]>>]>>) 
     /\ Ignore'    = 0
     /\ SLocks'    = SLocks
     /\ StateE'    = SLocks'[id]  
@@ -387,7 +388,8 @@ f_is_accepted9_10(id) ==
                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                 name |-> id]>>>>, 
                               to   |-> <<[policy |-> load(id, f_ia_r(id)),
-                                          name |-> f_ia_r(id).name]>>]>>) 
+                                          name |-> f_ia_r(id).name,
+                                          offs |-> f_ia_r(id).offs]>>]>>) 
        /\ Ignore'   = 0
        /\ SLocks'   = SLocks
        /\ StateE'   = SLocks'[id]  
@@ -400,7 +402,8 @@ f_is_accepted9_10(id) ==
                                            [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                             name |-> id]>>>>, 
                               to   |-> <<[policy |-> load(id, f_ia_r(id)),
-                                          name |-> f_ia_r(id).name]>>]>>) 
+                                          name |-> f_ia_r(id).name,
+                                          offs |-> f_ia_r(id).offs ]>>]>>) 
        /\ Ignore'   = 0
        /\ SLocks'   = SLocks
        /\ StateE'   = SLocks'[id]  
@@ -494,11 +497,14 @@ p_allocate7(id) ==
                                        [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                         name |-> id]>>>>, 
                           to   |-> <<[policy |-> load(id, f_ia_p_s_id(id)),
-                                      name |-> f_ia_p_s_id(id).name], 
+                                      name |-> f_ia_p_s_id(id).name,
+                                      offs |-> f_ia_p_s_id(id).offs], 
                                      [policy |-> load(id, f_ia_v_v_status(id)),
-                                      name |-> f_ia_v_v_status(id).name],
+                                      name |-> f_ia_v_v_status(id).name,
+                                      offs |-> f_ia_v_v_status(id).offs],
                                      [policy |-> load(id, f_ia_r(id)),
-                                      name |-> f_ia_r(id).name]>>]>>)                           
+                                      name |-> f_ia_r(id).name,
+                                      offs |-> f_ia_r(id).offs]>>]>>)                           
     /\ Ignore' = 0
     /\ SLocks' = SLocks
     /\ StateE'    = SLocks'[id]             
@@ -512,7 +518,8 @@ p_allocate7r(id) ==
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                          name |-> id]>>>>, 
                            to   |-> <<[policy |-> load(id, p_al_v_is_acc(id)),
-                                       name |-> p_al_v_is_acc(id).name]>>]>>) 
+                                       name |-> p_al_v_is_acc(id).name,
+                                       offs |-> p_al_v_is_acc(id).offs]>>]>>) 
     /\ Ignore' = 0
     /\ SLocks' = SLocks
     /\ StateE'    = SLocks'[id]             
@@ -545,7 +552,8 @@ p_allocate10_15(id) ==
                                            [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                             name |-> id]>>>>, 
                               to   |-> <<[policy |-> load(id, p_al_v_p_id(id)),
-                                          name |-> p_al_v_p_id(id).name]>>]>>) 
+                                          name |-> p_al_v_p_id(id).name,
+                                          offs |-> p_al_v_p_id(id).offs]>>]>>) 
        /\ Ignore'    = 0
        /\ SLocks'    = SLocks
        /\ StateE'    = SLocks'[id]  
@@ -886,25 +894,35 @@ f_get_section_program5(id) ==
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                     name |-> id]>>>>, 
                       to   |-> <<[policy |-> load(id, f_gsp_v_program_arr_e1_c1(id)),
-                                  name |-> f_gsp_v_program_arr_e1_c1(id).name],
+                                  name |-> f_gsp_v_program_arr_e1_c1(id).name,
+                                  offs |-> f_gsp_v_program_arr_e1_c1(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e1_c2(id)),
-                                  name |-> f_gsp_v_program_arr_e1_c2(id).name],
+                                  name |-> f_gsp_v_program_arr_e1_c2(id).name,
+                                  offs |-> f_gsp_v_program_arr_e1_c2(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e1_c3(id)),
-                                  name |-> f_gsp_v_program_arr_e1_c3(id).name],
+                                  name |-> f_gsp_v_program_arr_e1_c3(id).name,
+                                  offs |-> f_gsp_v_program_arr_e1_c3(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e1_c4(id)),
-                                  name |-> f_gsp_v_program_arr_e1_c4(id).name],
+                                  name |-> f_gsp_v_program_arr_e1_c4(id).name,
+                                  offs |-> f_gsp_v_program_arr_e1_c4(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e1_c5(id)),
-                                  name |-> f_gsp_v_program_arr_e1_c5(id).name],
+                                  name |-> f_gsp_v_program_arr_e1_c5(id).name,
+                                  offs |-> f_gsp_v_program_arr_e1_c5(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e2_c1(id)),
-                                  name |-> f_gsp_v_program_arr_e2_c1(id).name],
+                                  name |-> f_gsp_v_program_arr_e2_c1(id).name,
+                                  offs |-> f_gsp_v_program_arr_e2_c1(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e2_c2(id)),
-                                  name |-> f_gsp_v_program_arr_e2_c2(id).name],
+                                  name |-> f_gsp_v_program_arr_e2_c2(id).name,
+                                  offs |-> f_gsp_v_program_arr_e2_c2(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e2_c3(id)),
-                                  name |-> f_gsp_v_program_arr_e2_c3(id).name],
+                                  name |-> f_gsp_v_program_arr_e2_c3(id).name,
+                                  offs |-> f_gsp_v_program_arr_e2_c3(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e2_c4(id)),
-                                  name |-> f_gsp_v_program_arr_e2_c4(id).name],
+                                  name |-> f_gsp_v_program_arr_e2_c4(id).name,
+                                  offs |-> f_gsp_v_program_arr_e2_c4(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e2_c5(id)),
-                                  name |-> f_gsp_v_program_arr_e2_c5(id).name]>>]>>) 
+                                  name |-> f_gsp_v_program_arr_e2_c5(id).name,
+                                  offs |-> f_gsp_v_program_arr_e2_c5(id).offs]>>]>>) 
     /\ Ignore'    = 0
     /\ SLocks'    = SLocks
     /\ StateE'    = SLocks'[id]  
@@ -976,25 +994,35 @@ f_get_section_program9(id) ==
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                      name |-> id]>>>>,
                           to   |-> <<[policy |-> load(id, f_gsp_r_arr_e1_c1(id)),
-                                      name |-> f_gsp_r_arr_e1_c1(id).name], 
+                                      name |-> f_gsp_r_arr_e1_c1(id).name,
+                                      offs |-> f_gsp_r_arr_e1_c1(id).offs], 
                                      [policy |-> load(id, f_gsp_r_arr_e1_c2(id)),
-                                      name |-> f_gsp_r_arr_e1_c2(id).name],  
+                                      name |-> f_gsp_r_arr_e1_c2(id).name,
+                                      offs |-> f_gsp_r_arr_e1_c2(id).offs],  
                                      [policy |-> load(id, f_gsp_r_arr_e1_c3(id)),
-                                      name |-> f_gsp_r_arr_e1_c3(id).name], 
+                                      name |-> f_gsp_r_arr_e1_c3(id).name,
+                                      offs |-> f_gsp_r_arr_e1_c3(id).offs], 
                                      [policy |-> load(id, f_gsp_r_arr_e1_c4(id)),
-                                      name |-> f_gsp_r_arr_e1_c4(id).name],
+                                      name |-> f_gsp_r_arr_e1_c4(id).name,
+                                      offs |-> f_gsp_r_arr_e1_c4(id).offs],
                                      [policy |-> load(id, f_gsp_r_arr_e1_c5(id)),
-                                      name |-> f_gsp_r_arr_e1_c5(id).name], 
+                                      name |-> f_gsp_r_arr_e1_c5(id).name,
+                                      offs |-> f_gsp_r_arr_e1_c5(id).offs], 
                                      [policy |-> load(id, f_gsp_r_arr_e2_c1(id)),
-                                      name |-> f_gsp_r_arr_e2_c1(id).name],
+                                      name |-> f_gsp_r_arr_e2_c1(id).name,
+                                      offs |-> f_gsp_r_arr_e2_c1(id).offs],
                                      [policy |-> load(id, f_gsp_r_arr_e2_c2(id)),
-                                      name |-> f_gsp_r_arr_e2_c2(id).name], 
+                                      name |-> f_gsp_r_arr_e2_c2(id).name,
+                                      offs |-> f_gsp_r_arr_e2_c2(id).offs], 
                                      [policy |-> load(id, f_gsp_r_arr_e2_c3(id)),
-                                      name |-> f_gsp_r_arr_e2_c3(id).name],  
+                                      name |-> f_gsp_r_arr_e2_c3(id).name,
+                                      offs |-> f_gsp_r_arr_e2_c3(id).offs],  
                                      [policy |-> load(id, f_gsp_r_arr_e2_c4(id)),
-                                      name |-> f_gsp_r_arr_e2_c4(id).name], 
+                                      name |-> f_gsp_r_arr_e2_c4(id).name,
+                                      offs |-> f_gsp_r_arr_e2_c4(id).offs], 
                                      [policy |-> load(id, f_gsp_r_arr_e2_c5(id)),
-                                      name |-> f_gsp_r_arr_e2_c5(id).name]>>]>>) 
+                                      name |-> f_gsp_r_arr_e2_c5(id).name,
+                                      offs |-> f_gsp_r_arr_e2_c5(id).offs]>>]>>) 
     /\ Ignore'   = 0
     /\ SLocks'   = SLocks
     /\ StateE'   = SLocks'[id]  
@@ -1149,15 +1177,20 @@ f_get_paper5(id) ==
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                      name |-> id]>>>>,
                           to   |-> <<[policy |-> load(id, f_gp_v_paper_rec_c1(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name], 
+                                      name |-> f_gp_v_paper_rec_c1(id).name,
+                                      offs |-> f_gp_v_paper_rec_c1(id).offs], 
                                      [policy |-> load(id, f_gp_v_paper_rec_c2(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c2(id).name,
+                                      offs |-> f_gp_v_paper_rec_c2(id).offs],
                                      [policy |-> load(id, f_gp_v_paper_rec_c3(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c3(id).name,
+                                      offs |-> f_gp_v_paper_rec_c3(id).offs],
                                      [policy |-> load(id, f_gp_v_paper_rec_c4(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c4(id).name,
+                                      offs |-> f_gp_v_paper_rec_c4(id).offs],
                                      [policy |-> load(id, f_gp_v_paper_rec_c5(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name]>>]>>)  
+                                      name |-> f_gp_v_paper_rec_c5(id).name,
+                                      offs |-> f_gp_v_paper_rec_c5(id).offs]>>]>>)  
             /\ Ignore'    = 0
             /\ SLocks'    = SLocks
             /\ StateE'    = SLocks'[id]  
@@ -1201,15 +1234,20 @@ f_get_paper8(id) ==
                                       name |-> id]>>
                                   >>,
                           to   |-> <<[policy |-> load(id, f_gp_r_rec_c1(id)),
-                                      name |-> f_gp_r_rec_c1(id).name], 
+                                      name |-> f_gp_r_rec_c1(id).name,
+                                      offs |-> f_gp_r_rec_c1(id).offs], 
                                      [policy |-> load(id, f_gp_r_rec_c2(id)),
-                                      name |-> f_gp_r_rec_c1(id).name],
+                                      name |-> f_gp_r_rec_c2(id).name,
+                                      offs |-> f_gp_r_rec_c2(id).offs],
                                      [policy |-> load(id, f_gp_r_rec_c3(id)),
-                                      name |-> f_gp_r_rec_c1(id).name],
+                                      name |-> f_gp_r_rec_c3(id).name,
+                                      offs |-> f_gp_r_rec_c3(id).offs],
                                      [policy |-> load(id, f_gp_r_rec_c4(id)),
-                                      name |-> f_gp_r_rec_c1(id).name],
+                                      name |-> f_gp_r_rec_c4(id).name,
+                                      offs |-> f_gp_r_rec_c4(id).offs],
                                      [policy |-> load(id, f_gp_r_rec_c5(id)),
-                                      name |-> f_gp_r_rec_c1(id).name]>>]>>) 
+                                      name |-> f_gp_r_rec_c5(id).name,
+                                      offs |-> f_gp_r_rec_c5(id).offs]>>]>>) 
     /\ Ignore'   = 0
     /\ SLocks'   = SLocks
     /\ StateE'   = SLocks'[id]  
@@ -1653,5 +1691,5 @@ SpecFS == Init /\ [] [Next]_vars
                   
 =============================================================================
 \* Modification History
-\* Last modified Thu May 26 19:08:54 MSK 2022 by user-sc
+\* Last modified Thu Jun 09 19:01:58 MSK 2022 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc
