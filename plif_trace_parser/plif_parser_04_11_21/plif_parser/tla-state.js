@@ -326,9 +326,9 @@ class GraphClass{
     console.log(offset)
     console.log(NodeSessionId)
     try{
-      //fp = sessions[NodeSessionId].get(sessionName)["StateRegs"][0]["fp"]
+      fp = sessions[NodeSessionId].get(sessionName)["StateRegs"][0]["fp"]
       console.log([...sessions[NodeSessionId].get(sessionName)["SessionM"]])
-      policy = [...sessions[NodeSessionId].get(sessionName)["SessionM"][offset]]
+      policy = [...sessions[NodeSessionId].get(sessionName)["SessionM"][offset + fp -1]]
       console.log()
     } catch(e){
       policy = undefined
@@ -381,6 +381,7 @@ class GraphClass{
     this.layersNum += 1;
     this.tableEdges = [];
     this.tableNodes = [];
+    let processedNodes = []
     const persReg = new RegExp('^col_[\\w\\d_]+');
     
     //Check if this Session already exist, otherwise add new one
@@ -424,14 +425,9 @@ class GraphClass{
           this.nodeNames.push(v["name"]?.slice(1, -1));
           fromNodes.push(this.id);
         } else {
-          //let id_l = this.#getNodeId(v["name"]?.slice(1, -1))
-          //for(a of this.layers2Nodes){
-          //  if(id_l == a["id"]){
-          //    a["layer"].push(id_l)
-          //  }
-          //}
           fromNodes.push(this.#getNodeId(v["name"]?.slice(1, -1)))
         }
+        processedNodes.push(v["name"]?.slice(1, -1));
       }
       if(!(this.nodeNames.includes(data["to"][i]["name"]?.slice(1, -1)))){
         let EndPol = undefined//this.getPolicyFromSessionM(sessionName, data["to"][i]["name"], TraceSessions, this.layersNum, data["to"][i]["offs"]);
@@ -449,6 +445,7 @@ class GraphClass{
         this.layers2Nodes.push({id:this.id, layer: [this.layersNum]})
         this.nodeNames.push( data["to"][i]["name"]?.slice(1, -1));
         inNodes.push(this.id);
+        processedNodes.push(data["to"][i]["name"]?.slice(1, -1));
       } else {
           //let EndPol = this.getPolicyFromSessionM(sessionName, data["to"][i]["name"], TraceSessions, this.layersNum, data["to"][i]["offs"]);
           let EndPol = undefined//this.getPolicyFromSessionM(sessionName, data["to"][i]["name"], TraceSessions, this.layersNum, data["to"][i]["offs"]);
@@ -469,7 +466,14 @@ class GraphClass{
           if(!f){
             this.layers2Nodes.push({ id: id_l, layer: [this.layersNum] })
           }
-          this.sessions[sessionName].UpdatePolicy(id_l, data["to"][i]["name"]?.slice(1, -1), policy);
+          if( !processedNodes.includes(data["to"][i]["name"]?.slice(1, -1)) ){
+            console.log("UPDATE CALL")
+            console.log(data["to"][i]["name"]?.slice(1, -1))
+            console.log(processedNodes)
+            this.sessions[sessionName].UpdatePolicy(id_l, data["to"][i]["name"]?.slice(1, -1), policy);
+            processedNodes.push(data["to"][i]["name"]?.slice(1, -1))
+          }
+            
           inNodes.push(this.#getNodeId( data["to"][i]["name"]?.slice(1, -1)))
       }    
 
