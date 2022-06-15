@@ -190,8 +190,7 @@ p_ap_p_auth(x)          == [loc|->"mem", offs |->4, policy |-> any_caller(x),
 (***************************************************************************)
 (* FUNCTION f_is_accepted markup.  All input parameters and return value   *)
 (* have any_caller policy.  This global policy assertion is wrong and will *)
-(* be corrected durif @@ g == [x \in (DOMAIN f) \cup (DOMAIN g) |->        *)
-(*           IF x \in DOMAIN f THEN f[x] ELSE g[x]]ng analisys.            *)
+(* be corrected during analisys.                                           *)
 (***************************************************************************)                       
 
 f_ia_p_s_id(x)          == [loc|->"mem", offs |->0, policy |-> 
@@ -401,7 +400,7 @@ TypeOK ==
 
 =============================================================================
 \* Modification History
-\* Last modified Tue Dec 14 15:55:01 MSK 2021 by user-sc
+\* Last modified Mon Jun 13 11:26:01 MSK 2022 by user-sc
 \* Last modified Tue Oct 13 11:26:10 MSK 2020 by user-sc
 \* Last modified Wed Aug 19 14:25:25 MSK 2020 by User
 \* Created Tue Aug 04 12:15:07 MSK 2020 by User

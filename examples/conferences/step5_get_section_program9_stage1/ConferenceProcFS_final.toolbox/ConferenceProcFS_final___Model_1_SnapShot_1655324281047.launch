@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.lamport.tla.toolbox.tool.tlc.modelCheck">
+    <stringAttribute key="configurationName" value="Model_1_SnapShot_1655324281047"/>
+    <intAttribute key="distributedFPSetCount" value="0"/>
+    <stringAttribute key="distributedNetworkInterface" value="192.168.8.100"/>
+    <intAttribute key="distributedNodesCount" value="1"/>
+    <stringAttribute key="distributedTLC" value="off"/>
+    <intAttribute key="fpIndex" value="80"/>
+    <intAttribute key="maxHeapSize" value="25"/>
+    <stringAttribute key="modelBehaviorInit" value="Init"/>
+    <stringAttribute key="modelBehaviorNext" value="Next"/>
+    <stringAttribute key="modelBehaviorSpec" value="SpecFS"/>
+    <intAttribute key="modelBehaviorSpecType" value="1"/>
+    <stringAttribute key="modelBehaviorVars" value="VPol, XLocks, Trace, Ignore, StateE, SLocks, New2Old, Sessions"/>
+    <stringAttribute key="modelComments" value=""/>
+    <booleanAttribute key="modelCorrectnessCheckDeadlock" value="true"/>
+    <listAttribute key="modelCorrectnessInvariants">
+        <listEntry value="1ParalocksInv"/>
+    </listAttribute>
+    <listAttribute key="modelCorrectnessProperties"/>
+    <intAttribute key="modelEditorOpenTabs" value="8"/>
+    <stringAttribute key="modelExpressionEval" value=""/>
+    <listAttribute key="modelParameterConstants">
+        <listEntry value="U;;{allen, bob, alex, john};1;1"/>
+        <listEntry value="Session_number;;3;0;0"/>
+        <listEntry value="UU;;{x};1;0"/>
+        <listEntry value="GPol;;(&quot;organizer&quot; :&gt; {&quot;manager&quot;,  &quot;reviewer&quot;, &quot;guest&quot;}) @@&#10;                 (&quot;manager&quot; :&gt; {&quot;guest&quot;}) @@&#10;                 (&quot;reviewer&quot; :&gt; {&quot;guest&quot;}) @@&#10;                 (&quot;guest&quot; :&gt;  {&quot;guest&quot;});0;0"/>
+        <listEntry value="ALL;;ALL;1;0"/>
+        <listEntry value="NONE;;NONE;1;0"/>
+        <listEntry value="E0;;{&quot;t_expire&quot;};0;0"/>
+        <listEntry value="E1;;{&quot;guest&quot;, &quot;reviewer&quot;, &quot;manager&quot;, &quot;organizer&quot;};0;0"/>
+        <listEntry value="Undef;;Undef;1;0"/>
+    </listAttribute>
+    <intAttribute key="modelVersion" value="20191005"/>
+    <intAttribute key="numberOfWorkers" value="8"/>
+    <stringAttribute key="result.mail.address" value=""/>
+    <stringAttribute key="specName" value="ConferenceProcFS_final"/>
+    <stringAttribute key="tlcResourcesProfile" value="local custom"/>
+</launchConfiguration>

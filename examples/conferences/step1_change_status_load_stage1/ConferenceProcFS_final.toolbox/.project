@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>ConferenceProcFS_final</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>toolbox.builder.TLAParserBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>toolbox.natures.TLANature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>Apalache.tla</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Apalache.tla</locationURI>
+		</link>
+		<link>
+			<name>ConferenceProcFS_final.tla</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/ConferenceProcFS_final.tla</locationURI>
+		</link>
+		<link>
+			<name>Paralocks.tla</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Paralocks.tla</locationURI>
+		</link>
+		<link>
+			<name>ParametersFS.tla</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/ParametersFS.tla</locationURI>
+		</link>
+		<link>
+			<name>RuntimeFS.tla</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/RuntimeFS.tla</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>
