@@ -386,7 +386,12 @@ ParalocksInv ==
         ELSE TRUE
 
 
-VPolUnchanged == VPol = VPol'
+VPolUnchanged ==  
+    LET CompInv_OP1 (x, y) == /\ x
+                              /\ comparePol(VPol[y].policy, VPol'[y].policy)
+                              /\ comparePol(VPol'[y].policy, VPol[y].policy)
+    IN FoldSet(CompInv_OP1, TRUE, DOMAIN VPol)
+
 CompInv == [] [VPolUnchanged]_vars 
 
 ===========================================================================

@@ -1598,10 +1598,12 @@ Init ==
              @@ [e2 \in E1 |-> 
                 \* step3 invariant violation fix 
                 CASE 
+                   /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_change_status"
+                   /\ e2 = "reviewer"  ->  {s}
                     \* если первый блок сеанса f_is_accepted, то
                     \*  открываем блокировку manager
                      
-                   /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
+                [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
                    /\ e2 = "manager"  ->  {s}
                 [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_allocate"
                    /\ e2 = "manager"  ->  {s}
@@ -1752,5 +1754,5 @@ SpecFS == Init /\ [] [Next]_vars
                   
 =============================================================================
 \* Modification History
-\* Last modified Thu Jun 16 01:03:34 MSK 2022 by user-sc
+\* Last modified Sun Jun 19 12:24:40 MSK 2022 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc

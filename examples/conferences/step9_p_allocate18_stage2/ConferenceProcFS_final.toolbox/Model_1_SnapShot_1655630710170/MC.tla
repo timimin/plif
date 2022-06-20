@@ -3,26 +3,36 @@ EXTENDS ConferenceProcFS_final, TLC
 
 \* MV CONSTANT declarations@modelParameterConstants
 CONSTANTS
+allen, bob, alex, john
+----
+
+\* MV CONSTANT declarations@modelParameterConstants
+CONSTANTS
 x
 ----
 
+\* MV CONSTANT definitions U
+const_16556306927742000 == 
+{allen, bob, alex, john}
+----
+
 \* MV CONSTANT definitions UU
-const_165219551448233000 == 
+const_16556306927743000 == 
 {x}
 ----
 
-\* CONSTANT definitions @modelParameterConstants:0U
-const_165219551448234000 == 
-{"allen", "bob", "alex", "john"}
+\* SYMMETRY definition
+symm_16556306927754000 == 
+Permutations(const_16556306927742000)
 ----
 
 \* CONSTANT definitions @modelParameterConstants:1Session_number
-const_165219551448235000 == 
+const_16556306927755000 == 
 3
 ----
 
 \* CONSTANT definitions @modelParameterConstants:3GPol
-const_165219551448236000 == 
+const_16556306927756000 == 
 ("organizer" :> {"manager",  "reviewer", "guest"}) @@
                  ("manager" :> {"guest"}) @@
                  ("reviewer" :> {"guest"}) @@
@@ -30,15 +40,15 @@ const_165219551448236000 ==
 ----
 
 \* CONSTANT definitions @modelParameterConstants:6E0
-const_165219551448237000 == 
+const_16556306927757000 == 
 {"t_expire"}
 ----
 
 \* CONSTANT definitions @modelParameterConstants:7E1
-const_165219551448238000 == 
+const_16556306927758000 == 
 {"guest", "reviewer", "manager", "organizer"}
 ----
 
 =============================================================================
 \* Modification History
-\* Created Tue May 10 18:11:54 MSK 2022 by user-sc
+\* Created Sun Jun 19 12:24:52 MSK 2022 by user-sc

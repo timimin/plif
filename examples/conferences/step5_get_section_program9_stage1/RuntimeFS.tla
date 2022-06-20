@@ -392,6 +392,6 @@ VPolUnchanged ==
                               /\ comparePol(VPol'[y].policy, VPol[y].policy)
     IN FoldSet(CompInv_OP1, TRUE, DOMAIN VPol)
 
-CompInv == [] [VPolUnchanged]_vars s 
+CompInv == [] [VPolUnchanged]_vars
 
 ===========================================================================

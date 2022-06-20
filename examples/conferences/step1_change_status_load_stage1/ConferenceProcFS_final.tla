@@ -1217,19 +1217,19 @@ f_get_paper8(id) ==
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>, 
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c2(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c2(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c3(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c3(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c4(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c4(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c5(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c5(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>
                                   >>,
@@ -1691,5 +1691,5 @@ SpecFS == Init /\ [] [Next]_vars
                   
 =============================================================================
 \* Modification History
-\* Last modified Wed Jun 15 21:29:22 MSK 2022 by user-sc
+\* Last modified Mon Jun 20 19:39:11 MSK 2022 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc

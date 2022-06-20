@@ -1598,10 +1598,12 @@ Init ==
              @@ [e2 \in E1 |-> 
                 \* step3 invariant violation fix 
                 CASE 
+                   /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_change_status"
+                   /\ e2 = "reviewer"  ->  {s}
                     \* если первый блок сеанса f_is_accepted, то
                     \*  открываем блокировку manager
                      
-                   /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
+                [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
                    /\ e2 = "manager"  ->  {s}
                 [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_allocate"
                    /\ e2 = "manager"  ->  {s}
@@ -1623,15 +1625,29 @@ Init ==
                                        \* step6 CompInv violation fix
                                        {<<u1,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
                                                 reviewer |-> {NONE}, manager |-> {u1}, 
-                                                organizer |-> {NONE}]>> >>,
+                                                organizer |-> {NONE}]>>>>,
                                         <<u1,<<[t_expire |-> {}], [guest |-> {NONE}, 
                                                 reviewer |-> {NONE}, manager |-> {NONE}, 
-                                                organizer |-> {NONE}]>> >>},
+                                                organizer |-> {NONE}]>>>>},
                                        name |-> "col_submissions_status"],
            
-            col_logs_event_id               |-> [ext|->0, policy |-> min,
+            col_logs_event_id               |-> [ext|->0, policy |-> 
+                                       \* step8 CompInv violation fix
+                                       {<<u1,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {u1}, 
+                                                organizer |-> {NONE}]>>>>,
+                                        <<u1,<<[t_expire |-> {}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {NONE}, 
+                                                organizer |-> {NONE}]>>>>},
                                        name |-> "col_logs_event_id"],
-            col_logs_err_info               |-> [ext|->0, policy |-> min,
+            col_logs_err_info               |-> [ext|->0, policy |-> 
+                                       \* step8 CompInv violation fix
+                                       {<<u1,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {u1}, 
+                                                organizer |-> {NONE}]>>>>,
+                                        <<u1,<<[t_expire |-> {}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {NONE}, 
+                                                organizer |-> {NONE}]>>>>},
                                        name |-> "col_logs_err_info"],
 
             col_papers_paper_id             |-> [ext|->0, policy |-> min,
@@ -1646,7 +1662,7 @@ Init ==
                                        \* step5 CompInv violation fix
                                        {<<u1,<<[t_expire |-> {}], [guest |-> {NONE},
                                             reviewer |-> {NONE}, manager |-> {NONE}, 
-                                            organizer |-> {NONE}]>> >>},
+                                            organizer |-> {NONE}]>>>>},
                                        name |-> "col_papers_authors"], 
 
             col_conferences_conference_id   |-> [ext|->0, policy |-> min,
@@ -1671,13 +1687,41 @@ Init ==
             col_sections_description        |-> [ext|->0, policy |-> min,
                                        name |-> "col_sections_description"], 
 
-            col_allocations_allocation_id   |-> [ext|->0, policy |-> min,
+            col_allocations_allocation_id   |-> [ext|->0, policy |-> 
+                                       \* step7 CompInv violation fix
+                                       {<<u1,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {u1}, 
+                                                organizer |-> {NONE}]>>>>,
+                                        <<u1,<<[t_expire |-> {}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {NONE}, 
+                                                organizer |-> {NONE}]>>>>},
                                        name |-> "col_allocations_allocation_id"],
-            col_allocations_submission_id   |-> [ext|->0, policy |-> min,
+            col_allocations_submission_id   |-> [ext|->0, policy |-> 
+                                       \* step7 CompInv violation fix
+                                       {<<u1,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {u1}, 
+                                                organizer |-> {NONE}]>>>>,
+                                        <<u1,<<[t_expire |-> {}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {NONE}, 
+                                                organizer |-> {NONE}]>>>>},
                                        name |-> "col_allocations_submission_id"],
-            col_allocations_section_id      |-> [ext|->0, policy |-> min,
+            col_allocations_section_id      |-> [ext|->0, policy |-> 
+                                       \* step7 CompInv violation fix
+                                       {<<u1,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {u1}, 
+                                                organizer |-> {NONE}]>>>>,
+                                        <<u1,<<[t_expire |-> {}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {NONE}, 
+                                                organizer |-> {NONE}]>>>>},
                                        name |-> "col_allocations_section_id"],
-            col_allocations_allocation_date |-> [ext|->0, policy |-> min,
+            col_allocations_allocation_date |-> [ext|->0, policy |-> 
+                                       \* step7 CompInv violation fix
+                                       {<<u1,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {u1}, 
+                                                organizer |-> {NONE}]>>>>,
+                                        <<u1,<<[t_expire |-> {}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {NONE}, 
+                                                organizer |-> {NONE}]>>>>},
                                        name |-> "col_allocations_allocation_date"]
            ] 
 (*                       
@@ -1710,5 +1754,5 @@ SpecFS == Init /\ [] [Next]_vars
                   
 =============================================================================
 \* Modification History
-\* Last modified Thu Jun 16 00:11:37 MSK 2022 by user-sc
+\* Last modified Sun Jun 19 12:24:40 MSK 2022 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc

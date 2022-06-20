@@ -1224,19 +1224,19 @@ f_get_paper8(id) ==
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>, 
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c2(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c2(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c3(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c3(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c4(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c4(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c5(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c5(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>
                                   >>,
@@ -1596,12 +1596,15 @@ Init ==
         /\ SLocks   = 
             [s \in S |-> [e1 \in E0 |-> {}] 
              @@ [e2 \in E1 |-> 
-                \* step3 invariant violation fix 
                 CASE 
+                   /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_change_status"
+                   /\ e2 = "reviewer"  ->  {s}
+                    
+                    \* step3 invariant violation fix 
                     \* если первый блок сеанса f_is_accepted, то
                     \*  открываем блокировку manager
                      
-                   /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
+                [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
                    /\ e2 = "manager"  ->  {s}
                 [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_allocate"
                    /\ e2 = "manager"  ->  {s}
@@ -1752,5 +1755,5 @@ SpecFS == Init /\ [] [Next]_vars
                   
 =============================================================================
 \* Modification History
-\* Last modified Thu Jun 16 01:03:34 MSK 2022 by user-sc
+\* Last modified Mon Jun 20 19:37:25 MSK 2022 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc
