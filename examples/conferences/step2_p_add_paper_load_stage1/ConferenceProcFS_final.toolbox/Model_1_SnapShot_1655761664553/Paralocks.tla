@@ -323,7 +323,7 @@ LUB_2_Existence == \A p1, p2 \in PoliciesSet : \E p \in PoliciesSet :
 
 =============================================================================
 \* Modification History
-\* Last modified Sat Jan 29 15:27:54 MSK 2022 by user-sc
+\* Last modified Thu Jun 09 19:03:19 MSK 2022 by user-sc
 \* Last modified Fri Oct 02 09:31:12 MSK 2020 by user-sc
 \* Last modified Sat Aug 29 19:20:37 MSK 2020 by User
 \* Created Mon May 25 11:46:28 MSK 2020 by User

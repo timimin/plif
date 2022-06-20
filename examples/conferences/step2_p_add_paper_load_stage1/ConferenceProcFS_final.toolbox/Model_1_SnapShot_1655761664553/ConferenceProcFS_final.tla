@@ -88,23 +88,23 @@ p_submit_paper4(id) ==
                  [from |-> <<<<[policy |-> load(id, p_sp_p_s_id(id)), 
                                 name |-> p_sp_p_s_id(id).name],
                                [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                name |-> id \o "_PCLabel"]>>, 
+                                name |-> id]>>, 
                              <<[policy |-> load(id, p_sp_p_p_id(id)),
                                 name |-> p_sp_p_p_id(id).name],
                                [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                name |-> id \o "_PCLabel"]>>,
+                                name |-> id]>>,
                              <<[policy |-> load(id, p_sp_p_c_id(id)),
                                 name |-> p_sp_p_c_id(id).name],
                                [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                name |-> id \o "_PCLabel"]>>, 
+                                name |-> id]>>, 
                              <<[policy |-> load(id, p_sp_p_sub_date(id)),
                                 name |-> p_sp_p_sub_date(id).name],
                                [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                name |-> id \o "_PCLabel"]>>,
+                                name |-> id]>>,
                              <<[policy |-> load(id, p_sp_p_stat(id)),
                                 name |-> p_sp_p_stat(id).name],
                                [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                name |-> id \o "_PCLabel"]>>>>,
+                                name |-> id]>>>>,
                   to |-> <<VPol.col_submissions_submission_id,
                            VPol.col_submissions_paper_id,
                            VPol.col_submissions_conference_id,
@@ -133,7 +133,7 @@ p_submit_paper_exit(id) ==
     /\ Trace' = Append(Trace, <<id, "p_submit_paper_exit", 
                                     "submit_paper_exit",
                        [from |-> << >>, to |-> << >>]>>)
-    /\ Ignore'= 1
+    /\ Ignore'= 0
     /\ SLocks' = SLocks
     /\ StateE'    = SLocks'[id]  
     /\ UNCHANGED <<New2Old, VPol>>
@@ -165,7 +165,8 @@ p_add_paper_load (id) ==
                                      reviewer |-> {NONE}, manager |-> {NONE}, 
                                      organizer |-> {NONE}]>> >>}>> 
                     >>    
-    /\ Ignore' = 1
+    \* step1 invariant violation fix
+	/\ Ignore' = 1
     /\ SLocks' = SLocks
     /\ StateE'    = SLocks'[id]             
     /\ UNCHANGED  <<VPol>>
@@ -191,23 +192,23 @@ p_add_paper4(id) ==
                             <<<<[policy |-> load(id, p_ap_p_p_id(id)),
                                    name |-> p_ap_p_p_id(id).name],
                                 [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                   name |-> id \o "_PCLabel"]>>, 
+                                   name |-> id]>>, 
                               <<[policy |-> load(id, p_ap_p_papers_tit(id)),
                                    name |-> p_ap_p_papers_tit(id).name],
                                 [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                   name |-> id \o "_PCLabel"]>>,
+                                   name |-> id]>>,
                               <<[policy |-> load(id, p_ap_p_papers_abst(id)),
                                    name |-> p_ap_p_papers_abst(id).name],
                                 [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                   name |-> id \o "_PCLabel"]>>, 
+                                   name |-> id]>>, 
                               <<[policy |-> load(id, p_ap_p_t(id)),
                                    name |-> p_ap_p_t(id).name],
                                 [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                   name |-> id \o "_PCLabel"]>>,
+                                   name |-> id]>>,
                               <<[policy |-> load(id, p_ap_p_auth(id)),
                                    name |-> p_ap_p_auth(id).name],
                                 [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                   name |-> id \o "_PCLabel"]>>>>,
+                                   name |-> id]>>>>,
                               to |-> <<VPol.col_papers_paper_id,
                               VPol.col_papers_title,
                               VPol.col_papers_abstract,
@@ -267,6 +268,7 @@ p_change_status_load(id) ==
                                reviewer |-> {NONE}, manager |-> {NONE}, 
                                organizer |-> {NONE}]>> >>}>> 
                     >> 
+ \* Step_0 invariant violation fix.
     /\ Ignore' = 1
     /\ SLocks' = SLocks
     /\ StateE'    = SLocks'[id]             
@@ -290,7 +292,7 @@ p_change_status4(id) ==
                                    [policy |-> load(id, p_cs_p_s_id(id)),
                                     name |-> p_cs_p_s_id(id).name],
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>>>,
+                                    name |-> id]>>>>,
                                 to |-> <<VPol.col_submissions_status>>]>>) 
     /\ Ignore' = 0
     /\ SLocks' = SLocks
@@ -360,9 +362,10 @@ f_is_accepted5(id) ==
                                          [policy |-> load(id, f_ia_p_s_id(id)),
                                           name |-> f_ia_p_s_id(id).name],
                                          [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                          name |-> id \o "_PCLabel"]>>>>, 
+                                          name |-> id]>>>>, 
                             to |-> <<[policy |-> load(id, f_ia_v_v_status(id)),
-                                      name |-> f_ia_v_v_status(id).name]>>]>>) 
+                                      name |-> f_ia_v_v_status(id).name,
+                                      offs |-> f_ia_v_v_status(id).offs]>>]>>) 
     /\ Ignore'    = 0
     /\ SLocks'    = SLocks
     /\ StateE'    = SLocks'[id]  
@@ -375,9 +378,9 @@ f_is_accepted8(id) ==
                                       name |-> f_ia_v_v_status(id).name],
                                      [policy |-> min, name |-> "l1"],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>>>, 
+                                      name |-> id]>>>>, 
                         to   |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>]>>)    
+                                    name |-> id]>>]>>)    
     /\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>> 
          
 f_is_accepted9_10(id) ==
@@ -385,9 +388,10 @@ f_is_accepted9_10(id) ==
        /\ Trace'    = Append(Trace, <<id, "f_is_accepted9","then return TRUE",
                              [from |-> <<<<[policy |-> min, name |-> "l2"],
                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                name |-> id \o "_PCLabel"]>>>>, 
+                                name |-> id]>>>>, 
                               to   |-> <<[policy |-> load(id, f_ia_r(id)),
-                                          name |-> f_ia_r(id).name]>>]>>) 
+                                          name |-> f_ia_r(id).name,
+                                          offs |-> f_ia_r(id).offs]>>]>>) 
        /\ Ignore'   = 0
        /\ SLocks'   = SLocks
        /\ StateE'   = SLocks'[id]  
@@ -398,9 +402,10 @@ f_is_accepted9_10(id) ==
                                           "else return FALSE",
                              [from |-> <<<<[policy |-> min, name |-> "l3"],
                                            [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                            name |-> id \o "_PCLabel"]>>>>, 
+                                            name |-> id]>>>>, 
                               to   |-> <<[policy |-> load(id, f_ia_r(id)),
-                                          name |-> f_ia_r(id).name]>>]>>) 
+                                          name |-> f_ia_r(id).name,
+                                          offs |-> f_ia_r(id).offs ]>>]>>) 
        /\ Ignore'   = 0
        /\ SLocks'   = SLocks
        /\ StateE'   = SLocks'[id]  
@@ -411,9 +416,9 @@ f_is_accepted11(id) ==
     /\ ifend(id, <<"f_is_accepted","exit">>)
     /\ Trace' = Append(Trace, <<id,"f_is_accepted11","endif",
                        [from |-> <<<<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>>>, 
+                                      name |-> id]>>>>, 
                         to   |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>]>>) 
+                                    name |-> id]>>]>>) 
     /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>
 
 f_is_accepted_exit(id) ==
@@ -484,21 +489,24 @@ p_allocate7(id) ==
                          [from |-> <<<<[policy |-> load(id, p_al_p_s_id(id)),
                                         name |-> p_al_p_s_id(id).name],
                                        [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                        name |-> id \o "_PCLabel"]>>, 
+                                        name |-> id]>>, 
                                      <<[policy |-> load(id, f_ia_v_v_status(id)),
                                         name |-> f_ia_v_v_status(id).name],
                                        [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                        name |-> id \o "_PCLabel"]>>,
+                                        name |-> id]>>,
                                      <<[policy |-> load(id, f_ia_r(id)),
                                         name |-> f_ia_r(id).name],
                                        [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                        name |-> id \o "_PCLabel"]>>>>, 
+                                        name |-> id]>>>>, 
                           to   |-> <<[policy |-> load(id, f_ia_p_s_id(id)),
-                                      name |-> f_ia_p_s_id(id).name], 
+                                      name |-> f_ia_p_s_id(id).name,
+                                      offs |-> f_ia_p_s_id(id).offs], 
                                      [policy |-> load(id, f_ia_v_v_status(id)),
-                                      name |-> f_ia_v_v_status(id).name],
+                                      name |-> f_ia_v_v_status(id).name,
+                                      offs |-> f_ia_v_v_status(id).offs],
                                      [policy |-> load(id, f_ia_r(id)),
-                                      name |-> f_ia_r(id).name]>>]>>)                           
+                                      name |-> f_ia_r(id).name,
+                                      offs |-> f_ia_r(id).offs]>>]>>)                           
     /\ Ignore' = 0
     /\ SLocks' = SLocks
     /\ StateE'    = SLocks'[id]             
@@ -510,9 +518,10 @@ p_allocate7r(id) ==
                           [from |-> <<<<[policy |-> Sessions[id]["Ret"][1], 
                                          name   |-> f_ia_r(id).name],
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                         name |-> id \o "_PCLabel"]>>>>, 
+                                         name |-> id]>>>>, 
                            to   |-> <<[policy |-> load(id, p_al_v_is_acc(id)),
-                                       name |-> p_al_v_is_acc(id).name]>>]>>) 
+                                       name |-> p_al_v_is_acc(id).name,
+                                       offs |-> p_al_v_is_acc(id).offs]>>]>>) 
     /\ Ignore' = 0
     /\ SLocks' = SLocks
     /\ StateE'    = SLocks'[id]             
@@ -524,9 +533,9 @@ p_allocate8(id) ==
                        [from |-> <<<<[policy |-> load(id, p_al_v_is_acc(id)),
                                       name |-> p_al_v_is_acc(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>>>, 
+                                      name |-> id]>>>>, 
                         to   |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>]>>)    
+                                    name |-> id]>>]>>)    
     /\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>> 
     
 p_allocate10_15(id) ==     
@@ -543,9 +552,10 @@ p_allocate10_15(id) ==
                                            [policy |-> load(id, p_al_p_s_id(id)),
                                             name |-> p_al_p_s_id(id).name],
                                            [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                            name |-> id \o "_PCLabel"]>>>>, 
+                                            name |-> id]>>>>, 
                               to   |-> <<[policy |-> load(id, p_al_v_p_id(id)),
-                                          name |-> p_al_v_p_id(id).name]>>]>>) 
+                                          name |-> p_al_v_p_id(id).name,
+                                          offs |-> p_al_v_p_id(id).offs]>>]>>) 
        /\ Ignore'    = 0
        /\ SLocks'    = SLocks
        /\ StateE'    = SLocks'[id]  
@@ -574,19 +584,19 @@ p_allocate13(id) ==
                  [from |-> <<<<[policy |-> load(id, p_al_p_a_id(id)),
                                 name |-> p_al_p_a_id(id).name],
                                [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                name |-> id \o "_PCLabel"]>>, 
+                                name |-> id]>>, 
                              <<[policy |-> load(id, p_al_p_s_id(id)),
                                 name |-> p_al_p_s_id(id).name],
                                [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                name |-> id \o "_PCLabel"]>>,
+                                name |-> id]>>,
                              <<[policy |-> load(id, p_al_p_sec_id(id)),
                                 name |-> p_al_p_sec_id(id).name],
                                [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                name |-> id \o "_PCLabel"]>>,
+                                name |-> id]>>,
                              <<[policy |-> load(id, p_al_p_alloc_date(id)),
                                 name |-> p_al_p_alloc_date(id).name],
                                [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                name |-> id \o "_PCLabel"]>>>>,
+                                name |-> id]>>>>,
                   to   |-> <<VPol.col_allocations_allocation_id,
                              VPol.col_allocations_submission_id,
                              VPol.col_allocations_section_id,
@@ -600,9 +610,9 @@ p_allocate16(id) ==
     /\ ifend(id, <<"p_allocate","exit">>)
     /\ Trace' = Append(Trace, <<id,"p_allocate16","endif",
                        [from |-> <<<<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>>>, 
+                                      name |-> id]>>>>, 
                         to   |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>]>>) 
+                                    name |-> id]>>]>>) 
     /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>
    
 p_allocate17(id) ==
@@ -612,9 +622,9 @@ p_allocate17(id) ==
                       [from |-> <<<<[policy |-> load(id, p_al_e_PAPER_NOT_ACCEPTED(id)),
                                      name |-> p_al_e_PAPER_NOT_ACCEPTED(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>>>, 
+                                     name |-> id]>>>>, 
                        to   |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>]>>)    
+                                    name |-> id]>>]>>)    
     /\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>> 
 
 p_allocate18(id) ==
@@ -628,10 +638,10 @@ p_allocate18(id) ==
                  "|| s_id || ', ' || sysdate || '.')",
                        [from |-> <<<<[policy |-> min, name |-> "l4"],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>, 
+                                      name |-> id]>>, 
                                    <<[policy |-> min, name |-> "l5"],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>>>,
+                                      name |-> id]>>>>,
                         to   |-> <<VPol.col_logs_event_id,
                                    VPol.col_logs_err_info>>]>>)
     /\ Ignore' = 0
@@ -794,7 +804,7 @@ f_get_section_program5(id) ==
                                    [policy |-> load(id, f_gsp_p_s_id(id)),
                                     name |-> f_gsp_p_s_id(id).name],
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>,
+                                    name |-> id]>>,
                                  <<VPol.col_papers_title, 
                                    VPol.col_papers_paper_id,
                                    VPol.col_allocations_submission_id,
@@ -804,7 +814,7 @@ f_get_section_program5(id) ==
                                    [policy |-> load(id, f_gsp_p_s_id(id)),
                                     name |-> f_gsp_p_s_id(id).name],
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>,
+                                    name |-> id]>>,
                                  <<VPol.col_papers_abstract, 
                                    VPol.col_papers_paper_id,
                                    VPol.col_allocations_submission_id,
@@ -814,7 +824,7 @@ f_get_section_program5(id) ==
                                    [policy |-> load(id, f_gsp_p_s_id(id)),
                                     name |-> f_gsp_p_s_id(id).name],
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>,
+                                    name |-> id]>>,
                                  <<VPol.col_papers_text, 
                                    VPol.col_papers_paper_id,
                                    VPol.col_allocations_submission_id,
@@ -824,7 +834,7 @@ f_get_section_program5(id) ==
                                    [policy |-> load(id, f_gsp_p_s_id(id)),
                                     name |-> f_gsp_p_s_id(id).name],
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>,
+                                    name |-> id]>>,
                                  <<[policy |-> min, name |-> "l6"], 
                                    VPol.col_papers_paper_id,
                                    VPol.col_allocations_submission_id,
@@ -834,7 +844,7 @@ f_get_section_program5(id) ==
                                    [policy |-> load(id, f_gsp_p_s_id(id)),
                                     name |-> f_gsp_p_s_id(id).name],
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>,
+                                    name |-> id]>>,
                                  <<VPol.col_papers_paper_id, 
                                    VPol.col_papers_paper_id,
                                    VPol.col_allocations_submission_id,
@@ -844,7 +854,7 @@ f_get_section_program5(id) ==
                                    [policy |-> load(id, f_gsp_p_s_id(id)),
                                     name |-> f_gsp_p_s_id(id).name],
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>,
+                                    name |-> id]>>,
                                  <<VPol.col_papers_title, 
                                    VPol.col_papers_paper_id,
                                    VPol.col_allocations_submission_id,
@@ -854,7 +864,7 @@ f_get_section_program5(id) ==
                                    [policy |-> load(id, f_gsp_p_s_id(id)),
                                     name |-> f_gsp_p_s_id(id).name],
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>,
+                                    name |-> id]>>,
                                  <<VPol.col_papers_abstract, 
                                    VPol.col_papers_paper_id,
                                    VPol.col_allocations_submission_id,
@@ -864,7 +874,7 @@ f_get_section_program5(id) ==
                                    [policy |-> load(id, f_gsp_p_s_id(id)),
                                     name |-> f_gsp_p_s_id(id).name],
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>,
+                                    name |-> id]>>,
                                  <<VPol.col_papers_text, 
                                    VPol.col_papers_paper_id,
                                    VPol.col_allocations_submission_id,
@@ -874,7 +884,7 @@ f_get_section_program5(id) ==
                                    [policy |-> load(id, f_gsp_p_s_id(id)),
                                     name |-> f_gsp_p_s_id(id).name],
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>,
+                                    name |-> id]>>,
                                  <<[policy |-> min, name |-> "l7"], 
                                    VPol.col_papers_paper_id,
                                    VPol.col_allocations_submission_id,
@@ -884,27 +894,37 @@ f_get_section_program5(id) ==
                                    [policy |-> load(id, f_gsp_p_s_id(id)),
                                     name |-> f_gsp_p_s_id(id).name],
                                    [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                    name |-> id \o "_PCLabel"]>>>>, 
+                                    name |-> id]>>>>, 
                       to   |-> <<[policy |-> load(id, f_gsp_v_program_arr_e1_c1(id)),
-                                  name |-> f_gsp_v_program_arr_e1_c1(id).name],
+                                  name |-> f_gsp_v_program_arr_e1_c1(id).name,
+                                  offs |-> f_gsp_v_program_arr_e1_c1(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e1_c2(id)),
-                                  name |-> f_gsp_v_program_arr_e1_c2(id).name],
+                                  name |-> f_gsp_v_program_arr_e1_c2(id).name,
+                                  offs |-> f_gsp_v_program_arr_e1_c2(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e1_c3(id)),
-                                  name |-> f_gsp_v_program_arr_e1_c3(id).name],
+                                  name |-> f_gsp_v_program_arr_e1_c3(id).name,
+                                  offs |-> f_gsp_v_program_arr_e1_c3(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e1_c4(id)),
-                                  name |-> f_gsp_v_program_arr_e1_c4(id).name],
+                                  name |-> f_gsp_v_program_arr_e1_c4(id).name,
+                                  offs |-> f_gsp_v_program_arr_e1_c4(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e1_c5(id)),
-                                  name |-> f_gsp_v_program_arr_e1_c5(id).name],
+                                  name |-> f_gsp_v_program_arr_e1_c5(id).name,
+                                  offs |-> f_gsp_v_program_arr_e1_c5(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e2_c1(id)),
-                                  name |-> f_gsp_v_program_arr_e2_c1(id).name],
+                                  name |-> f_gsp_v_program_arr_e2_c1(id).name,
+                                  offs |-> f_gsp_v_program_arr_e2_c1(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e2_c2(id)),
-                                  name |-> f_gsp_v_program_arr_e2_c2(id).name],
+                                  name |-> f_gsp_v_program_arr_e2_c2(id).name,
+                                  offs |-> f_gsp_v_program_arr_e2_c2(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e2_c3(id)),
-                                  name |-> f_gsp_v_program_arr_e2_c3(id).name],
+                                  name |-> f_gsp_v_program_arr_e2_c3(id).name,
+                                  offs |-> f_gsp_v_program_arr_e2_c3(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e2_c4(id)),
-                                  name |-> f_gsp_v_program_arr_e2_c4(id).name],
+                                  name |-> f_gsp_v_program_arr_e2_c4(id).name,
+                                  offs |-> f_gsp_v_program_arr_e2_c4(id).offs],
                                  [policy |-> load(id, f_gsp_v_program_arr_e2_c5(id)),
-                                  name |-> f_gsp_v_program_arr_e2_c5(id).name]>>]>>) 
+                                  name |-> f_gsp_v_program_arr_e2_c5(id).name,
+                                  offs |-> f_gsp_v_program_arr_e2_c5(id).offs]>>]>>) 
     /\ Ignore'    = 0
     /\ SLocks'    = SLocks
     /\ StateE'    = SLocks'[id]  
@@ -938,63 +958,73 @@ f_get_section_program9(id) ==
                                   <<[policy |-> load(id, f_gsp_v_program_arr_e1_c1(id)),
                                      name |-> f_gsp_v_program_arr_e1_c1(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<[policy |-> load(id, f_gsp_v_program_arr_e1_c2(id)),
                                      name |-> f_gsp_v_program_arr_e1_c2(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<[policy |-> load(id, f_gsp_v_program_arr_e1_c3(id)),
                                      name |-> f_gsp_v_program_arr_e1_c3(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<[policy |-> load(id, f_gsp_v_program_arr_e1_c4(id)),
                                      name |-> f_gsp_v_program_arr_e1_c4(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<[policy |-> load(id, f_gsp_v_program_arr_e1_c5(id)),
                                      name |-> f_gsp_v_program_arr_e1_c5(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<[policy |-> load(id, f_gsp_v_program_arr_e2_c1(id)),
                                      name |-> f_gsp_v_program_arr_e2_c1(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<[policy |-> load(id, f_gsp_v_program_arr_e2_c2(id)),
                                      name |-> f_gsp_v_program_arr_e2_c2(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<[policy |-> load(id, f_gsp_v_program_arr_e2_c3(id)),
                                      name |-> f_gsp_v_program_arr_e2_c3(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<[policy |-> load(id, f_gsp_v_program_arr_e2_c4(id)),
                                      name |-> f_gsp_v_program_arr_e2_c4(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<[policy |-> load(id, f_gsp_v_program_arr_e2_c5(id)),
                                      name |-> f_gsp_v_program_arr_e2_c5(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>>>,
+                                     name |-> id]>>>>,
                           to   |-> <<[policy |-> load(id, f_gsp_r_arr_e1_c1(id)),
-                                      name |-> f_gsp_r_arr_e1_c1(id).name], 
+                                      name |-> f_gsp_r_arr_e1_c1(id).name,
+                                      offs |-> f_gsp_r_arr_e1_c1(id).offs], 
                                      [policy |-> load(id, f_gsp_r_arr_e1_c2(id)),
-                                      name |-> f_gsp_r_arr_e1_c2(id).name],  
+                                      name |-> f_gsp_r_arr_e1_c2(id).name,
+                                      offs |-> f_gsp_r_arr_e1_c2(id).offs],  
                                      [policy |-> load(id, f_gsp_r_arr_e1_c3(id)),
-                                      name |-> f_gsp_r_arr_e1_c3(id).name], 
+                                      name |-> f_gsp_r_arr_e1_c3(id).name,
+                                      offs |-> f_gsp_r_arr_e1_c3(id).offs], 
                                      [policy |-> load(id, f_gsp_r_arr_e1_c4(id)),
-                                      name |-> f_gsp_r_arr_e1_c4(id).name],
+                                      name |-> f_gsp_r_arr_e1_c4(id).name,
+                                      offs |-> f_gsp_r_arr_e1_c4(id).offs],
                                      [policy |-> load(id, f_gsp_r_arr_e1_c5(id)),
-                                      name |-> f_gsp_r_arr_e1_c5(id).name], 
+                                      name |-> f_gsp_r_arr_e1_c5(id).name,
+                                      offs |-> f_gsp_r_arr_e1_c5(id).offs], 
                                      [policy |-> load(id, f_gsp_r_arr_e2_c1(id)),
-                                      name |-> f_gsp_r_arr_e2_c1(id).name],
+                                      name |-> f_gsp_r_arr_e2_c1(id).name,
+                                      offs |-> f_gsp_r_arr_e2_c1(id).offs],
                                      [policy |-> load(id, f_gsp_r_arr_e2_c2(id)),
-                                      name |-> f_gsp_r_arr_e2_c2(id).name], 
+                                      name |-> f_gsp_r_arr_e2_c2(id).name,
+                                      offs |-> f_gsp_r_arr_e2_c2(id).offs], 
                                      [policy |-> load(id, f_gsp_r_arr_e2_c3(id)),
-                                      name |-> f_gsp_r_arr_e2_c3(id).name],  
+                                      name |-> f_gsp_r_arr_e2_c3(id).name,
+                                      offs |-> f_gsp_r_arr_e2_c3(id).offs],  
                                      [policy |-> load(id, f_gsp_r_arr_e2_c4(id)),
-                                      name |-> f_gsp_r_arr_e2_c4(id).name], 
+                                      name |-> f_gsp_r_arr_e2_c4(id).name,
+                                      offs |-> f_gsp_r_arr_e2_c4(id).offs], 
                                      [policy |-> load(id, f_gsp_r_arr_e2_c5(id)),
-                                      name |-> f_gsp_r_arr_e2_c5(id).name]>>]>>) 
+                                      name |-> f_gsp_r_arr_e2_c5(id).name,
+                                      offs |-> f_gsp_r_arr_e2_c5(id).offs]>>]>>) 
     /\ Ignore'   = 0
     /\ SLocks'   = SLocks
     /\ StateE'   = SLocks'[id]  
@@ -1052,8 +1082,7 @@ f_get_section_program(id,st)  ==
 f_get_paper_load(id) == 
  IF XLocks = Undef 
     THEN
-    /\ openLock (id, {[t_expire |-> ALL]}) 
-    (*/\ SLocks'  = [SLocks EXCEPT ![id]["t_expire"] = {ALL}]*)
+    \*/\ openLock (id, {[t_expire |-> ALL]}) 
     /\ XLocks' = id  
     /\ Sessions' = 
                [Sessions EXCEPT ![id]["SessionM"] = 
@@ -1094,7 +1123,7 @@ f_get_paper_load(id) ==
                      f_gp_v_paper_rec_c5(id).policy>>
                    >>  
     /\ Ignore'   = 0
-    \*/\ SLocks'   = SLocks
+    /\ SLocks'   = SLocks
     /\ StateE'   = SLocks'[id]             
     /\ UNCHANGED  <<VPol>>
   ELSE UNCHANGED vars
@@ -1123,41 +1152,46 @@ f_get_paper5(id) ==
                                     [policy |-> load(id, f_gp_p_p_id(id)),
                                      name |-> f_gp_p_p_id(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<VPol.col_papers_title,
                                     VPol.col_papers_paper_id,
                                     [policy |-> load(id, f_gp_p_p_id(id)),
                                      name |-> f_gp_p_p_id(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>,
+                                      name |-> id]>>,
                                   <<VPol.col_papers_abstract,
                                     VPol.col_papers_paper_id,
                                     [policy |-> load(id, f_gp_p_p_id(id)),
                                      name |-> f_gp_p_p_id(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<VPol.col_papers_text,
                                     VPol.col_papers_paper_id,
                                     [policy |-> load(id, f_gp_p_p_id(id)),
                                      name |-> f_gp_p_p_id(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>,
+                                     name |-> id]>>,
                                   <<VPol.col_papers_authors,
                                     VPol.col_papers_paper_id,
                                     [policy |-> load(id, f_gp_p_p_id(id)),
                                      name |-> f_gp_p_p_id(id).name],
                                     [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                     name |-> id \o "_PCLabel"]>>>>,
+                                     name |-> id]>>>>,
                           to   |-> <<[policy |-> load(id, f_gp_v_paper_rec_c1(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name], 
+                                      name |-> f_gp_v_paper_rec_c1(id).name,
+                                      offs |-> f_gp_v_paper_rec_c1(id).offs], 
                                      [policy |-> load(id, f_gp_v_paper_rec_c2(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c2(id).name,
+                                      offs |-> f_gp_v_paper_rec_c2(id).offs],
                                      [policy |-> load(id, f_gp_v_paper_rec_c3(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c3(id).name,
+                                      offs |-> f_gp_v_paper_rec_c3(id).offs],
                                      [policy |-> load(id, f_gp_v_paper_rec_c4(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c4(id).name,
+                                      offs |-> f_gp_v_paper_rec_c4(id).offs],
                                      [policy |-> load(id, f_gp_v_paper_rec_c5(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name]>>]>>)  
+                                      name |-> f_gp_v_paper_rec_c5(id).name,
+                                      offs |-> f_gp_v_paper_rec_c5(id).offs]>>]>>)  
             /\ Ignore'    = 0
             /\ SLocks'    = SLocks
             /\ StateE'    = SLocks'[id]  
@@ -1182,34 +1216,39 @@ f_get_paper8(id) ==
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c1(id)),
                                       name |-> f_gp_v_paper_rec_c1(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>, 
+                                      name |-> id]>>, 
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c2(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c2(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>,
+                                      name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c3(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c3(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>,
+                                      name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c4(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c4(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>,
+                                      name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c5(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c5(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>
+                                      name |-> id]>>
                                   >>,
                           to   |-> <<[policy |-> load(id, f_gp_r_rec_c1(id)),
-                                      name |-> f_gp_r_rec_c1(id).name], 
+                                      name |-> f_gp_r_rec_c1(id).name,
+                                      offs |-> f_gp_r_rec_c1(id).offs], 
                                      [policy |-> load(id, f_gp_r_rec_c2(id)),
-                                      name |-> f_gp_r_rec_c1(id).name],
+                                      name |-> f_gp_r_rec_c2(id).name,
+                                      offs |-> f_gp_r_rec_c2(id).offs],
                                      [policy |-> load(id, f_gp_r_rec_c3(id)),
-                                      name |-> f_gp_r_rec_c1(id).name],
+                                      name |-> f_gp_r_rec_c3(id).name,
+                                      offs |-> f_gp_r_rec_c3(id).offs],
                                      [policy |-> load(id, f_gp_r_rec_c4(id)),
-                                      name |-> f_gp_r_rec_c1(id).name],
+                                      name |-> f_gp_r_rec_c4(id).name,
+                                      offs |-> f_gp_r_rec_c4(id).offs],
                                      [policy |-> load(id, f_gp_r_rec_c5(id)),
-                                      name |-> f_gp_r_rec_c1(id).name]>>]>>) 
+                                      name |-> f_gp_r_rec_c5(id).name,
+                                      offs |-> f_gp_r_rec_c5(id).offs]>>]>>) 
     /\ Ignore'   = 0
     /\ SLocks'   = SLocks
     /\ StateE'   = SLocks'[id]  
@@ -1258,19 +1297,19 @@ dispatch(id,st) ==
                                           "submit_paper_load",
                          [from |-> <<<<[policy |-> min, name |-> "c1"],
                                        [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                        name |-> id \o "_PCLabel"]>>, 
+                                        name |-> id]>>, 
                                      <<[policy |-> min, name |-> "c2"],
                                        [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                        name |-> id \o "_PCLabel"]>>, 
+                                        name |-> id]>>, 
                                      <<[policy |-> min, name |-> "c3"],
                                        [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                        name |-> id \o "_PCLabel"]>>, 
+                                        name |-> id]>>, 
                                      <<[policy |-> min, name |-> "c4"],
                                        [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                        name |-> id \o "_PCLabel"]>>, 
+                                        name |-> id]>>, 
                                      <<[policy |-> min, name |-> "c5"],
                                        [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                        name |-> id \o "_PCLabel"]>>>>, 
+                                        name |-> id]>>>>, 
                          to   |-> <<p_sp_p_s_id(id), p_sp_p_p_id(id), 
                                     p_sp_p_c_id(id), p_sp_p_sub_date(id),
                                     p_sp_p_stat(id)>>]>>)
@@ -1284,10 +1323,16 @@ dispatch(id,st) ==
                                             "change_status_load",
                                [from |-> <<<<[policy |-> min, name |-> "c11"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>, 
-                                           <<[policy |-> min, name |-> "c12"],
+                                              name |-> id]>>, 
+                                           <<[policy |-> 
+                                             {<<u1,<<[t_expire |-> {NONE}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {u1}, 
+                                                organizer |-> {NONE}]>> >>,
+                                              <<u1,<<[t_expire |-> {}], [guest |-> {NONE}, 
+                                                reviewer |-> {NONE}, manager |-> {NONE}, 
+                                                organizer |-> {NONE}]>> >>}, name |-> "c12"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                      name |-> id \o "_PCLabel"]>>>>, 
+                                      name |-> id]>>>>, 
                                 to   |-> <<p_cs_p_s_id(id), 
                                            p_cs_p_stat(id)>>]>>) 
       [] /\ Head(st).pc[1] = "p_change_status" 
@@ -1300,13 +1345,13 @@ dispatch(id,st) ==
                                             "is_accepted_load",
                         [from |-> <<<<[policy |-> min, name |-> "c13"],
                                       [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                       name |-> id \o "_PCLabel"]>>, 
+                                       name |-> id]>>, 
                                     <<f_ia_v_v_status(id),
                                       [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                       name |-> id \o "_PCLabel"]>>,
+                                       name |-> id]>>,
                                     <<f_ia_r(id),
                                       [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                       name |-> id \o "_PCLabel"]>>>>, 
+                                       name |-> id]>>>>, 
                          to   |-> <<f_ia_p_s_id(id), f_ia_v_v_status(id),
                                     f_ia_r(id)>>]>>)
       [] /\ Head(st).pc[1] = "f_is_accepted" 
@@ -1318,22 +1363,22 @@ dispatch(id,st) ==
                                             "allocate_load", 
                [from |-> <<<<[policy |-> min, name |-> "c14"],
                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                              name |-> id \o "_PCLabel"]>>, 
+                              name |-> id]>>, 
                            <<[policy |-> min, name |-> "c15"],
                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                              name |-> id \o "_PCLabel"]>>,
+                              name |-> id]>>,
                            <<[policy |-> min, name |-> "c16"],
                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                              name |-> id \o "_PCLabel"]>>, 
+                              name |-> id]>>, 
                            <<[policy |-> min, name |-> "c17"],
                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                              name |-> id \o "_PCLabel"]>>,
+                              name |-> id]>>,
                            <<p_al_v_p_id(id),
                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                              name |-> id \o "_PCLabel"]>>,
+                              name |-> id]>>,
                            <<p_al_e_PAPER_NOT_ACCEPTED(id),
                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                              name |-> id \o "_PCLabel"]>>>>, 
+                              name |-> id]>>>>, 
                 to   |-> <<p_al_p_a_id(id), p_al_p_s_id(id),
                            p_al_p_sec_id(id), p_al_p_alloc_date(id),
                            p_al_v_p_id(id), p_al_e_PAPER_NOT_ACCEPTED(id)>>]>>)
@@ -1347,64 +1392,64 @@ dispatch(id,st) ==
                     [from |-> <<<<[policy |-> min, name |-> "c18"]>>,
                                          <<f_gsp_r_arr_e1_c1(id),
                                            [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                            name |-> id \o "_PCLabel"]>>, 
+                                            name |-> id]>>, 
                                           <<f_gsp_r_arr_e1_c2(id),
                                             [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                             name |-> id \o "_PCLabel"]>>,  
+                                             name |-> id]>>,  
                                           <<f_gsp_r_arr_e1_c3(id),
                                             [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                             name |-> id \o "_PCLabel"]>>,
+                                             name |-> id]>>,
                                           <<f_gsp_r_arr_e1_c4(id),
                                             [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                             name |-> id \o "_PCLabel"]>>,
+                                             name |-> id]>>,
                                           <<f_gsp_r_arr_e1_c5(id),
                                             [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                             name |-> id \o "_PCLabel"]>>,
+                                             name |-> id]>>,
                                           <<f_gsp_r_arr_e2_c1(id),
                                             [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                             name |-> id \o "_PCLabel"]>>,
+                                             name |-> id]>>,
                                           <<f_gsp_r_arr_e2_c2(id),
                                             [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                             name |-> id \o "_PCLabel"]>>,
+                                             name |-> id]>>,
                                           <<f_gsp_r_arr_e2_c3(id),
                                             [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                             name |-> id \o "_PCLabel"]>>,  
+                                             name |-> id]>>,  
                                           <<f_gsp_r_arr_e2_c4(id),
                                             [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                             name |-> id \o "_PCLabel"]>>,
+                                             name |-> id]>>,
                                           <<f_gsp_r_arr_e2_c5(id),
                                             [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                             name |-> id \o "_PCLabel"]>>,
+                                             name |-> id]>>,
                                       <<f_gsp_v_program_arr_e1_c1(id),
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                         name |-> id \o "_PCLabel"]>>, 
+                                         name |-> id]>>, 
                                       <<f_gsp_v_program_arr_e1_c2(id),
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                         name |-> id \o "_PCLabel"]>>,  
+                                         name |-> id]>>,  
                                       <<f_gsp_v_program_arr_e1_c3(id),
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                         name |-> id \o "_PCLabel"]>>,
+                                         name |-> id]>>,
                                       <<f_gsp_v_program_arr_e1_c4(id),
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                         name |-> id \o "_PCLabel"]>>,
+                                         name |-> id]>>,
                                       <<f_gsp_v_program_arr_e1_c5(id),
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                         name |-> id \o "_PCLabel"]>>,
+                                         name |-> id]>>,
                                       <<f_gsp_v_program_arr_e2_c1(id),
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                         name |-> id \o "_PCLabel"]>>,
+                                         name |-> id]>>,
                                       <<f_gsp_v_program_arr_e2_c2(id),
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                         name |-> id \o "_PCLabel"]>>,
+                                         name |-> id]>>,
                                       <<f_gsp_v_program_arr_e2_c3(id),
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                         name |-> id \o "_PCLabel"]>>,  
+                                         name |-> id]>>,  
                                       <<f_gsp_v_program_arr_e2_c4(id),
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                         name |-> id \o "_PCLabel"]>>,
+                                         name |-> id]>>,
                                       <<f_gsp_v_program_arr_e2_c5(id),
                                         [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                         name |-> id \o "_PCLabel"]>>>>, 
+                                         name |-> id]>>>>, 
                      to   |-> <<f_gsp_p_s_id (id), f_gsp_r_arr_e1_c1(id), 
                                 f_gsp_r_arr_e1_c2(id), f_gsp_r_arr_e1_c3(id),
                                 f_gsp_r_arr_e1_c4(id), f_gsp_r_arr_e1_c5(id),
@@ -1428,39 +1473,39 @@ dispatch(id,st) ==
             /\ f_get_paper_load(id)
             /\ Trace' = Append(Trace, <<id, "f_get_paper_load",
                                             "get_paper_load",
-                               [from |-> <<<<[policy |-> min, name |-> "c6"],
+                               [from |-> <<<<[policy |-> min, name |-> "c26"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>, 
+                                              name |-> id]>>, 
                                            <<f_gp_v_paper_rec_c1(id),
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>, 
+                                              name |-> id]>>, 
                                            <<f_gp_v_paper_rec_c2(id),
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>, 
+                                              name |-> id]>>, 
                                            <<f_gp_v_paper_rec_c3(id),
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>, 
+                                              name |-> id]>>, 
                                            <<f_gp_v_paper_rec_c4(id),
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>,
+                                              name |-> id]>>,
                                            <<f_gp_v_paper_rec_c5(id),
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>,
+                                              name |-> id]>>,
                                            <<f_gp_r_rec_c1(id),
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>,
+                                              name |-> id]>>,
                                            <<f_gp_r_rec_c2(id),
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>,
+                                              name |-> id]>>,
                                            <<f_gp_r_rec_c3(id),
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>,
+                                              name |-> id]>>,
                                            <<f_gp_r_rec_c4(id),
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>,
+                                              name |-> id]>>,
                                            <<f_gp_r_rec_c5(id),
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>
+                                              name |-> id]>>
                                            >>, 
                                 to   |-> <<f_gp_p_p_id(id), f_gp_v_paper_rec_c1(id), 
                                            f_gp_v_paper_rec_c2(id), 
@@ -1481,19 +1526,22 @@ dispatch(id,st) ==
                                           "add_paper_load",
                                [from |-> <<<<[policy |-> min, name |-> "c6"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>, 
+                                              name |-> id]>>, 
                                            <<[policy |-> min, name |-> "c7"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>, 
+                                              name |-> id]>>, 
                                            <<[policy |-> min, name |-> "c8"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>, 
+                                              name |-> id]>>, 
                                            <<[policy |-> min, name |-> "c9"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>, 
-                                           <<[policy |-> min, name |-> "c10"],
+                                              name |-> id]>>, 
+                                           <<[policy |-> 
+                                             {<<u1,<<[t_expire |-> {}], [guest |-> {NONE},
+                                                      reviewer |-> {NONE}, manager |-> {NONE}, 
+                                                      organizer |-> {NONE}]>> >>}, name |-> "c10"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
-                                              name |-> id \o "_PCLabel"]>>>>, 
+                                              name |-> id]>>>>, 
                                 to   |-> <<p_ap_p_p_id(id), p_ap_p_papers_tit(id), 
                                            p_ap_p_papers_abst(id), 
                                            p_ap_p_t(id), p_ap_p_auth(id)>>]>>)                                          
@@ -1541,16 +1589,16 @@ Init ==
                                 x \cup ({<<y @@ [fp |->1]>>}), {}, pc) ])]
         /\ SLocks   = 
             [s \in S |-> [e1 \in E0 |-> {}] 
-             @@ [e2 \in E1 |->
-                CASE 
-                    \*# если первый блок сеанса f_is_accepted, то
-                    \*  открываем блокировку manager
-                     
-                   /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
-                   /\ e2 = "manager"  ->  {s}
-                [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_allocate"
-                   /\ e2 = "manager"  ->  {s}
-                [] OTHER -> {}]]                         
+             @@ [e2 \in E1 |-> {}]]
+             \*   CASE 
+             \*       \*# если первый блок сеанса f_is_accepted, то
+             \*      \*  открываем блокировку manager
+             \*        
+             \*      /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
+             \*      /\ e2 = "manager"  ->  {s}
+             \*   [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_allocate"
+             \*      /\ e2 = "manager"  ->  {s}
+             \*   [] OTHER -> {}]]                         
         /\ New2Old  = <<<<max>>, <<min>>>>
         /\ Ignore   = 0
         /\ XLocks   = Undef
@@ -1644,5 +1692,5 @@ SpecFS == Init /\ [] [Next]_vars
                   
 =============================================================================
 \* Modification History
-\* Last modified Tue May 10 18:14:12 MSK 2022 by user-sc
+\* Last modified Tue Jun 21 00:47:27 MSK 2022 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc

@@ -12,27 +12,27 @@ x
 ----
 
 \* MV CONSTANT definitions U
-const_16557432168332000 == 
+const_165576165043010000 == 
 {allen, bob, alex, john}
 ----
 
 \* MV CONSTANT definitions UU
-const_16557432168333000 == 
+const_165576165043011000 == 
 {x}
 ----
 
 \* SYMMETRY definition
-symm_16557432168334000 == 
-Permutations(const_16557432168332000)
+symm_165576165043012000 == 
+Permutations(const_165576165043010000)
 ----
 
 \* CONSTANT definitions @modelParameterConstants:1Session_number
-const_16557432168335000 == 
+const_165576165043013000 == 
 3
 ----
 
 \* CONSTANT definitions @modelParameterConstants:3GPol
-const_16557432168336000 == 
+const_165576165043014000 == 
 ("organizer" :> {"manager",  "reviewer", "guest"}) @@
                  ("manager" :> {"guest"}) @@
                  ("reviewer" :> {"guest"}) @@
@@ -40,15 +40,15 @@ const_16557432168336000 ==
 ----
 
 \* CONSTANT definitions @modelParameterConstants:6E0
-const_16557432168337000 == 
+const_165576165043015000 == 
 {"t_expire"}
 ----
 
 \* CONSTANT definitions @modelParameterConstants:7E1
-const_16557432168338000 == 
+const_165576165043016000 == 
 {"guest", "reviewer", "manager", "organizer"}
 ----
 
 =============================================================================
 \* Modification History
-\* Created Mon Jun 20 19:40:16 MSK 2022 by user-sc
+\* Created Tue Jun 21 00:47:30 MSK 2022 by user-sc
