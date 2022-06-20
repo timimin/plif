@@ -23,9 +23,9 @@
   margin-top: 10px;
   width: 95%;
   min-width: 1000px;
-  height: 700px;
+  height: 100%;
   padding: 6px;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .statesDiv{
@@ -33,12 +33,14 @@
   min-width: 800px;
   height: calc(100% - 100px);
   display: flex;
+  overflow: hidden;
 }
 
 .statesDiv h4{
   height: 20px;
   margin: auto;
   margin-bottom: 6px;
+  overflow: hidden;
 }
 
 .state-content{
@@ -57,7 +59,7 @@
   height: calc(100% - 5px);
   padding: 5px;
   padding-bottom: 0px;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .singleFlowDiv{
@@ -68,7 +70,7 @@
   height: calc(100% - 5px);
   padding: 5px;
   padding-bottom: 0px;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .currState{
@@ -91,13 +93,17 @@
   /* margin-top: 4px; */
   /* margin: 10px; */
   /* height: 18%; */
+  overflow: hidden;
+  border: 2px solid gray;
+  margin-left: 3px;
+  margin-right: 3px;
 }
 
 .actions{
   display: flex;
   align-items: center;
   /* height: 80%; */
-  overflow-x: scroll;
+  overflow-x: hidden;
   overflow-y: hidden;
   margin-top: 15px;
 }

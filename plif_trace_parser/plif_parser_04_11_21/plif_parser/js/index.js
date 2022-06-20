@@ -55,6 +55,9 @@ async function loadTrace(){
   }
   document.querySelector('.loading').classList.add('hidden');
   document.getElementById("check").classList.remove('hidden-visibility');
+  let a = Boolean(loadCurrState());
+  console.log(a)
+  console.log("//////////////asdfasdf//////////////////////")
   loadCurrState();
 }
 
@@ -73,12 +76,15 @@ async function reloadFile(){
   if(graph == null) return;
   document.querySelector('.loading').classList.add('hidden');
   document.getElementById("check").classList.remove('hidden-visibility');
-  loadCurrState();
+  loadCurrState()
 }
+
+let prev_state = null;
+
 
 // Load curent state and its childs
 async function loadCurrState(){
-  if(graph == null) return;
+  if(graph == null) return false;
   curr_state = copyState(graph.get(curr_state.id));
 
   if(curr_state.value == null){
@@ -93,10 +99,16 @@ async function loadCurrState(){
   //drawCurrState(curr_state.value);
   //drawPreviewState(path[Math.max(0,path.length-2)].value);
   //drawNewTrace(path[Math.max(0,path.length-2)].value);
-  drawNewTrace(curr_state.value);
-  drawNewState(curr_state.value);
-  drawNewGraphView(curr_state.value);
+  if(prev_state == null) {
+    prev_state = curr_state.value;
+    return true;
+  }
+  drawNewTrace(prev_state);
+  drawNewState(prev_state);
+  drawNewGraphView(curr_state.value, prev_state);
+  prev_state = curr_state.value;
   loadChilds();
+  return false;
 }
 
 // Create childs buttons
@@ -143,7 +155,9 @@ function updateCurrent(){
     path.pop();
   }
   else curr_state = childs[selected-1]
-  loadCurrState();
+  console.log("sadfkjhasldkjfhasdlkjfghakswdejh")
+  console.log(loadCurrState());
+
 }
 
 // Draw current state
@@ -168,7 +182,7 @@ function drawNewState(stateStr){
   drawNew2OldState(content, stateStr);
 }
 
-function drawNewGraphView(stateStr){
+function drawNewGraphView(stateStr, prev_state){
   let content = document.getElementById("fgraph");
-  drawGraph(content, stateStr);
+  drawGraph(content, prev_state, stateStr);
 }

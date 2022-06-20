@@ -42,7 +42,7 @@ class Session{
   static #aId = 0;
   static #uId = 0;
 
-  constructor(name, posY, id){
+  constructor(name, posY, id, PCLabelPolicy){
     this.sessionName = name;
     this.posY = posY;
     this.dots = {};
@@ -50,6 +50,8 @@ class Session{
     this.curCoords = [[0,2], [0,2], [0,2]];
     this.constReg = new RegExp('^c\\d+');
     this.persReg = new RegExp('^col_\\w+');
+    this.PCLabel = id;
+    this.PCLabelPolicy = [PCLabelPolicy]
     this.dots[id] = {
         affil: 5,
         type: 5,  
@@ -58,6 +60,7 @@ class Session{
           x: 0, 
           y: this.posY,
           borderWidth: 2,
+          title: this.genHtmlTitle(`<b>"PCLabel"</b>`,  this.PCLabelPolicy),
           color: {
             border: "#000000",
             background: "#000000"
@@ -65,7 +68,7 @@ class Session{
         }
     };
   }
-
+  
   static resetId(){
     Session.#eId = 0;
     Session.#pId = 0;
@@ -175,6 +178,8 @@ class Session{
   }
 
   genHtmlTitle(html, policy) {
+    console.log("Gen HTML title")
+    console.log(policy)
     const container = document.createElement("div");
     container.setAttribute('class', 'graphTitleContaner');
 
@@ -209,20 +214,26 @@ class Session{
 
 
   UpdatePolicy(id, name, policy){
-    console.log("updatePolicy")
     this.dots[id]["policy"].push(policy)
-    console.log( this.dots[id]["policy"])
     this.dots[id]["dot"]["title"] = this.genHtmlTitle(`<b>${name}</b>`,  this.dots[id]["policy"]);
-    console.log(this.dots[id]["dot"]["title"])
   }
 
-  //generate_policy_rep(policy){
-  //  let c = 0;
-  //  let res = ""
-  //  for(const a of policy){
-  //    res = `<div class=graphTitlePolicyInner${c%2}>${}`
-  //  }
-  //}
+
+
+  UpdatePClabel(textPol){
+    console.log("PCLABELUpdateasdasdfgasdfg");
+    console.log(textPol);
+    console.log(this.PCLabelPolicy);
+    if(textPol == undefined || this.PCLabelPolicy[this.PCLabelPolicy.length-1] == textPol){
+      return false;
+    }else{
+      this.PCLabelPolicy.push(textPol)
+      console.log("PCLABELUpdateasdasdfgasdfg__");
+      console.log(this.PCLabelPolicy);
+      this.dots[this.PCLabel]["dot"]["title"] = this.genHtmlTitle(`<b>PCLabel</b>`,  this.PCLabelPolicy);
+      return true;
+    }
+  }
 
   //Add new node to the session
   AddNode(id, name, policy){
@@ -321,10 +332,10 @@ class GraphClass{
   getPolicyFromSessionM(sessionName, nodeName, sessions, NodeSessionId, offset){
     console.log("Get policy from session")
     let fp, policy = undefined;
-    console.log(nodeName)
-    console.log(sessions)
-    console.log(offset)
-    console.log(NodeSessionId)
+    //console.log(nodeName)
+    //console.log(sessions)
+    //console.log(offset)
+    //console.log(NodeSessionId)
     try{
       fp = sessions[NodeSessionId].get(sessionName)["StateRegs"][0]["fp"]
       console.log([...sessions[NodeSessionId].get(sessionName)["SessionM"]])
@@ -350,7 +361,7 @@ class GraphClass{
       let reviewer = [...pol[1][1]['reviewer']][0];
       ToShow += `${ToName}:`;
       if(t_expire != 'NONE')
-        ToShow += `</br>t_expire(${t_expire})`;
+        ToShow += `</br>t_expire`;
       if(guest != 'NONE')
         ToShow += `</br>guest(${guest})`;
       if(manager != 'NONE')
@@ -370,34 +381,47 @@ class GraphClass{
     console.log(node)
     let unsetted = undefined
     if(from_node)
-      unsetted = [...node[0]['policy']][0];
+      unsetted = [...node[0]['policy']];
     else
-      unsetted = [...node['policy']][0];
-    return this.parsePolicy2([unsetted])
+      unsetted = [...node['policy']];
+    console.log("unsetted: ")
+    console.log(unsetted)
+    return this.parsePolicy2(unsetted)
   }
 
   //Add new layer of transitions to graph
-  processLayer(sessionName, data, TraceSessions, VPol){
+  processLayer(sessionName, data, TraceSessions, VPol, PClabelpol){
     this.layersNum += 1;
     this.tableEdges = [];
     this.tableNodes = [];
     let processedNodes = []
     const persReg = new RegExp('^col_[\\w\\d_]+');
-    
+    let parsedPcLablePol = this.parsePolicy2(PClabelpol)
     //Check if this Session already exist, otherwise add new one
     let keys = Object.keys(this.sessions);
     if(!(keys.includes(sessionName))) {
       let lastSession = this.sessions[keys[keys.length - 1]];
       if(lastSession == undefined){
-        this.sessions[sessionName] = new Session(sessionName,  0, ++this.id);
+        this.sessions[sessionName] = new Session(sessionName,  0, ++this.id, parsedPcLablePol);
         this.nodeNames.push("session_" + sessionName);
       }
       else{
-        this.sessions[sessionName] = new Session(sessionName,  lastSession.posY + lastSession.height*node_spacing + group_spacing, ++this.id);
+        this.sessions[sessionName] = new Session(sessionName,  lastSession.posY + lastSession.height*node_spacing + group_spacing, ++this.id, parsedPcLablePol);
         this.nodeNames.push("session_" + sessionName);
       }
     }
-
+    
+    if(this.sessions[sessionName].UpdatePClabel(parsedPcLablePol)){
+      let pc_f = false;
+      for(const a of this.layers2Nodes){
+        if(this.sessions[sessionName].PCLabel == a["id"]){
+          a["layer"].push(this.layersNum)
+          pc_f = true;
+        }
+      }
+      if(!pc_f)
+        this.layers2Nodes.push({id: this.sessions[sessionName].PCLabel, layer: [this.layersNum]})
+    }
     //Paint all nodes in gray
     for(const i of Object.keys(this.sessions)){
       this.sessions[i].PaintInGrey();
@@ -407,8 +431,12 @@ class GraphClass{
     //process from\to fields
     for(let i=0; i < data["from"].length; i++){
       let fromNodes = [], inNodes = [];
+      if(data["to"][i]["name"]?.slice(1, -1) == sessionName)
+        continue;
       for(const v of data["from"][i]){
-        if(!this.nodeNames.includes( v["name"]?.slice(1, -1) )){
+        if(v["name"] == sessionName){
+          fromNodes.push(this.sessions[sessionName].PCLabel);
+        }else if(!this.nodeNames.includes( v["name"]?.slice(1, -1) )){
           let tmp_pol = undefined
           if(persReg.test(v["name"]?.slice(1, -1))){
             console.log('tested')
@@ -932,7 +960,19 @@ var nodes = undefined;
 var edges = undefined;
 var AllSessions = [];
 
-function drawGraph(content, stateStr){
+function ParsePCLabelTrace(trace, n){
+  console.log("trace PC")
+  console.log(trace)
+  if(trace.length == 0)
+    return undefined
+  let PClabelFrom = trace[n][3]["from"]
+  if(PClabelFrom.length == 0)
+    return undefined
+  else
+    return PClabelFrom[0][PClabelFrom[0].length -1]["policy"];
+}
+
+function drawGraph(content, stateStr, next_state){
   console.log("Draw Graph//////////////////////////////////////////////////")
   let template = document.getElementById("GraphTemplate");
   let result = template.content.cloneNode(true);
@@ -950,23 +990,33 @@ function drawGraph(content, stateStr){
   FixButton.onclick = toggleFixTraceMode;
 
   let str = new String(stateStr);
+  let next_str = new String(next_state)
   let vars = parseVars(str);
+  let next_vars = parseVars(next_str);
+  let next_trace = next_vars.get("Trace")
   let trace = vars.get("Trace");
   let session = vars.get("Sessions");
   let VPol = vars.get("VPol");
   console.log(vars);
   console.log(trace);
-  
+  //console.log()
+  console.log(next_vars)
+  //let PClabelpol = ParsePCLabelTrace(next_trace)
+
   if(trace.length > AllSessions.length)
     AllSessions.push(session)
   console.log(AllSessions)
 
   //let sessionM = vars.get("SessionM");
   graphInst =  new GraphClass();
-
+  let PClabelpol = undefined
   if(trace.length > 0){
+    let n_state = 1;
     for(const t of trace){
-      graphInst.processLayer(t[0], t[3], AllSessions, VPol);
+      if(n_state <next_trace.length)
+        PClabelpol = ParsePCLabelTrace(next_trace, n_state)
+      n_state += 1
+      graphInst.processLayer(t[0], t[3], AllSessions, VPol, PClabelpol);
     }
   }
   nodes = new vis.DataSet(graphInst.Nodes);  
