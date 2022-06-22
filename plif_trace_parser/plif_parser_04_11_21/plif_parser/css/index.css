@@ -59,7 +59,8 @@
   height: calc(100% - 5px);
   padding: 5px;
   padding-bottom: 0px;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .singleFlowDiv{
@@ -70,7 +71,8 @@
   height: calc(100% - 5px);
   padding: 5px;
   padding-bottom: 0px;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .currState{
