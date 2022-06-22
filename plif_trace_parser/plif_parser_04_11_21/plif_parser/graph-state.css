@@ -78,7 +78,8 @@ div.redTable {
 
 .newStateTable-frame{
   height: calc(80% - 25px);
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .lockState-stateInfoDiv{

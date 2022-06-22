@@ -431,8 +431,8 @@ class GraphClass{
     //process from\to fields
     for(let i=0; i < data["from"].length; i++){
       let fromNodes = [], inNodes = [];
-      if(data["to"][i]["name"]?.slice(1, -1) == sessionName)
-        continue;
+      //if(data["to"][i]["name"]?.slice(1, -1) == sessionName)
+      //  continue;
       for(const v of data["from"][i]){
         if(v["name"] == sessionName){
           fromNodes.push(this.sessions[sessionName].PCLabel);
@@ -457,7 +457,9 @@ class GraphClass{
         }
         processedNodes.push(v["name"]?.slice(1, -1));
       }
-      if(!(this.nodeNames.includes(data["to"][i]["name"]?.slice(1, -1)))){
+      if(data["to"][i]["name"] == sessionName){
+        inNodes.push(this.sessions[sessionName].PCLabel);
+      }else if(!(this.nodeNames.includes(data["to"][i]["name"]?.slice(1, -1)))){
         let EndPol = undefined//this.getPolicyFromSessionM(sessionName, data["to"][i]["name"], TraceSessions, this.layersNum, data["to"][i]["offs"]);
         if(persReg.test(data["to"][i]["name"]?.slice(1, -1))){
           console.log('tested')
