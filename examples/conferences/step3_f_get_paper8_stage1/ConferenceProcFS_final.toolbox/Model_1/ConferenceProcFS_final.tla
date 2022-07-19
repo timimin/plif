@@ -184,9 +184,9 @@ p_add_paper4(id) ==
                       load(id, p_ap_p_auth(id))>>,
                     <<"p_add_paper","exit">>)
    /\ Trace' = Append(Trace, <<id, "p_add_paper4", 
-                             "INSERT INTO PAPERS " \o
+                             "insert into PAPERS " \o
                              "(PAPER_ID, TITLE, ABSTRACT, TEXT, AUTHORS )"\o
-                             "VALUES (p_id, tit, absr, t, auth)",
+                             "values (p_id, tit, absr, t, auth)",
                              [from |-> 
                             <<<<[policy |-> load(id, p_ap_p_p_id(id)),
                                    name |-> p_ap_p_p_id(id).name],
@@ -353,9 +353,9 @@ f_is_accepted5(id) ==
                     load(id, f_ia_p_s_id(id))), 
                     <<"f_is_accepted","lbl_8">>)
     /\ Trace'     = Append(Trace, <<id, "f_is_accepted5",
-                    "SELECT STATUS into v_status, " \o
-                    "FROM SUBMISSIONS " \o
-                    "WHERE SUBMISSION_ID = s_id",
+                    "select STATUS into v_status, " \o
+                    "from SUBMISSIONS " \o
+                    "where SUBMISSION_ID = s_id",
                            [from |-> <<<<VPol.col_submissions_status, 
                                          VPol.col_submissions_submission_id, 
                                          [policy |-> load(id, f_ia_p_s_id(id)),
@@ -1081,7 +1081,7 @@ f_get_section_program(id,st)  ==
 f_get_paper_load(id) == 
  IF XLocks = Undef 
     THEN
-    \* step1 invariant violation fix
+    \* step2 invariant violation fix
     /\ openLock (id, {[t_expire |-> ALL]}) 
     /\ XLocks' = id  
     /\ Sessions' = 
@@ -1123,7 +1123,7 @@ f_get_paper_load(id) ==
                      f_gp_v_paper_rec_c5(id).policy>>
                    >>  
     /\ Ignore'   = 0
-    \* step1 invariant violation fix
+    \* step2 invariant violation fix
     \*/\ SLocks'   = SLocks
     /\ StateE'   = SLocks'[id]             
     /\ UNCHANGED  <<VPol>>
@@ -1219,19 +1219,19 @@ f_get_paper8(id) ==
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>, 
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c2(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c2(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c3(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c3(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c4(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c4(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c5(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c5(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>
                                   >>,
@@ -1474,7 +1474,7 @@ dispatch(id,st) ==
             /\ f_get_paper_load(id)
             /\ Trace' = Append(Trace, <<id, "f_get_paper_load",
                                             "get_paper_load",
-                               [from |-> <<<<[policy |-> min, name |-> "c6"],
+                               [from |-> <<<<[policy |-> min, name |-> "c26"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                               name |-> id]>>, 
                                            <<f_gp_v_paper_rec_c1(id),
@@ -1693,5 +1693,5 @@ SpecFS == Init /\ [] [Next]_vars
                   
 =============================================================================
 \* Modification History
-\* Last modified Wed Jun 15 22:55:00 MSK 2022 by user-sc
+\* Last modified Thu Jun 23 09:24:45 MSK 2022 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc

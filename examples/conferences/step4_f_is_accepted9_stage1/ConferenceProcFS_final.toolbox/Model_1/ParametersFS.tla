@@ -194,7 +194,7 @@ p_ap_p_auth(x)          == [loc|->"mem", offs |->4, policy |-> any_caller(x),
 (***************************************************************************)                       
 
 f_ia_p_s_id(x)          == [loc|->"mem", offs |->0, policy |->  
-                           \* step4 invariant violation fix 
+                           \* step3 invariant violation fix 
                            {<<x,<<[t_expire |-> {NONE}], [guest |-> {NONE},
                            reviewer |-> {NONE}, manager |-> {x}, 
                            organizer |-> {NONE}]>> >>},
@@ -202,7 +202,7 @@ f_ia_p_s_id(x)          == [loc|->"mem", offs |->0, policy |->
 f_ia_v_v_status(x)      == [loc|->"mem", offs |->1, policy |-> min,
                                                   name |-> "f_ia_v_v_status"]
 f_ia_r(x)               == [loc|->"mem", offs |->2, policy |-> 
-                           \* step4 invariant violation fix 
+                           \* step3 invariant violation fix 
                            {<<x,<<[t_expire |-> {NONE}], [guest |-> {NONE},
                            reviewer |-> {NONE}, manager |-> {x}, 
                            organizer |-> {NONE}]>> >>}, 
@@ -404,7 +404,7 @@ TypeOK ==
 
 =============================================================================
 \* Modification History
-\* Last modified Wed Jun 15 23:04:26 MSK 2022 by user-sc
+\* Last modified Sat Jun 25 15:05:46 MSK 2022 by user-sc
 \* Last modified Tue Oct 13 11:26:10 MSK 2020 by user-sc
 \* Last modified Wed Aug 19 14:25:25 MSK 2020 by User
 \* Created Tue Aug 04 12:15:07 MSK 2020 by User

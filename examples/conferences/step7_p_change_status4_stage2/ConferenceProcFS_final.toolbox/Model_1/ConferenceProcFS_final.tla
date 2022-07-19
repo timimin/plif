@@ -185,9 +185,9 @@ p_add_paper4(id) ==
                       load(id, p_ap_p_auth(id))>>,
                     <<"p_add_paper","exit">>)
    /\ Trace' = Append(Trace, <<id, "p_add_paper4", 
-                             "INSERT INTO PAPERS " \o
+                             "insert into PAPERS " \o
                              "(PAPER_ID, TITLE, ABSTRACT, TEXT, AUTHORS )"\o
-                             "VALUES (p_id, tit, absr, t, auth)",
+                             "values (p_id, tit, absr, t, auth)",
                              [from |-> 
                             <<<<[policy |-> load(id, p_ap_p_p_id(id)),
                                    name |-> p_ap_p_p_id(id).name],
@@ -354,9 +354,9 @@ f_is_accepted5(id) ==
                     load(id, f_ia_p_s_id(id))), 
                     <<"f_is_accepted","lbl_8">>)
     /\ Trace'     = Append(Trace, <<id, "f_is_accepted5",
-                    "SELECT STATUS into v_status, " \o
-                    "FROM SUBMISSIONS " \o
-                    "WHERE SUBMISSION_ID = s_id",
+                    "select STATUS into v_status, " \o
+                    "from SUBMISSIONS " \o
+                    "where SUBMISSION_ID = s_id",
                            [from |-> <<<<VPol.col_submissions_status, 
                                          VPol.col_submissions_submission_id, 
                                          [policy |-> load(id, f_ia_p_s_id(id)),
@@ -545,8 +545,8 @@ p_allocate10_15(id) ==
                         load(id, p_al_p_s_id(id))), 
                             <<"p_allocate","lbl_13">>)
        /\ Trace'     = Append(Trace, <<id, "p_allocate_10",
-                              "THEN SELECT paper_id into v_p_id " \o
-                              "FROM SUBMISSIONS WHERE submission_id = s_id",
+                              "then select paper_id into v_p_id " \o
+                              "from SUBMISSIONS where submission_id = s_id",
                              [from |-> <<<<VPol.col_submissions_submission_id,
                                            VPol.col_submissions_paper_id,
                                            [policy |-> load(id, p_al_p_s_id(id)),
@@ -577,10 +577,10 @@ p_allocate13(id) ==
                            load(id, p_al_p_alloc_date(id))>>,
                     <<"p_allocate","lbl_16">>)
     /\ Trace'  = Append(Trace, <<id, "p_allocate_13", 
-                 "INSERT INTO ALLOCATIONS " \o
+                 "insert into ALLOCATIONS " \o
                  "(ALLOCATION_ID, SUBMISSION_ID, "\o
                  "SECTION_ID, ALLOCATION_DATE)" \o
-                 "VALUES (id, s_id, sec_id, alloc_date)",
+                 "values (id, s_id, sec_id, alloc_date)",
                  [from |-> <<<<[policy |-> load(id, p_al_p_a_id(id)),
                                 name |-> p_al_p_a_id(id).name],
                                [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
@@ -792,13 +792,13 @@ f_get_section_program5(id) ==
                                  load(id, f_gsp_p_s_id (id))>>), 
                                <<"f_get_section_program","lbl_9">>)
     /\ Trace'     = Append(Trace, <<id, "f_get_section_program_5",
-                    "SELECT paper_typ(PAPER_ID, TITLE, ABSTRACT,  " \o
-                    "TEXT, 'UNKNOWN_AUTH' BULK COLLECT " \o 
-                    "INTO v_program FROM PAPERS " \o
-                    "FROM PAPERS WHERE PAPER_ID IN (SELECT PAPER_ID " \o
-                    "FROM ALLOCATIONS a JOIN SUBMISSIONS s " \o
-                    "ON a.submission_id = s.submission_id " \o
-                    "WHERE a.SECTION_ID = s_id)",
+                    "select paper_typ(PAPER_ID, TITLE, ABSTRACT,  " \o
+                    "TEXT, 'UNKNOWN_AUTH' bulk collect " \o 
+                    "into v_program from PAPERS " \o
+                    "where PAPER_ID in (select PAPER_ID " \o
+                    "from ALLOCATIONS a join SUBMISSIONS s " \o
+                    "on a.submission_id = s.submission_id " \o
+                    "where a.SECTION_ID = s_id)",
                      [from |-> <<<<VPol.col_papers_paper_id, 
                                    VPol.col_papers_paper_id,
                                    VPol.col_allocations_submission_id,
@@ -1224,19 +1224,19 @@ f_get_paper8(id) ==
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>, 
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c2(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c2(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c3(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c3(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c4(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c4(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>,
                                    <<[policy |-> load(id, f_gp_v_paper_rec_c5(id)),
-                                      name |-> f_gp_v_paper_rec_c1(id).name],
+                                      name |-> f_gp_v_paper_rec_c5(id).name],
                                      [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                       name |-> id]>>
                                   >>,
@@ -1382,12 +1382,16 @@ dispatch(id,st) ==
                            <<p_al_v_p_id(id),
                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                               name |-> id]>>,
+                           <<p_al_v_is_acc(id),
+                             [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
+                              name |-> id]>>,
                            <<p_al_e_PAPER_NOT_ACCEPTED(id),
                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                               name |-> id]>>>>, 
                 to   |-> <<p_al_p_a_id(id), p_al_p_s_id(id),
                            p_al_p_sec_id(id), p_al_p_alloc_date(id),
-                           p_al_v_p_id(id), p_al_e_PAPER_NOT_ACCEPTED(id)>>]>>)
+                           p_al_v_p_id(id), p_al_v_is_acc(id),
+                           p_al_e_PAPER_NOT_ACCEPTED(id)>>]>>)
       [] /\ Head(st).pc[1] = "p_allocate" 
          /\ Sessions[id]["SessionM"] # <<>> -> p_allocate(id,st)
       [] /\ Head(st).pc[1] = "f_get_section_program" 
@@ -1479,7 +1483,7 @@ dispatch(id,st) ==
             /\ f_get_paper_load(id)
             /\ Trace' = Append(Trace, <<id, "f_get_paper_load",
                                             "get_paper_load",
-                               [from |-> <<<<[policy |-> min, name |-> "c6"],
+                               [from |-> <<<<[policy |-> min, name |-> "c26"],
                                              [policy |-> LUB4Seq(Sessions[id]["PCLabel"]),
                                               name |-> id]>>, 
                                            <<f_gp_v_paper_rec_c1(id),
@@ -1710,5 +1714,5 @@ SpecFS == Init /\ [] [Next]_vars
                   
 =============================================================================
 \* Modification History
-\* Last modified Thu Jun 16 00:13:38 MSK 2022 by user-sc
+\* Last modified Tue Jun 28 21:57:27 MSK 2022 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc

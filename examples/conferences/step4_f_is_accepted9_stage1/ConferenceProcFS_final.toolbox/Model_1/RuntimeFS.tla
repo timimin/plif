@@ -385,6 +385,12 @@ ParalocksInv ==
              Tail(FoldSeq(ParalocksInv_OP2, <<<<min, 0>>>>, New2Old[1]))) 
         ELSE TRUE
 
-CompInv == TRUE
+VPolUnchanged ==  
+    LET CompInv_OP1 (x, y) == /\ x
+                              /\ comparePol(VPol[y].policy, VPol'[y].policy)
+                              /\ comparePol(VPol'[y].policy, VPol[y].policy)
+    IN FoldSet(CompInv_OP1, TRUE, DOMAIN VPol)
+
+CompInv == [] [VPolUnchanged]_vars 
 
 ===========================================================================

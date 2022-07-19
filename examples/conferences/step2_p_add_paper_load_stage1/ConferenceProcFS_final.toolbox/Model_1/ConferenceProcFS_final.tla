@@ -185,9 +185,9 @@ p_add_paper4(id) ==
                       load(id, p_ap_p_auth(id))>>,
                     <<"p_add_paper","exit">>)
    /\ Trace' = Append(Trace, <<id, "p_add_paper4", 
-                             "INSERT INTO PAPERS " \o
+                             "insert into PAPERS " \o
                              "(PAPER_ID, TITLE, ABSTRACT, TEXT, AUTHORS )"\o
-                             "VALUES (p_id, tit, absr, t, auth)",
+                             "values (p_id, tit, absr, t, auth)",
                              [from |-> 
                             <<<<[policy |-> load(id, p_ap_p_p_id(id)),
                                    name |-> p_ap_p_p_id(id).name],
@@ -1692,5 +1692,5 @@ SpecFS == Init /\ [] [Next]_vars
                   
 =============================================================================
 \* Modification History
-\* Last modified Tue Jun 21 00:47:27 MSK 2022 by user-sc
+\* Last modified Thu Jun 23 09:27:51 MSK 2022 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc
