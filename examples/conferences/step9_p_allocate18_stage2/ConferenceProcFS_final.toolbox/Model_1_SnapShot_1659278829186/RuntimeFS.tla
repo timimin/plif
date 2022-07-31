@@ -388,9 +388,9 @@ ParalocksInv ==
 
 VPolUnchanged ==  
     LET CompInv_OP1 (x, y) == /\ x
-                              /\ comparePol(y'.policy,y.policy)
-                              /\ comparePol(y.policy,y'.policy)
-    IN FoldSeq(CompInv_OP1, TRUE, VPol)
+                              /\ comparePol(VPol[y].policy, VPol'[y].policy)
+                              /\ comparePol(VPol'[y].policy, VPol[y].policy)
+    IN FoldSet(CompInv_OP1, TRUE, DOMAIN VPol)
 
 CompInv == [] [VPolUnchanged]_vars 
 

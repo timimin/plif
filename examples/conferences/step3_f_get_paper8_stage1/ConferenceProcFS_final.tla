@@ -1591,15 +1591,22 @@ Init ==
         /\ SLocks   = 
             [s \in S |-> [e1 \in E0 |-> {}] 
              @@ [e2 \in E1 |-> {}]]
-             \*   CASE 
-             \*       \*# если первый блок сеанса f_is_accepted, то
-             \*      \*  открываем блокировку manager
-             \*        
-             \*      /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
-             \*      /\ e2 = "manager"  ->  {s}
-             \*   [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_allocate"
-             \*      /\ e2 = "manager"  ->  {s}
-             \*   [] OTHER -> {}]]                         
+             CASE 
+                   /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_change_status"
+                   /\ \/ e2 = "reviewer"  
+                      \/ e2 = "guest" ->  {s}
+                    
+                    \* step3 invariant violation fix 
+                    \* если первый блок сеанса f_is_accepted, то
+                    \*  открываем блокировку manager и guest
+                     
+             \*   [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
+             \*      /\ \/ e2 = "manager"  
+             \*         \/ e2 = "guest" ->  {s}
+                [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_allocate"
+                   /\ \/ e2 = "manager"  
+                      \/ e2 = "guest"->  {s}
+                [] OTHER -> {}]]                          
         /\ New2Old  = <<<<max>>, <<min>>>>
         /\ Ignore   = 0
         /\ XLocks   = Undef
