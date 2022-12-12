@@ -390,7 +390,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     @Override
     public void enterReturn_statement(PlSqlParser.Return_statementContext ctx) {
         int numberOfLine = ctx.start.getLine();
-        ReturnOperator returnOperator = new ReturnOperator(numberOfLine, programBlockData, RETURN);
+        ReturnOperator returnOperator = new ReturnOperator(numberOfLine, getSpaceSeparatedText(ctx), programBlockData, RETURN);
         returnOperatorMap.putIfAbsent(numberOfLine, returnOperator);
         programBlockData.addOperator(numberOfLine, returnOperator);
     }

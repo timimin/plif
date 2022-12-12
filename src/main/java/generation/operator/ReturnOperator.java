@@ -16,8 +16,8 @@ import static util.OperatorUtil.appendNextRuleLabel;
 public class ReturnOperator extends SqlOperator {
     private String returnableVariableName;
 
-    public ReturnOperator(int numberOfLineInProgramBlock, ProgramBlockData programBlockData, OperatorType operatorType) {
-        super(numberOfLineInProgramBlock, programBlockData, operatorType);
+    public ReturnOperator(int numberOfLineInProgramBlock, String queryCode, ProgramBlockData programBlockData, OperatorType operatorType) {
+        super(numberOfLineInProgramBlock, queryCode, programBlockData, operatorType);
     }
 
     @Override
@@ -42,6 +42,19 @@ public class ReturnOperator extends SqlOperator {
                     .append("/\\ Ignore' = 0\n/\\ SLocks' = SLocks\n/\\ StateE' = SLocks'[id]\n/\\ XLocks' = XLocks\n/\\ VPol' = VPol\n\n");
         }
         return operatorRule.toString();
+    }
+
+    @Override
+    protected String getTrace() {
+        StringBuilder trace = new StringBuilder("/\\ Trace' = Append(Trace,<<id,\n ");
+        Variable returnableVariable = programBlockData.getVariables().get(returnableVariableName);
+        trace.append(surroundWithQuotes(getOperatorRuleName())).append(COMMA_WITH_LINE_BREAK)
+                .append(surroundWithQuotes(queryCode)).append(COMMA_WITH_LINE_BREAK).append("[from |-> <<\n ");
+        returnableVariable.getVariablePolicies().forEach(policy ->
+                        trace.append("<<[policy |-> load(id, ").append(policy).append("(id)),\n ")
+                                .append("name |-> ").append(policy).append("(id).name]>>,\n "));//литералы поддерживать
+
+        return null;
     }
 
     public void setReturnableVariableName(String returnableVariableName) {

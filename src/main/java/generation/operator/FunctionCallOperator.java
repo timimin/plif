@@ -84,6 +84,11 @@ public class FunctionCallOperator extends SqlOperator {
     }
 
     @Override
+    protected String getTrace() {
+        return null;
+    }
+
+    @Override
     public String getOperatorDispatcherRule() {
         return "Head(st).pc[2] = " + getLabel() + " -> " + getOperatorRuleNameWithId() + "\n" +
                 "[] Head(st).pc[2] = " + surroundWithQuotes("lbl_" + numberOfLineInProgramBlock + "r") + " -> "

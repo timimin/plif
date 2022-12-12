@@ -75,9 +75,7 @@ public abstract class SqlOperator {
         this.hasElseKeyWordInThisLine = hasElseKeyWordInThisLine;
     }
 
-    protected String getTrace() {
-        return UNCHANGED_TRACE;
-    }
+    protected abstract String getTrace();
 
     @Override
     public String toString() {
