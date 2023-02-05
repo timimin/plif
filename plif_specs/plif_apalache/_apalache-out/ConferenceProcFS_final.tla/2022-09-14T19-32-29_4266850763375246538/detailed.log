@@ -1,0 +1,17 @@
+19:32:29.465 [main] INFO  a.f.a.t.Tool$ - Type checking ConferenceProcFS_final.tla
+19:32:29.467 [main] INFO  a.f.a.i.p.PassChainExecutor - PASS #0: SanyParser
+19:32:29.815 [main] ERROR a.f.a.t.Tool$ - Error by TLA+ parser: *** Errors: 2
+
+line 85, col 29 to line 85, col 41 of module Paralocks
+
+Unknown operator: `compareClause'.
+
+
+line 85, col 54 to line 85, col 66 of module Paralocks
+
+Unknown operator: `compareClause'.
+
+
+
+19:32:29.816 [main] INFO  a.f.a.t.Tool$ - It took me 0 days  0 hours  0 min  0 sec
+19:32:29.816 [main] INFO  a.f.a.t.Tool$ - Total time: 0.761 sec

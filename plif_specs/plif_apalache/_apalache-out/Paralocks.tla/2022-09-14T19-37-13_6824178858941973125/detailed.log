@@ -1,0 +1,13 @@
+19:37:14.155 [main] INFO  a.f.a.t.Tool$ - Type checking Paralocks.tla
+19:37:14.158 [main] INFO  a.f.a.i.p.PassChainExecutor - PASS #0: SanyParser
+19:37:14.563 [main] DEBUG a.f.a.i.p.PassChainExecutor - PASS #0: SanyParser [OK]
+19:37:14.563 [main] INFO  a.f.a.i.p.PassChainExecutor - PASS #1: TypeCheckerSnowcat
+19:37:14.563 [main] INFO  a.f.a.t.t.p.EtcTypeCheckerPassImpl -  > Running Snowcat .::.
+19:37:15.456 [main] INFO  a.f.a.t.t.p.EtcTypeCheckerPassImpl -  > Your types are great!
+19:37:15.456 [main] INFO  a.f.a.t.t.p.EtcTypeCheckerPassImpl -  > All expressions are typed
+19:37:15.456 [main] DEBUG a.f.a.i.p.PassChainExecutor - PASS #1: TypeCheckerSnowcat [OK]
+19:37:15.457 [main] INFO  a.f.a.i.p.PassChainExecutor - PASS #2: Terminal
+19:37:15.457 [main] DEBUG a.f.a.i.p.PassChainExecutor - PASS #2: Terminal [OK]
+19:37:15.457 [main] INFO  a.f.a.t.Tool$ - Type checker [OK]
+19:37:15.457 [main] INFO  a.f.a.t.Tool$ - It took me 0 days  0 hours  0 min  1 sec
+19:37:15.457 [main] INFO  a.f.a.t.Tool$ - Total time: 1.632 sec

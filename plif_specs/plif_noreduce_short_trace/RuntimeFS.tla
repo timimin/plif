@@ -341,6 +341,18 @@ skip(id, next_stmt) ==
             <<[Head(Sessions[id]["StateRegs"]) 
                                             EXCEPT !["pc"] = next_stmt]>> \o
                           Tail(Sessions[id]["StateRegs"])]
+
+(***************************************************************************)
+(* assign operator implements C-ASSGN abstarct semantics rule              *)
+(***************************************************************************)
+
+\* delete
+\* assign
+\* while
+\* endwhile
+\* остальное skip
+
+
 (*
 ParalocksInv == 
     LET
@@ -380,6 +392,13 @@ ParalocksInv ==
              Tail(FoldSeq(ParalocksInv_OP2, <<<<min, 0>>>>, New2Old[1]))) 
         ELSE TRUE
 
-CompInv == TRUE
+
+VPolUnchanged ==  
+    LET CompInv_OP1 (x, y) == /\ x
+                              /\ comparePol(VPol[y].policy, VPol'[y].policy)
+                              /\ comparePol(VPol'[y].policy, VPol[y].policy)
+    IN FoldSet(CompInv_OP1, TRUE, DOMAIN VPol)
+
+CompInv == [] [VPolUnchanged]_vars 
 
 ===========================================================================

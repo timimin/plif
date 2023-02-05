@@ -1,0 +1,74 @@
+@!@!@STARTMSG 2262:0 @!@!@
+TLC2 Version 2.16 of Day Month 20?? (rev: 294e2ae)
+@!@!@ENDMSG 2262 @!@!@
+@!@!@STARTMSG 2187:0 @!@!@
+Running breadth-first search Model-Checking with fp 30 and seed -900651743896158630 with 8 workers on 16 cores with 3641MB heap and 5427MB offheap memory [pid: 6699] (Linux 5.15.0-58-generic amd64, AdoptOpenJDK 14.0.1 x86_64, OffHeapDiskFPSet, DiskStateQueue).
+@!@!@ENDMSG 2187 @!@!@
+@!@!@STARTMSG 2220:0 @!@!@
+Starting SANY...
+@!@!@ENDMSG 2220 @!@!@
+Parsing file /home/user-sc/plif_github/plif/plif_specs/plif_noreduce_short_trace/ConferenceProcFS_final.toolbox/Model_1/MC.tla
+Parsing file /home/user-sc/plif_github/plif/plif_specs/plif_noreduce_short_trace/ConferenceProcFS_final.toolbox/Model_1/ConferenceProcFS_final.tla
+Parsing file /home/user-sc/toolbox/tla_toolbox_1.7.1_fixed/tlaplus/toolbox/org.lamport.tla.toolbox.product.product/target/products/org.lamport.tla.toolbox.product.product/linux/gtk/x86_64/toolbox/plugins/org.lamport.tlatools_1.0.0.202109141953/tla2sany/StandardModules/TLC.tla
+Parsing file /home/user-sc/plif_github/plif/plif_specs/plif_noreduce_short_trace/ConferenceProcFS_final.toolbox/Model_1/RuntimeFS.tla
+Parsing file /home/user-sc/toolbox/tla_toolbox_1.7.1_fixed/tlaplus/toolbox/org.lamport.tla.toolbox.product.product/target/products/org.lamport.tla.toolbox.product.product/linux/gtk/x86_64/toolbox/plugins/org.lamport.tlatools_1.0.0.202109141953/tla2sany/StandardModules/Sequences.tla
+Parsing file /home/user-sc/plif_github/plif/plif_specs/plif_noreduce_short_trace/ConferenceProcFS_final.toolbox/Model_1/ParametersFS.tla
+Parsing file /home/user-sc/toolbox/tla_toolbox_1.7.1_fixed/tlaplus/toolbox/org.lamport.tla.toolbox.product.product/target/products/org.lamport.tla.toolbox.product.product/linux/gtk/x86_64/toolbox/plugins/org.lamport.tlatools_1.0.0.202109141953/tla2sany/StandardModules/Naturals.tla
+Parsing file /home/user-sc/plif_github/plif/plif_specs/plif_noreduce_short_trace/ConferenceProcFS_final.toolbox/Model_1/Paralocks.tla
+Parsing file /usr/local/lib/tlaps/FiniteSets.tla
+Parsing file /home/user-sc/plif_github/plif/plif_specs/plif_noreduce_short_trace/ConferenceProcFS_final.toolbox/Model_1/Apalache.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Apalache
+Semantic processing of module Paralocks
+Semantic processing of module ParametersFS
+Semantic processing of module RuntimeFS
+Semantic processing of module ConferenceProcFS_final
+Semantic processing of module MC
+@!@!@STARTMSG 2219:0 @!@!@
+SANY finished.
+@!@!@ENDMSG 2219 @!@!@
+@!@!@STARTMSG 2185:0 @!@!@
+Starting... (2023-02-05 22:22:23)
+@!@!@ENDMSG 2185 @!@!@
+@!@!@STARTMSG 2189:0 @!@!@
+Computing initial states...
+@!@!@ENDMSG 2189 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 2 initial states...
+@!@!@ENDMSG 2269 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 4 initial states...
+@!@!@ENDMSG 2269 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 8 initial states...
+@!@!@ENDMSG 2269 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 16 initial states...
+@!@!@ENDMSG 2269 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 32 initial states...
+@!@!@ENDMSG 2269 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 64 initial states...
+@!@!@ENDMSG 2269 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 128 initial states...
+@!@!@ENDMSG 2269 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 256 initial states...
+@!@!@ENDMSG 2269 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 512 initial states...
+@!@!@ENDMSG 2269 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 1024 initial states...
+@!@!@ENDMSG 2269 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 2048 initial states...
+@!@!@ENDMSG 2269 @!@!@
+@!@!@STARTMSG 2269:0 @!@!@
+Computed 4096 initial states...
+@!@!@ENDMSG 2269 @!@!@

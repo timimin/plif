@@ -72,6 +72,7 @@ EXTENDS Naturals, Apalache, Sequences, TLC
 \* @typeAlias: POLICY = Set(CLAUSE); 
 \* @typeAlias: LOCKS = Str -> Set(U); 
 
+
 (***************************************************************************)
 (* ReduceSeq, ReduceSet, Tup, SeqOf, Range, FindFirstInSeq, IsPrefix,      *)
 (* ReplaceInSet, IsNotSeqEmpty - are utility operators                     *)
@@ -332,6 +333,20 @@ COpenLocks(lock, GLOB) ==
 (* the special value NONE for representing closed or not required locks    *)
 (* here.                                                                   *)
 (***************************************************************************)
+
+\* @type: Set(CLAUSE);
+ClausesSet == \*{c \in
+                   {<<u, <<e0, e1>>>> : u  \in (U \cup UU), 
+                           e0 \in [E0 -> SUBSET {NONE}],
+                           e1 \in [E1 -> ((SUBSET (U) \cup SUBSET(UU)) 
+                                                  \ {{}}) \cup {{NONE}}]}
+\* @type: Set(POLICY);
+PoliciesSet == {p \in SUBSET ClausesSet: 
+                      \A c1 \in p: ~\E c2 \in p: 
+                        /\ c1 # c2 
+                        /\ (compareClause(c1, c2) \/ compareClause(c2, c1))}
+               \cup {{}}
+
 (*
 ParalocksTypeOK ==
      /\ StateE \in {<<e1, e2>> : 

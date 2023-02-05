@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.lamport.tla.toolbox.tool.tlc.modelCheck">
+    <stringAttribute key="TLCCmdLineParameters" value="-dump d"/>
+    <stringAttribute key="alias" value=""/>
+    <intAttribute key="collectCoverage" value="1"/>
     <stringAttribute key="configurationName" value="Model_1"/>
+    <booleanAttribute key="deferLiveness" value="false"/>
+    <intAttribute key="dfidDepth" value="100"/>
+    <booleanAttribute key="dfidMode" value="false"/>
     <intAttribute key="distributedFPSetCount" value="0"/>
     <stringAttribute key="distributedNetworkInterface" value="172.17.0.1"/>
     <intAttribute key="distributedNodesCount" value="1"/>
     <stringAttribute key="distributedTLC" value="off"/>
-    <intAttribute key="fpIndex" value="99"/>
-    <intAttribute key="maxHeapSize" value="25"/>
+    <stringAttribute key="distributedTLCVMArgs" value="-Xmx4g"/>
+    <intAttribute key="fpBits" value="1"/>
+    <intAttribute key="fpIndex" value="28"/>
+    <booleanAttribute key="fpIndexRandom" value="true"/>
+    <intAttribute key="maxHeapSize" value="53"/>
+    <intAttribute key="maxSetSize" value="1000000"/>
+    <booleanAttribute key="mcMode" value="true"/>
     <stringAttribute key="modelBehaviorInit" value="Init"/>
     <stringAttribute key="modelBehaviorNext" value="Next"/>
     <stringAttribute key="modelBehaviorSpec" value="SpecFS"/>
@@ -20,10 +31,11 @@
     <listAttribute key="modelCorrectnessProperties">
         <listEntry value="1CompInv"/>
     </listAttribute>
-    <intAttribute key="modelEditorOpenTabs" value="8"/>
+    <intAttribute key="modelEditorOpenTabs" value="14"/>
     <stringAttribute key="modelExpressionEval" value=""/>
+    <stringAttribute key="modelParameterActionConstraint" value=""/>
     <listAttribute key="modelParameterConstants">
-        <listEntry value="U;;{allen, bob, alex, john};1;1"/>
+        <listEntry value="U;;{allen, bob, alex, john};1;0"/>
         <listEntry value="Session_number;;3;0;0"/>
         <listEntry value="UU;;{x};1;0"/>
         <listEntry value="GPol;;(&quot;organizer&quot; :&gt; {&quot;manager&quot;,  &quot;reviewer&quot;, &quot;guest&quot;}) @@&#10;                 (&quot;manager&quot; :&gt; {&quot;guest&quot;}) @@&#10;                 (&quot;reviewer&quot; :&gt; {&quot;guest&quot;}) @@&#10;                 (&quot;guest&quot; :&gt;  {&quot;guest&quot;});0;0"/>
@@ -33,9 +45,21 @@
         <listEntry value="E1;;{&quot;guest&quot;, &quot;reviewer&quot;, &quot;manager&quot;, &quot;organizer&quot;};0;0"/>
         <listEntry value="Undef;;Undef;1;0"/>
     </listAttribute>
+    <stringAttribute key="modelParameterContraint" value=""/>
+    <listAttribute key="modelParameterDefinitions"/>
+    <stringAttribute key="modelParameterModelValues" value="{}"/>
+    <stringAttribute key="modelParameterNewDefinitions" value=""/>
     <intAttribute key="modelVersion" value="20191005"/>
     <intAttribute key="numberOfWorkers" value="8"/>
+    <stringAttribute key="postCondition" value=""/>
+    <booleanAttribute key="recover" value="false"/>
     <stringAttribute key="result.mail.address" value=""/>
+    <intAttribute key="simuAril" value="-1"/>
+    <intAttribute key="simuDepth" value="100"/>
+    <stringAttribute key="simuNumTraces" value="9223372036854775807"/>
+    <intAttribute key="simuSeed" value="-1"/>
     <stringAttribute key="specName" value="ConferenceProcFS_final"/>
     <stringAttribute key="tlcResourcesProfile" value="local custom"/>
+    <stringAttribute key="view" value=""/>
+    <booleanAttribute key="visualizeStateGraph" value="false"/>
 </launchConfiguration>

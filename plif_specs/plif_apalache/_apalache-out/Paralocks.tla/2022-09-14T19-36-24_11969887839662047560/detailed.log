@@ -1,0 +1,8 @@
+19:36:24.725 [main] INFO  a.f.a.t.Tool$ - Type checking Paralocks.tla
+19:36:24.727 [main] INFO  a.f.a.i.p.PassChainExecutor - PASS #0: SanyParser
+19:36:25.119 [main] DEBUG a.f.a.i.p.PassChainExecutor - PASS #0: SanyParser [OK]
+19:36:25.119 [main] INFO  a.f.a.i.p.PassChainExecutor - PASS #1: TypeCheckerSnowcat
+19:36:25.119 [main] INFO  a.f.a.t.t.p.EtcTypeCheckerPassImpl -  > Running Snowcat .::.
+19:36:25.227 [main] ERROR a.f.a.t.Tool$ - Typing input error: Unexpected annotation of PoliciesSet: @type
+19:36:25.228 [main] INFO  a.f.a.t.Tool$ - It took me 0 days  0 hours  0 min  0 sec
+19:36:25.228 [main] INFO  a.f.a.t.Tool$ - Total time: 0.839 sec

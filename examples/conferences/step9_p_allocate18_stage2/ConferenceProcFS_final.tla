@@ -24,7 +24,7 @@
 (* sections_t, p_a_v1, f_gs_v1,...}                                        *)
 (***************************************************************************)
 
-EXTENDS RuntimeFS
+EXTENDS RuntimeFS, Sequences
 
 \*RECURSIVE dispatch(_,_) 
        
@@ -121,7 +121,7 @@ p_submit_paper4(id) ==
 (***************************************************************************)
          
 p_submit_paper_exit(id) ==                                     
-    /\ IF Len(Sessions[id]["StateRegs"])=1
+    /\ IF Head(Sessions[id]["StateRegs"]).fp=1
         THEN  XLocks' = Undef
         ELSE  XLocks' = XLocks
     /\ Sessions'  = 
@@ -220,7 +220,7 @@ p_add_paper4(id) ==
    /\ XLocks' = XLocks    
       
 p_add_paper_exit(id) ==                                     
-    /\ IF Len(Sessions[id]["StateRegs"])=1
+    /\ IF Head(Sessions[id]["StateRegs"]).fp=1
         THEN  XLocks' = Undef
         ELSE  XLocks' = XLocks
     /\ Sessions'  = 
@@ -300,7 +300,7 @@ p_change_status4(id) ==
     /\ XLocks' = XLocks
 
 p_change_status_exit(id) ==                                     
-    /\ IF Len(Sessions[id]["StateRegs"])=1
+    /\ IF Head(Sessions[id]["StateRegs"]).fp=1
         THEN  XLocks' = Undef
         ELSE  XLocks' = XLocks
     /\ Sessions'  = 
@@ -422,7 +422,7 @@ f_is_accepted11(id) ==
     /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>
 
 f_is_accepted_exit(id) ==
-    /\ IF Len(Sessions[id]["StateRegs"])=1
+    /\ IF Head(Sessions[id]["StateRegs"]).fp=1
         THEN  XLocks' = Undef
         ELSE  XLocks' = XLocks
     /\ Sessions'  = 
@@ -650,7 +650,7 @@ p_allocate18(id) ==
     /\ XLocks' = XLocks
 
 p_allocate_exit(id) ==                                     
-    /\ IF Len(Sessions[id]["StateRegs"])=1
+    /\ IF Head(Sessions[id]["StateRegs"]).fp=1
         THEN  XLocks' = Undef
         ELSE  XLocks' = XLocks
     /\ Sessions'  = 
@@ -1036,7 +1036,7 @@ f_get_section_program9(id) ==
     /\ VPol'     = VPol
 
 f_get_section_program_exit(id) ==
-    /\ IF Len(Sessions[id]["StateRegs"])=1
+    /\ IF Head(Sessions[id]["StateRegs"]).fp=1
         THEN  XLocks' = Undef
         ELSE  XLocks' = XLocks
     /\ Sessions'  = 
@@ -1262,7 +1262,7 @@ f_get_paper8(id) ==
     /\ VPol'     = VPol
 
 f_get_paper_exit(id) ==
-    /\ IF Len(Sessions[id]["StateRegs"])=1
+    /\ IF Head(Sessions[id]["StateRegs"]).fp=1
         THEN  XLocks' = Undef
         ELSE  XLocks' = XLocks
     /\ Sessions'  = 
@@ -1564,15 +1564,22 @@ Init ==
         \* множество возможных начальных состояний pc 
         \* в пользовательских сеансах
         
-        LET pc == 
-                [{"pc"} -> 
-                        {<<"p_add_paper", "lbl_4">>,
-                         <<"p_submit_paper", "lbl_4">>,
-                         <<"p_change_status", "lbl_4">>,
-                         <<"f_is_accepted", "lbl_5">>,
-                         <<"p_allocate","lbl_7">>,
-                         <<"f_get_paper","lbl_5">>,
-                         <<"f_get_section_program","lbl_5">>}]
+        LET sregs == (******************************************************)
+                     (* for usecases like p_change_status-p_allocate       *)
+                     (* initial stateregs looks like {<<[pc |->            *)
+                     (* <<"p_change_status", "lbl_4">>, fp |->1]>> \o      *)
+                     (* <<[pc |-> <<"p_allocate", "lbl_7">>, fp |->1]>>}   *)
+                     (******************************************************)
+
+                                    
+                    {<<[pc |-> <<"p_add_paper", "lbl_4">>, fp |->1]>>, 
+                     <<[pc |-> <<"p_submit_paper", "lbl_4">>, fp |->1]>>,
+                     <<[pc |-> <<"p_change_status", "lbl_4">>, fp |->1]>>,
+                     <<[pc |-> <<"f_is_accepted", "lbl_5">>, fp |->1]>>,
+                     <<[pc |-> <<"p_allocate", "lbl_7">>, fp |->1]>>,
+                     <<[pc |-> <<"f_get_paper", "lbl_5">>, fp |->1]>>,
+                     <<[pc |-> <<"f_get_section_program", "lbl_5">>, fp |->1]>>}
+                     
         IN
         
         \* обобщенное представление трассы - для удобства анализа
@@ -1590,14 +1597,15 @@ Init ==
                        \* множество начальных состояний StateRegs для 
                        \* заданных пользовательских сеансов
                        
-                       [{"StateRegs"} -> 
-                            FoldSet (LAMBDA x, y: 
-                                x \cup ({<<y @@ [fp |->1]>>}), {}, pc) ])]
+                       [{"StateRegs"} -> sregs])]
+                         \*   FoldSet (LAMBDA x, y: 
+                         \*      x \cup {<<y @@ [fp |->1]>>}, {}, sregs) ])]
         /\ SLocks   = 
             [s \in S |-> [e1 \in E0 |-> {}] 
              @@ [e2 \in E1 |-> 
                 CASE 
-                   /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_change_status"
+                   /\ SelectSeq(Sessions[s]["StateRegs"],  
+                         LAMBDA x : x["pc"][1]= "p_change_status") # <<>>
                    /\ \/ e2 = "reviewer"  
                       \/ e2 = "guest" ->  {s}
                     
@@ -1605,10 +1613,12 @@ Init ==
                     \* если первый блок сеанса f_is_accepted, то
                     \*  открываем блокировку manager и guest
                      
-                [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "f_is_accepted"
+                [] /\ SelectSeq(Sessions[s]["StateRegs"],  
+                                LAMBDA x : x["pc"][1]= "f_is_accepted") # <<>>
                    /\ \/ e2 = "manager"  
                       \/ e2 = "guest" ->  {s}
-                [] /\ Sessions[s]["StateRegs"][1]["pc"][1] = "p_allocate"
+                [] /\ SelectSeq(Sessions[s]["StateRegs"],  
+                                LAMBDA x : x["pc"][1]= "p_allocate") # <<>>
                    /\ \/ e2 = "manager"  
                       \/ e2 = "guest"->  {s}
                 [] OTHER -> {}]]                         
@@ -1753,10 +1763,11 @@ Next_test == UNCHANGED vars
 
 SpecFS == Init /\ [] [Next]_vars 
 
+
 \*SpecFS == Init /\ [] [Next_test]_vars
                
                   
 =============================================================================
 \* Modification History
-\* Last modified Sun Jul 31 18:01:19 MSK 2022 by user-sc
+\* Last modified Sun Feb 05 21:07:50 MSK 2023 by user-sc
 \* Created Wed Oct 21 12:17:41 MSK 2020 by user-sc

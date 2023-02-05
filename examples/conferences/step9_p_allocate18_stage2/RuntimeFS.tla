@@ -346,6 +346,13 @@ skip(id, next_stmt) ==
 (* assign operator implements C-ASSGN abstarct semantics rule              *)
 (***************************************************************************)
 
+\* delete
+\* assign
+\* while
+\* endwhile
+\* остальное skip
+
+
 (*
 ParalocksInv == 
     LET
