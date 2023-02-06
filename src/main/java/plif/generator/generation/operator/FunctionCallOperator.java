@@ -85,7 +85,7 @@ public class FunctionCallOperator extends SqlOperator {
 
     @Override
     protected String getTrace() {
-        return null;
+        return UNCHANGED_TRACE;
     }
 
     @Override

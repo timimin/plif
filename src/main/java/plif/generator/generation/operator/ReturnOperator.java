@@ -54,7 +54,7 @@ public class ReturnOperator extends SqlOperator {
                         trace.append("<<[policy |-> load(id, ").append(policy).append("(id)),\n ")
                                 .append("name |-> ").append(policy).append("(id).name]>>,\n "));//литералы поддерживать
 
-        return null;
+        return trace.toString();
     }
 
     public void setReturnableVariableName(String returnableVariableName) {
