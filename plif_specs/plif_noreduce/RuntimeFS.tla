@@ -46,6 +46,16 @@ UpdateTablePolicy (id, columns, pvalues, cond) ==
                          D : y = columns[i]]>> \o <<cond>>)]        
   IN
   FoldSeq(UpdateTablePolicy_OP, VPol, columns)
+  
+
+DeleteTablePolicy (id, columns, cond) ==
+  LET
+        DeleteTablePolicy_OP(x,y)== 
+        [x EXCEPT ![y]["policy"] = 
+            LUB4Seq(Sessions[id]["PCLabel"] 
+                    \o <<x[y]["policy"]>> \o <<cond>>)]        
+  IN
+  FoldSeq(DeleteTablePolicy_OP, VPol, columns)
 
 (***************************************************************************)
 (* updates session vars policies with respect to pvalues, the current      *)
@@ -196,12 +206,12 @@ update(id, columns, exprs, cond, next_stmt) ==
                                             Tail(Sessions[id]["StateRegs"])]
            /\ VPol'  = UpdateTablePolicy (id, columns, exprs, cond)
            
-(****************************************************************************
-select operator implements C-SEL abstarct semantics rule.  It can also
-be used for bulk collect operations.  In the last case it is assumed
-that bulk collect returns only one row because we abstract away from
-individual rows labels.
-****************************************************************************)
+(***************************************************************************)
+(* select operator implements C-SEL abstarct semantics rule.  It can also  *)
+(* be used for bulk collect operations.  In the last case it is assumed    *)
+(* that bulk collect returns only one row because we abstract away from    *)
+(* individual rows labels.                                                 *)
+(***************************************************************************)
 
 select(id, variables, exprs, cond, next_stmt) ==
     /\ New2Old' = << <<max>>, <<min>> >>
@@ -343,13 +353,81 @@ skip(id, next_stmt) ==
                           Tail(Sessions[id]["StateRegs"])]
 
 (***************************************************************************)
-(* assign operator implements C-ASSGN abstarct semantics rule              *)
+(* assign operator implements C-ASSGN abstarct semantics rule.  Since      *)
+(* records are represented as sets of vars as well as arrays are           *)
+(* considered to be sets of records multiple-assignment statements are     *)
+(* possible                                                                *)
 (***************************************************************************)
 
-\* delete
-\* assign
-\* while
-\* endwhile
+assign(id, variables, exprs, next_stmt) ==
+    /\ New2Old' = << <<max>>, <<min>> >>
+    /\ Sessions' = 
+       [Sessions EXCEPT ![id]["StateRegs"] = 
+        <<[Head(Sessions[id]["StateRegs"]) EXCEPT !["pc"] = next_stmt]>> \o
+            Tail(Sessions[id]["StateRegs"]),
+                        ![id]["SessionM"] = 
+                               UpdateVarPolicy (id, variables, exprs, min)
+       ]
+
+(***************************************************************************)
+(* while operator semantics resembles that of if                           *)
+(***************************************************************************)
+
+while(id, policy, next_stmt) == 
+      /\  Sessions'  = 
+         [Sessions 
+            EXCEPT ![id]["PCLabel"] = <<policy>> \o Sessions[id]["PCLabel"],
+                   ![id]["StateRegs"] = 
+                    <<[Head(Sessions[id]["StateRegs"]) 
+                                            EXCEPT !["pc"] = next_stmt]>> \o
+                          Tail(Sessions[id]["StateRegs"])]
+
+(***************************************************************************)
+(* whilend operator semantics resembles that of ifend                      *)
+(***************************************************************************)
+
+whilend (id, next_stmt) == 
+    /\ Sessions'  = 
+            [Sessions 
+                EXCEPT ![id]["PCLabel"] = Tail(Sessions[id]["PCLabel"]),
+                       ![id]["StateRegs"] = 
+                        <<[Head(Sessions[id]["StateRegs"]) 
+                                            EXCEPT !["pc"] = next_stmt]>> \o
+                           Tail(Sessions[id]["StateRegs"])]
+
+(***************************************************************************)
+(* delete operator implements C-DEL, C-EXT-DEL abstarct semantics rules    *)
+(***************************************************************************)
+
+delete(id, columns, cond, next_stmt) ==
+    
+    LET isExt == IF VPol[columns[1]]["ext"] = 1
+                    THEN TRUE 
+                    ELSE FALSE
+    IN
+    IF isExt
+       THEN
+           /\ New2Old' = <<FoldSeq(LAMBDA x,y: x \o <<VPol[y]["policy"]>>, 
+                                                             <<>>, columns), 
+                           FoldSeq(LAMBDA x,y: x \o 
+                           <<LUB4Seq(Sessions[id]["PCLabel"] 
+                                     \o <<cond>>)>>, <<>>, columns)>>
+           /\ Sessions' = 
+               [Sessions EXCEPT ![id]["StateRegs"] = 
+                           <<[Head(Sessions[id]["StateRegs"]) 
+                                    EXCEPT !["pc"] = next_stmt]>> \o
+                                            Tail(Sessions[id]["StateRegs"])]
+           /\ VPol' = VPol
+            
+       ELSE 
+           /\ New2Old' = << <<max>>,<<min>> >>
+           /\ Sessions' = 
+               [Sessions EXCEPT ![id]["StateRegs"] = 
+                           <<[Head(Sessions[id]["StateRegs"]) 
+                                    EXCEPT !["pc"] = next_stmt]>> \o
+                                            Tail(Sessions[id]["StateRegs"])]
+           /\ VPol'  = DeleteTablePolicy (id, columns, cond)
+           
 \* остальное skip
 
 

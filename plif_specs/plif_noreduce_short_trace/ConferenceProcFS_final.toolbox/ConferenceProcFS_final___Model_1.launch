@@ -13,7 +13,7 @@
     <stringAttribute key="distributedTLC" value="off"/>
     <stringAttribute key="distributedTLCVMArgs" value="-Xmx4g"/>
     <intAttribute key="fpBits" value="1"/>
-    <intAttribute key="fpIndex" value="27"/>
+    <intAttribute key="fpIndex" value="17"/>
     <booleanAttribute key="fpIndexRandom" value="true"/>
     <intAttribute key="maxHeapSize" value="53"/>
     <intAttribute key="maxSetSize" value="1000000"/>
@@ -36,7 +36,7 @@
     <stringAttribute key="modelParameterActionConstraint" value=""/>
     <listAttribute key="modelParameterConstants">
         <listEntry value="U;;{allen, bob, alex, john, tom, cochar, remmy};1;0"/>
-        <listEntry value="Session_number;;6;0;0"/>
+        <listEntry value="Session_number;;4;0;0"/>
         <listEntry value="UU;;{x};1;0"/>
         <listEntry value="GPol;;(&quot;organizer&quot; :&gt; {&quot;manager&quot;,  &quot;reviewer&quot;, &quot;guest&quot;}) @@&#10;                 (&quot;manager&quot; :&gt; {&quot;guest&quot;}) @@&#10;                 (&quot;reviewer&quot; :&gt; {&quot;guest&quot;}) @@&#10;                 (&quot;guest&quot; :&gt;  {&quot;guest&quot;});0;0"/>
         <listEntry value="ALL;;ALL;1;0"/>
