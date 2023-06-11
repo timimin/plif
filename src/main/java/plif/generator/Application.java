@@ -12,9 +12,9 @@ public class Application {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите путь до папки с исходными данными:");//D:\JavaProjects\AntlrTesting\src\main\resources\programblocks
-        String sourcePath = "D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\programblocks";//scanner.nextLine();
+        String sourcePath = "D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\educational\\process";//scanner.nextLine();
         System.out.println("Введите путь до папки, в которой будут располагаться сгенерированные спецификации:");//D:\JavaProjects\AntlrTesting\src\main\resources\spec
-        String destinationPath = "D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\spec\\";//scanner.nextLine();
+        String destinationPath = "D:\\JavaProjects\\AntlrTesting\\src\\main\\resources\\educational\\process\\spec\\";//scanner.nextLine();
         long t = System.currentTimeMillis();
         DatabaseSchema databaseSchema = new DatabaseSchema(sourcePath);
         ProgramBlocksDataHolder programBlocksDataHolder = new ProgramBlocksDataHolder(sourcePath, databaseSchema);

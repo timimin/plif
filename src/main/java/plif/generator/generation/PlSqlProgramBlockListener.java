@@ -332,7 +332,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
     public void enterTable_ref_list(Table_ref_listContext ctx) {
         SelectIntoOperator selectIntoOperator = selectIntoOperatorMap.get(ctx.start.getLine());
         if (selectIntoOperator != null) {
-            selectIntoOperator.setInvolvedTable(databaseSchema.getTables().get(ctx.getText()));// в from 1 таблица допустима
+            selectIntoOperator.setInvolvedTable(databaseSchema.getTables().get(ctx.getText()));//TODO в from 1 таблица допустима
         }
     }
 
