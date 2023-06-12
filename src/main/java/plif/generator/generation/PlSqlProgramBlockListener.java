@@ -65,12 +65,17 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
 
     @Override
     public void exitSelect_statement(Select_statementContext ctx) {
-        if (selectNotInFromClause(ctx)) {
-            int numberOfLine = ctx.start.getLine();
-            SelectIntoOperator selectIntoOperator = selectIntoOperatorMap.get(numberOfLine);
-            Set<String> policies = dotReferencedColumnPolicies.get(numberOfLine + 1);
-            if (policies != null)
-                policies.forEach(policy -> selectIntoOperator.getConditionalExpressions().add(policy));//Добавляем из условий политики столбцов, указанных через обращение точкой к таблице
+        int numberOfLine = ctx.start.getLine();
+        SelectIntoOperator selectIntoOperator = selectIntoOperatorMap.get(numberOfLine);
+        if (selectIntoOperator != null) {
+            Set<String> conditionalPolicies = dotReferencedColumnPolicies.get(numberOfLine + 1);
+            Set<String> selectedPolicies = dotReferencedColumnPolicies.get(numberOfLine);
+            if (conditionalPolicies != null) {
+                conditionalPolicies.forEach(policy -> selectIntoOperator.getConditionalExpressions().add(policy));//Добавляем из условий политики столбцов, указанных через обращение точкой к таблице
+            }
+            if (selectedPolicies != null) {
+                selectedPolicies.forEach(policy -> selectIntoOperator.getSelectedExpressions().add(policy));//Добавляем выбираемые столбцы, указанные ч-з точку
+            }
         }
     }
 

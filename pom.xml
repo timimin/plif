@@ -13,12 +13,27 @@
         <maven.compiler.target>11</maven.compiler.target>
         <antlr4.version>4.10.1</antlr4.version>
         <apache.maven-compiler-plugin.version>3.8.1</apache.maven-compiler-plugin.version>
+        <junit.version>5.9.3</junit.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
             <version>${antlr4.version}</version>
+        </dependency>
+
+        <!--Test dependencies-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
