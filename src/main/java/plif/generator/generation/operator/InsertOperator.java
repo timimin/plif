@@ -68,7 +68,7 @@ public class InsertOperator extends SqlOperator {
                                     .append("name |-> ").append(policy).append("(id).name]>>,\n ")));
         } else {
             for (int i = 0; i < involvedColumnsPolicies.size(); i++) {
-                trace.append("<<[policy |-> min, name |-> ").append(programBlockData.getNextLiteralLabel()).append(">>,\n ");
+                trace.append("<<[policy |-> min, name |-> ").append(programBlockData.getNextLiteralLabel()).append("]>>,\n ");
             }
         }
         replaceEndOfString(trace, ">>,\n ", ">>\n >>,\n to |-> <<\n ");

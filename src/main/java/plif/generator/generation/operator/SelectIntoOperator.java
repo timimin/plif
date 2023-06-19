@@ -102,7 +102,7 @@ public class SelectIntoOperator extends SqlOperator {
         });
         replaceEndOfString(trace, ">>,\n ", ">>\n >>,\n to |-> <<\n ");
         insertedVariables.forEach(variableName -> programBlockVariables.get(variableName).getVariablePolicies().
-                forEach(policy -> trace.append("policy |-> load(id, ").append(policy).append("(id)),\n name |-> ").append(policy).append("(id).name],\n ")));
+                forEach(policy -> trace.append("[policy |-> load(id, ").append(policy).append("(id)),\n name |-> ").append(policy).append("(id).name],\n ")));
         return replaceEndOfString(trace, ",\n ", ">>\n ]>>)\n").toString();
     }
 }

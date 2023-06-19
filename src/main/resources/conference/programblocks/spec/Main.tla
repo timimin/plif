@@ -205,7 +205,7 @@ p_allocate10(id) ==
  >>
  >>,
  to |-> <<
- policy |-> load(id, p_allocate_v_v_p_id(id)),
+ [policy |-> load(id, p_allocate_v_v_p_id(id)),
  name |-> p_allocate_v_v_p_id(id).name]>>
  ]>>)
 /\ Ignore' = 0
@@ -292,8 +292,8 @@ p_allocate17(id) ==
  "p_allocate17",
  "insert into logs values ( 1 , 'an attempt was made to allocate unaccepted submission ' | | s_id | | ', ' | | sysdate | | '.' )",
  [from |-> <<
- <<[policy |-> min, name |-> "literal_1">>,
- <<[policy |-> min, name |-> "literal_2">>
+ <<[policy |-> min, name |-> "literal_1"]>>,
+ <<[policy |-> min, name |-> "literal_2"]>>
  >>,
  to |-> <<
  VPol.col_logs_event_id,
@@ -608,15 +608,15 @@ f_get_paper6(id) ==
  >>
  >>,
  to |-> <<
- policy |-> load(id, f_get_paper_v_v_paper_rec_c1(id)),
+ [policy |-> load(id, f_get_paper_v_v_paper_rec_c1(id)),
  name |-> f_get_paper_v_v_paper_rec_c1(id).name],
- policy |-> load(id, f_get_paper_v_v_paper_rec_c2(id)),
+ [policy |-> load(id, f_get_paper_v_v_paper_rec_c2(id)),
  name |-> f_get_paper_v_v_paper_rec_c2(id).name],
- policy |-> load(id, f_get_paper_v_v_paper_rec_c3(id)),
+ [policy |-> load(id, f_get_paper_v_v_paper_rec_c3(id)),
  name |-> f_get_paper_v_v_paper_rec_c3(id).name],
- policy |-> load(id, f_get_paper_v_v_paper_rec_c4(id)),
+ [policy |-> load(id, f_get_paper_v_v_paper_rec_c4(id)),
  name |-> f_get_paper_v_v_paper_rec_c4(id).name],
- policy |-> load(id, f_get_paper_v_v_paper_rec_c5(id)),
+ [policy |-> load(id, f_get_paper_v_v_paper_rec_c5(id)),
  name |-> f_get_paper_v_v_paper_rec_c5(id).name]>>
  ]>>)
 /\ Ignore' = 0
@@ -896,25 +896,25 @@ f_get_section_program8(id) ==
  >>
  >>,
  to |-> <<
- policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c1(id)),
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c1(id)),
  name |-> f_get_section_program_v_v_program_arr_e1_c1(id).name],
- policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c2(id)),
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c2(id)),
  name |-> f_get_section_program_v_v_program_arr_e1_c2(id).name],
- policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c3(id)),
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c3(id)),
  name |-> f_get_section_program_v_v_program_arr_e1_c3(id).name],
- policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c4(id)),
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c4(id)),
  name |-> f_get_section_program_v_v_program_arr_e1_c4(id).name],
- policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c5(id)),
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c5(id)),
  name |-> f_get_section_program_v_v_program_arr_e1_c5(id).name],
- policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c1(id)),
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c1(id)),
  name |-> f_get_section_program_v_v_program_arr_e2_c1(id).name],
- policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c2(id)),
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c2(id)),
  name |-> f_get_section_program_v_v_program_arr_e2_c2(id).name],
- policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c3(id)),
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c3(id)),
  name |-> f_get_section_program_v_v_program_arr_e2_c3(id).name],
- policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c4(id)),
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c4(id)),
  name |-> f_get_section_program_v_v_program_arr_e2_c4(id).name],
- policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c5(id)),
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c5(id)),
  name |-> f_get_section_program_v_v_program_arr_e2_c5(id).name]>>
  ]>>)
 /\ Ignore' = 0
@@ -1039,7 +1039,7 @@ f_is_accepted5(id) ==
  >>
  >>,
  to |-> <<
- policy |-> load(id, f_is_accepted_v_v_status(id)),
+ [policy |-> load(id, f_is_accepted_v_v_status(id)),
  name |-> f_is_accepted_v_v_status(id).name]>>
  ]>>)
 /\ Ignore' = 0
