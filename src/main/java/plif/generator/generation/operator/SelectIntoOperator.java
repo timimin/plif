@@ -94,8 +94,8 @@ public class SelectIntoOperator extends SqlOperator {
             int timesToRepeat = programBlockData.getVariables().get(variableName).getVariableType() == VariableType.CUSTOM_VARRAY ? 2 : 1;
             for (int i = 0; i < timesToRepeat; i++) {
                 selectedExpressions.forEach(expression -> {
-                    String columnPolicy = involvedTable.getColumnPolicy(expression);
-                    String appendedPolicy = columnPolicy == null ? "[policy |-> min, name |-> "+ programBlockData.getNextLiteralLabel()+ "]" : "VPol." + columnPolicy;
+                    String columnPolicy = expression.startsWith("\"col_") ? unqoute(expression) : involvedTable.getColumnPolicy(expression);
+                    String appendedPolicy = columnPolicy == null ? "[policy |-> min, name |-> " + programBlockData.getNextLiteralLabel() + "]" : "VPol." + columnPolicy;
                     trace.append("<<\n ").append(appendedPolicy).append(",\n ").append(conditionalExpressionsTrace).append("\n >>,\n ");
                 });
             }

@@ -34,6 +34,12 @@ public class CommonUtil {
         return "\"" + stringToSurround + "\"";
     }
 
+    public static String unqoute(String quotedString) {
+        if (quotedString.charAt(0) != '\"' && quotedString.charAt(quotedString.length() - 1) != '\"')
+            throw new IllegalArgumentException();
+        else return quotedString.substring(1, quotedString.length() - 1);
+    }
+
     public static List<String> appendSuffixToVariablePolicies(Variable variable, String suffix) {
         return variable.getVariablePolicies().stream().map(policy -> policy + suffix).collect(Collectors.toList());
     }

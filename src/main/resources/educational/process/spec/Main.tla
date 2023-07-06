@@ -168,7 +168,7 @@ f_UCHEBA_programm_list31(id) ==
  "SELECT uch_programm . programm_id , uch_programm . name , uch_programm . short_name , uch_programm . count_chasov , uch_programm . count_chasov_audit , uch_programm . data , uch_programm . fullnumber , uch_programm . code , uch_napravlenie . short_name , uch_napravlenie . name , upr_department . short_title INTO r FROM uch_programm WHERE uch_programm . napravlenie = uch_napravlenie . id and uch_programm . department = upr_department . id and uch_programm . type = '89878DB1-1E71-4E6C-B615-9085F2ED964D' and uch_programm . id <> data_view and uch_programm . name = data_name and uch_programm . code = data_code and uch_programm . data > = date_n and uch_programm . data < = date_o and uch_programm . napravlenie = data_naprav and uch_programm . department = data_kafedra and uch_programm . count_chasov > = data_chacov_n and uch_programm . count_chasov < = data_chacov_o and uch_programm . unuse = data_unuse",
  [from |-> <<
  <<
- [policy |-> min, name |-> "literal_2"],
+ VPol.col_uch_programm_programm_id,
  [policy |-> min, name |-> "literal_1"],
  [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
  name |-> f_UCHEBA_programm_list_p_data_view(id).name],
@@ -203,7 +203,7 @@ f_UCHEBA_programm_list31(id) ==
  VPol.col_uch_programm_unuse
  >>,
  <<
- [policy |-> min, name |-> "literal_3"],
+ VPol.col_uch_programm_name,
  [policy |-> min, name |-> "literal_1"],
  [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
  name |-> f_UCHEBA_programm_list_p_data_view(id).name],
@@ -238,7 +238,7 @@ f_UCHEBA_programm_list31(id) ==
  VPol.col_uch_programm_unuse
  >>,
  <<
- [policy |-> min, name |-> "literal_4"],
+ VPol.col_uch_programm_short_name,
  [policy |-> min, name |-> "literal_1"],
  [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
  name |-> f_UCHEBA_programm_list_p_data_view(id).name],
@@ -273,7 +273,7 @@ f_UCHEBA_programm_list31(id) ==
  VPol.col_uch_programm_unuse
  >>,
  <<
- [policy |-> min, name |-> "literal_5"],
+ VPol.col_uch_programm_count_chasov,
  [policy |-> min, name |-> "literal_1"],
  [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
  name |-> f_UCHEBA_programm_list_p_data_view(id).name],
@@ -308,7 +308,7 @@ f_UCHEBA_programm_list31(id) ==
  VPol.col_uch_programm_unuse
  >>,
  <<
- [policy |-> min, name |-> "literal_6"],
+ VPol.col_uch_programm_count_chasov_audit,
  [policy |-> min, name |-> "literal_1"],
  [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
  name |-> f_UCHEBA_programm_list_p_data_view(id).name],
@@ -343,7 +343,7 @@ f_UCHEBA_programm_list31(id) ==
  VPol.col_uch_programm_unuse
  >>,
  <<
- [policy |-> min, name |-> "literal_7"],
+ VPol.col_uch_programm_data,
  [policy |-> min, name |-> "literal_1"],
  [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
  name |-> f_UCHEBA_programm_list_p_data_view(id).name],
@@ -378,7 +378,7 @@ f_UCHEBA_programm_list31(id) ==
  VPol.col_uch_programm_unuse
  >>,
  <<
- [policy |-> min, name |-> "literal_8"],
+ VPol.col_uch_programm_fullnumber,
  [policy |-> min, name |-> "literal_1"],
  [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
  name |-> f_UCHEBA_programm_list_p_data_view(id).name],
@@ -413,7 +413,7 @@ f_UCHEBA_programm_list31(id) ==
  VPol.col_uch_programm_unuse
  >>,
  <<
- [policy |-> min, name |-> "literal_9"],
+ VPol.col_uch_programm_code,
  [policy |-> min, name |-> "literal_1"],
  [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
  name |-> f_UCHEBA_programm_list_p_data_view(id).name],
@@ -448,7 +448,7 @@ f_UCHEBA_programm_list31(id) ==
  VPol.col_uch_programm_unuse
  >>,
  <<
- [policy |-> min, name |-> "literal_10"],
+ VPol.col_uch_napravlenie_short_name,
  [policy |-> min, name |-> "literal_1"],
  [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
  name |-> f_UCHEBA_programm_list_p_data_view(id).name],
@@ -483,7 +483,7 @@ f_UCHEBA_programm_list31(id) ==
  VPol.col_uch_programm_unuse
  >>,
  <<
- [policy |-> min, name |-> "literal_11"],
+ VPol.col_uch_napravlenie_name,
  [policy |-> min, name |-> "literal_1"],
  [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
  name |-> f_UCHEBA_programm_list_p_data_view(id).name],
@@ -518,7 +518,7 @@ f_UCHEBA_programm_list31(id) ==
  VPol.col_uch_programm_unuse
  >>,
  <<
- [policy |-> min, name |-> "literal_12"],
+ VPol.col_upr_department_short_title,
  [policy |-> min, name |-> "literal_1"],
  [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
  name |-> f_UCHEBA_programm_list_p_data_view(id).name],

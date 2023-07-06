@@ -456,7 +456,7 @@ public class PlSqlProgramBlockListener extends PlSqlParserBaseListener {
         @Override
         public void enterVariable_name(Variable_nameContext ctx) {
             if (columnPolicy == null) {
-                if (ctx.getChildCount() != 1) {//обращение без точки
+                if (ctx.getChildCount() != 1) {//обращение с точкой
                     List<Id_expressionContext> expressions = ctx.id_expression();
                     Table table = databaseSchema.getTables().get(expressions.get(0).getText().toLowerCase());
                     if (table != null) {
