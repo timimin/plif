@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>ConferenceProcFS_final_1</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>toolbox.builder.TLAParserBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>toolbox.natures.TLANature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>ConferenceProcFS_final.tla</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/ConferenceProcFS_final.tla</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>

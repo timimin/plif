@@ -279,47 +279,6 @@ COpenLocks(lock, GLOB) ==
 (* here.                                                                   *)
 (***************************************************************************)
 
-ClausesSet == {c \in
-                   {<<u, <<e0, e1>>>> : u  \in (U \cup UU), 
-                           e0 \in [E0 -> SUBSET {NONE}],
-                           e1 \in [E1 -> ((SUBSET (U \cup UU)) 
-                                                     \ {{}}) \cup {{NONE}}]}:
-               \/ c[1] \in UU 
-               \/ /\ c[1] \notin UU
-                  /\ UNION (Range(c[2][2])) \cap UU = {}}
-                                                       
-\* {i \in ClausesSet: \A j \in (ClausesSet \ {i}): compareClause(i, j)}
-
-PoliciesSet == {p \in SUBSET ClausesSet: 
-                      \A c1 \in p: ~\E c2 \in p: 
-                        /\ c1 # c2 
-                        /\ (compareClause(c1, c2) \/ compareClause(c2, c1))}
- 
-
-\*  CHOOSE i \in PoliciesSet: \A j \in PoliciesSet : comparePol(i, j) -- min
-\*  CHOOSE i \in PoliciesSet: \A j \in PoliciesSet : comparePol(j, i) -- max
-
-Ref == \A p \in PoliciesSet: comparePol(p, p)
-
-Transitivity == \A p1, p2, p3 \in PoliciesSet: 
-                              \/ comparePol(p1, p3)
-                              \/ ~comparePol(p1, p2)
-                              \/ ~comparePol(p2, p3)
-                              
-AntySym == \A p1, p2 \in PoliciesSet: 
-                              \/ p1 = p2
-                              \/ ~comparePol(p1, p2)
-                              \/ ~comparePol(p2, p1)
-
-LUBC (SS, PS) == CHOOSE p \in PS : /\ \A s \in SS : comparePol(s, p)
-                          /\ \A y \in PS : \/ comparePol(p, y)
-                                           \/ ~\A r \in SS : comparePol(r, y)
-                                             
-LUB_Existence == \A s \in SUBSET (PoliciesSet) : \E p \in PoliciesSet :
-                                                    p = LUBC (s, PoliciesSet)
-
-LUB_2_Existence == \A p1, p2 \in PoliciesSet : \E p \in PoliciesSet :
-                                                  p = LUBC ({p1,p2}, PoliciesSet)
 
 =============================================================================
 \* Modification History

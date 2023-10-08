@@ -278,7 +278,7 @@ COpenLocks(lock, GLOB) ==
 (* the special value NONE for representing closed or not required locks    *)
 (* here.                                                                   *)
 (***************************************************************************)
-
+(*
 ClausesSet == {c \in
                    {<<u, <<e0, e1>>>> : u  \in (U \cup UU), 
                            e0 \in [E0 -> SUBSET {NONE}],
@@ -320,7 +320,7 @@ LUB_Existence == \A s \in SUBSET (PoliciesSet) : \E p \in PoliciesSet :
 
 LUB_2_Existence == \A p1, p2 \in PoliciesSet : \E p \in PoliciesSet :
                                                   p = LUBC ({p1,p2}, PoliciesSet)
-
+*)
 =============================================================================
 \* Modification History
 \* Last modified Thu Jun 09 19:03:19 MSK 2022 by user-sc
