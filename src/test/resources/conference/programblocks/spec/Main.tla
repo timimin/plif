@@ -1,6 +1,6 @@
 ------------------------------- MODULE Main -------------------------------
 EXTENDS RuntimeFS
-f_UCHEBA_programm_list_load(id) ==
+p_add_paper_load(id) ==
 IF XLocks = Undef
 THEN
 /\ XLocks' = id
@@ -11,101 +11,20 @@ THEN
  min,
  min,
  min,
- min,
- min,
- min,
- min,
- min,
- min,
- f_UCHEBA_programm_list_v_r_rec_c1(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c2(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c3(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c4(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c5(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c6(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c7(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c8(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c9(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c10(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c11(id).policy,
- f_UCHEBA_programm_list_r_rec_c1(id).policy,
- f_UCHEBA_programm_list_r_rec_c2(id).policy,
- f_UCHEBA_programm_list_r_rec_c3(id).policy,
- f_UCHEBA_programm_list_r_rec_c4(id).policy,
- f_UCHEBA_programm_list_r_rec_c5(id).policy,
- f_UCHEBA_programm_list_r_rec_c6(id).policy,
- f_UCHEBA_programm_list_r_rec_c7(id).policy,
- f_UCHEBA_programm_list_r_rec_c8(id).policy,
- f_UCHEBA_programm_list_r_rec_c9(id).policy,
- f_UCHEBA_programm_list_r_rec_c10(id).policy,
- f_UCHEBA_programm_list_r_rec_c11(id).policy>>
+ min>>
  ]
 /\ New2Old' =
  <<
- <<f_UCHEBA_programm_list_p_data_view(id).policy,
- f_UCHEBA_programm_list_p_data_unuse(id).policy,
- f_UCHEBA_programm_list_p_data_name(id).policy,
- f_UCHEBA_programm_list_p_data_code(id).policy,
- f_UCHEBA_programm_list_p_date_n(id).policy,
- f_UCHEBA_programm_list_p_date_o(id).policy,
- f_UCHEBA_programm_list_p_data_naprav(id).policy,
- f_UCHEBA_programm_list_p_data_kafedra(id).policy,
- f_UCHEBA_programm_list_p_data_chacov_n(id).policy,
- f_UCHEBA_programm_list_p_data_chacov_o(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c1(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c2(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c3(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c4(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c5(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c6(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c7(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c8(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c9(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c10(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c11(id).policy,
- f_UCHEBA_programm_list_r_rec_c1(id).policy,
- f_UCHEBA_programm_list_r_rec_c2(id).policy,
- f_UCHEBA_programm_list_r_rec_c3(id).policy,
- f_UCHEBA_programm_list_r_rec_c4(id).policy,
- f_UCHEBA_programm_list_r_rec_c5(id).policy,
- f_UCHEBA_programm_list_r_rec_c6(id).policy,
- f_UCHEBA_programm_list_r_rec_c7(id).policy,
- f_UCHEBA_programm_list_r_rec_c8(id).policy,
- f_UCHEBA_programm_list_r_rec_c9(id).policy,
- f_UCHEBA_programm_list_r_rec_c10(id).policy,
- f_UCHEBA_programm_list_r_rec_c11(id).policy>>,
+ <<p_add_paper_p_p_id(id).policy,
+ p_add_paper_p_tit(id).policy,
+ p_add_paper_p_absr(id).policy,
+ p_add_paper_p_t(id).policy,
+ p_add_paper_p_auth(id).policy>>,
  <<min,
  min,
  min,
  min,
- min,
- min,
- min,
- min,
- min,
- min,
- f_UCHEBA_programm_list_v_r_rec_c1(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c2(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c3(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c4(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c5(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c6(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c7(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c8(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c9(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c10(id).policy,
- f_UCHEBA_programm_list_v_r_rec_c11(id).policy,
- f_UCHEBA_programm_list_r_rec_c1(id).policy,
- f_UCHEBA_programm_list_r_rec_c2(id).policy,
- f_UCHEBA_programm_list_r_rec_c3(id).policy,
- f_UCHEBA_programm_list_r_rec_c4(id).policy,
- f_UCHEBA_programm_list_r_rec_c5(id).policy,
- f_UCHEBA_programm_list_r_rec_c6(id).policy,
- f_UCHEBA_programm_list_r_rec_c7(id).policy,
- f_UCHEBA_programm_list_r_rec_c8(id).policy,
- f_UCHEBA_programm_list_r_rec_c9(id).policy,
- f_UCHEBA_programm_list_r_rec_c10(id).policy,
- f_UCHEBA_programm_list_r_rec_c11(id).policy>>
+ min>>
  >>
 /\ Ignore' = 0
 /\ SLocks' = SLocks
@@ -113,502 +32,613 @@ THEN
 /\ UNCHANGED <<VPol>>
 ELSE UNCHANGED vars
 
-f_UCHEBA_programm_list31(id) ==
-/\ select(id, <<
- f_UCHEBA_programm_list_v_r_rec_c1(id),
- f_UCHEBA_programm_list_v_r_rec_c2(id),
- f_UCHEBA_programm_list_v_r_rec_c3(id),
- f_UCHEBA_programm_list_v_r_rec_c4(id),
- f_UCHEBA_programm_list_v_r_rec_c5(id),
- f_UCHEBA_programm_list_v_r_rec_c6(id),
- f_UCHEBA_programm_list_v_r_rec_c7(id),
- f_UCHEBA_programm_list_v_r_rec_c8(id),
- f_UCHEBA_programm_list_v_r_rec_c9(id),
- f_UCHEBA_programm_list_v_r_rec_c10(id),
- f_UCHEBA_programm_list_v_r_rec_c11(id)>>,
+p_add_paper4(id) ==
+/\ insert(id, <<
+ "col_papers_paper_id",
+ "col_papers_title",
+ "col_papers_abstract",
+ "col_papers_text",
+ "col_papers_authors">>,
  <<
- VPol["col_uch_programm_programm_id"].policy,
- VPol["col_uch_programm_name"].policy,
- VPol["col_uch_programm_short_name"].policy,
- VPol["col_uch_programm_count_chasov"].policy,
- VPol["col_uch_programm_count_chasov_audit"].policy,
- VPol["col_uch_programm_data"].policy,
- VPol["col_uch_programm_fullnumber"].policy,
- VPol["col_uch_programm_code"].policy,
- VPol["col_uch_napravlenie_short_name"].policy,
- VPol["col_uch_napravlenie_name"].policy,
- VPol["col_upr_department_short_title"].policy>>,
- LUB4Seq(<<
- load(id, f_UCHEBA_programm_list_p_data_view(id)),
- load(id, f_UCHEBA_programm_list_p_data_name(id)),
- load(id, f_UCHEBA_programm_list_p_data_code(id)),
- load(id, f_UCHEBA_programm_list_p_date_n(id)),
- load(id, f_UCHEBA_programm_list_p_date_o(id)),
- load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- VPol["col_uch_programm_napravlenie"].policy,
- VPol["col_uch_napravlenie_id"].policy,
- VPol["col_uch_programm_department"].policy,
- VPol["col_upr_department_id"].policy,
- VPol["col_uch_programm_type"].policy,
- VPol["col_uch_programm_id"].policy,
- VPol["col_uch_programm_name"].policy,
- VPol["col_uch_programm_code"].policy,
- VPol["col_uch_programm_data"].policy,
- VPol["col_uch_programm_count_chasov"].policy,
- VPol["col_uch_programm_unuse"].policy>>),
+ load(id, p_add_paper_p_p_id(id)),
+ load(id, p_add_paper_p_tit(id)),
+ load(id, p_add_paper_p_absr(id)),
+ load(id, p_add_paper_p_t(id)),
+ load(id, p_add_paper_p_auth(id))>>,
  <<
- "f_UCHEBA_programm_list", "lbl_33"
+ "p_add_paper", "exit"
  >>)
 /\ Trace' = Append(Trace,<<id,
- "f_UCHEBA_programm_list31",
- "SELECT uch_programm . programm_id , uch_programm . name , uch_programm . short_name , uch_programm . count_chasov , uch_programm . count_chasov_audit , uch_programm . data , uch_programm . fullnumber , uch_programm . code , uch_napravlenie . short_name , uch_napravlenie . name , upr_department . short_title INTO r FROM uch_programm WHERE uch_programm . napravlenie = uch_napravlenie . id and uch_programm . department = upr_department . id and uch_programm . type = '89878DB1-1E71-4E6C-B615-9085F2ED964D' and uch_programm . id <> data_view and uch_programm . name = data_name and uch_programm . code = data_code and uch_programm . data > = date_n and uch_programm . data < = date_o and uch_programm . napravlenie = data_naprav and uch_programm . department = data_kafedra and uch_programm . count_chasov > = data_chacov_n and uch_programm . count_chasov < = data_chacov_o and uch_programm . unuse = data_unuse",
+ "p_add_paper4",
+ "insert into papers ( paper_id , title , abstract , text , authors ) values ( p_id , tit , absr , t , auth )",
+ [from |-> <<
+ <<[policy |-> load(id, p_add_paper_p_p_id(id)),
+ name |-> p_add_paper_p_p_id(id).name]>>,
+ <<[policy |-> load(id, p_add_paper_p_tit(id)),
+ name |-> p_add_paper_p_tit(id).name]>>,
+ <<[policy |-> load(id, p_add_paper_p_absr(id)),
+ name |-> p_add_paper_p_absr(id).name]>>,
+ <<[policy |-> load(id, p_add_paper_p_t(id)),
+ name |-> p_add_paper_p_t(id).name]>>,
+ <<[policy |-> load(id, p_add_paper_p_auth(id)),
+ name |-> p_add_paper_p_auth(id).name]>>
+ >>,
+ to |-> <<
+ VPol.col_papers_paper_id,
+ VPol.col_papers_title,
+ VPol.col_papers_abstract,
+ VPol.col_papers_text,
+ VPol.col_papers_authors>>
+ ]>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ XLocks' = XLocks
+
+p_add_paper_exit(id) ==
+/\ IF Len(Sessions[id]["StateRegs"]) = 1
+ THEN XLocks' = Undef
+ ELSE XLocks' = XLocks
+/\ Sessions' =
+ [Sessions EXCEPT
+ ![id]["StateRegs"] = Tail(Sessions[id]["StateRegs"]) \o <<>>,
+ ![id]["SessionM"] = SubSeq(Sessions[id]["SessionM"], 1, Len(Sessions[id]["SessionM"]) - 5)]
+/\ Trace' = Append(Trace, <<id,"p_add_paper_exit",
+ "p_add_paper_exit",
+ [from |-> << >>, to |-> << >>]>>)
+ /\ Ignore' = 1
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<New2Old, VPol>>
+
+p_add_paper(id,st) ==
+ CASE Head(st).pc[2] = "lbl_4" -> p_add_paper4(id)
+[] Head(st).pc[2] = "exit" -> p_add_paper_exit(id)
+[] OTHER -> UNCHANGED vars
+
+p_allocate_load(id) ==
+IF XLocks = Undef
+THEN
+/\ XLocks' = id
+/\ Sessions' =
+ [
+ Sessions EXCEPT ![id]["SessionM"] = Sessions[id]["SessionM"] \o
+ <<min,
+ min,
+ min,
+ min,
+ p_allocate_e_paper_not_accepted(id).policy,
+ p_allocate_v_v_p_id(id).policy,
+ p_allocate_v_v_is_acc(id).policy>>
+ ]
+/\ New2Old' =
+ <<
+ <<p_allocate_p_id(id).policy,
+ p_allocate_p_s_id(id).policy,
+ p_allocate_p_sec_id(id).policy,
+ p_allocate_p_alloc_date(id).policy,
+ p_allocate_e_paper_not_accepted(id).policy,
+ p_allocate_v_v_p_id(id).policy,
+ p_allocate_v_v_is_acc(id).policy>>,
+ <<min,
+ min,
+ min,
+ min,
+ p_allocate_e_paper_not_accepted(id).policy,
+ p_allocate_v_v_p_id(id).policy,
+ p_allocate_v_v_is_acc(id).policy>>
+ >>
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<VPol>>
+ELSE UNCHANGED vars
+
+p_allocate7(id) ==
+/\ call(id, <<
+ "f_is_accepted", "lbl_5">>,
+ "lbl_7r",
+ <<
+ LUB4Seq(Sessions[id]["PCLabel"] \o <<load(id, p_allocate_p_s_id(id))>>),
+ LUB4Seq(Sessions[id]["PCLabel"] \o <<f_is_accepted_v_v_status(id).policy>>),
+ LUB4Seq(Sessions[id]["PCLabel"] \o <<f_is_accepted_r(id).policy>>)>>)
+/\ Trace' = Append(Trace,<<>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<XLocks, VPol, New2Old>>
+
+p_allocate7r(id) ==
+/\ exit_call(id, <<
+ p_allocate_v_v_is_acc(id)>>,
+ <<
+ "p_allocate", "lbl_8">>)
+/\ Trace' = Append(Trace,<<>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<XLocks, VPol>>
+
+p_allocate8(id) ==
+/\ if(id, LUB4Seq(<<
+ load(id, p_allocate_v_v_is_acc(id))>>),
+ <<
+ "p_allocate", "lbl_10_13"
+ >>)
+/\ Trace' = Append(Trace,<<id,
+ "p_allocate8",
+ "if v_is_acc",
+ [from |-> <<
+ <<[policy |-> load(id, p_allocate_v_v_is_acc(id)),
+ name |-> p_allocate_v_v_is_acc(id).name]>>
+ >>,
+ to |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]), name |-> "PCLabel"]>>]>>)
+ /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>
+
+p_allocate10_13(id) ==
+\/ /\ skip(id, <<"p_allocate", "lbl_10">>)
+ /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore, Trace>>
+\/ /\ skip(id, <<"p_allocate", "lbl_13">>)
+ /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore, Trace>>
+
+
+p_allocate10(id) ==
+/\ select(id, <<
+ p_allocate_v_v_p_id(id)>>,
+ <<
+ VPol["col_submissions_paper_id"].policy>>,
+ LUB4Seq(<<
+ VPol["col_submissions_submission_id"].policy,
+ load(id, p_allocate_p_s_id(id))>>),
+ <<
+ "p_allocate", "lbl_12"
+ >>)
+/\ Trace' = Append(Trace,<<id,
+ "p_allocate10",
+ "select paper_id into v_p_id from submissions where submission_id = s_id",
  [from |-> <<
  <<
- [policy |-> min, name |-> "literal_2"],
- [policy |-> min, name |-> "literal_1"],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
- name |-> f_UCHEBA_programm_list_p_data_view(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_name(id)),
- name |-> f_UCHEBA_programm_list_p_data_name(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_code(id)),
- name |-> f_UCHEBA_programm_list_p_data_code(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_n(id)),
- name |-> f_UCHEBA_programm_list_p_date_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_o(id)),
- name |-> f_UCHEBA_programm_list_p_date_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- name |-> f_UCHEBA_programm_list_p_data_naprav(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- name |-> f_UCHEBA_programm_list_p_data_kafedra(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- name |-> f_UCHEBA_programm_list_p_data_unuse(id).name],
- VPol.col_uch_programm_napravlenie,
- VPol.col_uch_napravlenie_id,
- VPol.col_uch_programm_department,
- VPol.col_upr_department_id,
- VPol.col_uch_programm_type,
- VPol.col_uch_programm_id,
- VPol.col_uch_programm_name,
- VPol.col_uch_programm_code,
- VPol.col_uch_programm_data,
- VPol.col_uch_programm_count_chasov,
- VPol.col_uch_programm_unuse
- >>,
- <<
- [policy |-> min, name |-> "literal_3"],
- [policy |-> min, name |-> "literal_1"],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
- name |-> f_UCHEBA_programm_list_p_data_view(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_name(id)),
- name |-> f_UCHEBA_programm_list_p_data_name(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_code(id)),
- name |-> f_UCHEBA_programm_list_p_data_code(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_n(id)),
- name |-> f_UCHEBA_programm_list_p_date_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_o(id)),
- name |-> f_UCHEBA_programm_list_p_date_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- name |-> f_UCHEBA_programm_list_p_data_naprav(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- name |-> f_UCHEBA_programm_list_p_data_kafedra(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- name |-> f_UCHEBA_programm_list_p_data_unuse(id).name],
- VPol.col_uch_programm_napravlenie,
- VPol.col_uch_napravlenie_id,
- VPol.col_uch_programm_department,
- VPol.col_upr_department_id,
- VPol.col_uch_programm_type,
- VPol.col_uch_programm_id,
- VPol.col_uch_programm_name,
- VPol.col_uch_programm_code,
- VPol.col_uch_programm_data,
- VPol.col_uch_programm_count_chasov,
- VPol.col_uch_programm_unuse
- >>,
- <<
- [policy |-> min, name |-> "literal_4"],
- [policy |-> min, name |-> "literal_1"],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
- name |-> f_UCHEBA_programm_list_p_data_view(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_name(id)),
- name |-> f_UCHEBA_programm_list_p_data_name(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_code(id)),
- name |-> f_UCHEBA_programm_list_p_data_code(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_n(id)),
- name |-> f_UCHEBA_programm_list_p_date_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_o(id)),
- name |-> f_UCHEBA_programm_list_p_date_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- name |-> f_UCHEBA_programm_list_p_data_naprav(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- name |-> f_UCHEBA_programm_list_p_data_kafedra(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- name |-> f_UCHEBA_programm_list_p_data_unuse(id).name],
- VPol.col_uch_programm_napravlenie,
- VPol.col_uch_napravlenie_id,
- VPol.col_uch_programm_department,
- VPol.col_upr_department_id,
- VPol.col_uch_programm_type,
- VPol.col_uch_programm_id,
- VPol.col_uch_programm_name,
- VPol.col_uch_programm_code,
- VPol.col_uch_programm_data,
- VPol.col_uch_programm_count_chasov,
- VPol.col_uch_programm_unuse
- >>,
- <<
- [policy |-> min, name |-> "literal_5"],
- [policy |-> min, name |-> "literal_1"],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
- name |-> f_UCHEBA_programm_list_p_data_view(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_name(id)),
- name |-> f_UCHEBA_programm_list_p_data_name(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_code(id)),
- name |-> f_UCHEBA_programm_list_p_data_code(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_n(id)),
- name |-> f_UCHEBA_programm_list_p_date_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_o(id)),
- name |-> f_UCHEBA_programm_list_p_date_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- name |-> f_UCHEBA_programm_list_p_data_naprav(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- name |-> f_UCHEBA_programm_list_p_data_kafedra(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- name |-> f_UCHEBA_programm_list_p_data_unuse(id).name],
- VPol.col_uch_programm_napravlenie,
- VPol.col_uch_napravlenie_id,
- VPol.col_uch_programm_department,
- VPol.col_upr_department_id,
- VPol.col_uch_programm_type,
- VPol.col_uch_programm_id,
- VPol.col_uch_programm_name,
- VPol.col_uch_programm_code,
- VPol.col_uch_programm_data,
- VPol.col_uch_programm_count_chasov,
- VPol.col_uch_programm_unuse
- >>,
- <<
- [policy |-> min, name |-> "literal_6"],
- [policy |-> min, name |-> "literal_1"],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
- name |-> f_UCHEBA_programm_list_p_data_view(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_name(id)),
- name |-> f_UCHEBA_programm_list_p_data_name(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_code(id)),
- name |-> f_UCHEBA_programm_list_p_data_code(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_n(id)),
- name |-> f_UCHEBA_programm_list_p_date_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_o(id)),
- name |-> f_UCHEBA_programm_list_p_date_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- name |-> f_UCHEBA_programm_list_p_data_naprav(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- name |-> f_UCHEBA_programm_list_p_data_kafedra(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- name |-> f_UCHEBA_programm_list_p_data_unuse(id).name],
- VPol.col_uch_programm_napravlenie,
- VPol.col_uch_napravlenie_id,
- VPol.col_uch_programm_department,
- VPol.col_upr_department_id,
- VPol.col_uch_programm_type,
- VPol.col_uch_programm_id,
- VPol.col_uch_programm_name,
- VPol.col_uch_programm_code,
- VPol.col_uch_programm_data,
- VPol.col_uch_programm_count_chasov,
- VPol.col_uch_programm_unuse
- >>,
- <<
- [policy |-> min, name |-> "literal_7"],
- [policy |-> min, name |-> "literal_1"],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
- name |-> f_UCHEBA_programm_list_p_data_view(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_name(id)),
- name |-> f_UCHEBA_programm_list_p_data_name(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_code(id)),
- name |-> f_UCHEBA_programm_list_p_data_code(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_n(id)),
- name |-> f_UCHEBA_programm_list_p_date_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_o(id)),
- name |-> f_UCHEBA_programm_list_p_date_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- name |-> f_UCHEBA_programm_list_p_data_naprav(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- name |-> f_UCHEBA_programm_list_p_data_kafedra(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- name |-> f_UCHEBA_programm_list_p_data_unuse(id).name],
- VPol.col_uch_programm_napravlenie,
- VPol.col_uch_napravlenie_id,
- VPol.col_uch_programm_department,
- VPol.col_upr_department_id,
- VPol.col_uch_programm_type,
- VPol.col_uch_programm_id,
- VPol.col_uch_programm_name,
- VPol.col_uch_programm_code,
- VPol.col_uch_programm_data,
- VPol.col_uch_programm_count_chasov,
- VPol.col_uch_programm_unuse
- >>,
- <<
- [policy |-> min, name |-> "literal_8"],
- [policy |-> min, name |-> "literal_1"],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
- name |-> f_UCHEBA_programm_list_p_data_view(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_name(id)),
- name |-> f_UCHEBA_programm_list_p_data_name(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_code(id)),
- name |-> f_UCHEBA_programm_list_p_data_code(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_n(id)),
- name |-> f_UCHEBA_programm_list_p_date_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_o(id)),
- name |-> f_UCHEBA_programm_list_p_date_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- name |-> f_UCHEBA_programm_list_p_data_naprav(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- name |-> f_UCHEBA_programm_list_p_data_kafedra(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- name |-> f_UCHEBA_programm_list_p_data_unuse(id).name],
- VPol.col_uch_programm_napravlenie,
- VPol.col_uch_napravlenie_id,
- VPol.col_uch_programm_department,
- VPol.col_upr_department_id,
- VPol.col_uch_programm_type,
- VPol.col_uch_programm_id,
- VPol.col_uch_programm_name,
- VPol.col_uch_programm_code,
- VPol.col_uch_programm_data,
- VPol.col_uch_programm_count_chasov,
- VPol.col_uch_programm_unuse
- >>,
- <<
- [policy |-> min, name |-> "literal_9"],
- [policy |-> min, name |-> "literal_1"],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
- name |-> f_UCHEBA_programm_list_p_data_view(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_name(id)),
- name |-> f_UCHEBA_programm_list_p_data_name(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_code(id)),
- name |-> f_UCHEBA_programm_list_p_data_code(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_n(id)),
- name |-> f_UCHEBA_programm_list_p_date_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_o(id)),
- name |-> f_UCHEBA_programm_list_p_date_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- name |-> f_UCHEBA_programm_list_p_data_naprav(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- name |-> f_UCHEBA_programm_list_p_data_kafedra(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- name |-> f_UCHEBA_programm_list_p_data_unuse(id).name],
- VPol.col_uch_programm_napravlenie,
- VPol.col_uch_napravlenie_id,
- VPol.col_uch_programm_department,
- VPol.col_upr_department_id,
- VPol.col_uch_programm_type,
- VPol.col_uch_programm_id,
- VPol.col_uch_programm_name,
- VPol.col_uch_programm_code,
- VPol.col_uch_programm_data,
- VPol.col_uch_programm_count_chasov,
- VPol.col_uch_programm_unuse
- >>,
- <<
- [policy |-> min, name |-> "literal_10"],
- [policy |-> min, name |-> "literal_1"],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
- name |-> f_UCHEBA_programm_list_p_data_view(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_name(id)),
- name |-> f_UCHEBA_programm_list_p_data_name(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_code(id)),
- name |-> f_UCHEBA_programm_list_p_data_code(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_n(id)),
- name |-> f_UCHEBA_programm_list_p_date_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_o(id)),
- name |-> f_UCHEBA_programm_list_p_date_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- name |-> f_UCHEBA_programm_list_p_data_naprav(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- name |-> f_UCHEBA_programm_list_p_data_kafedra(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- name |-> f_UCHEBA_programm_list_p_data_unuse(id).name],
- VPol.col_uch_programm_napravlenie,
- VPol.col_uch_napravlenie_id,
- VPol.col_uch_programm_department,
- VPol.col_upr_department_id,
- VPol.col_uch_programm_type,
- VPol.col_uch_programm_id,
- VPol.col_uch_programm_name,
- VPol.col_uch_programm_code,
- VPol.col_uch_programm_data,
- VPol.col_uch_programm_count_chasov,
- VPol.col_uch_programm_unuse
- >>,
- <<
- [policy |-> min, name |-> "literal_11"],
- [policy |-> min, name |-> "literal_1"],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
- name |-> f_UCHEBA_programm_list_p_data_view(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_name(id)),
- name |-> f_UCHEBA_programm_list_p_data_name(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_code(id)),
- name |-> f_UCHEBA_programm_list_p_data_code(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_n(id)),
- name |-> f_UCHEBA_programm_list_p_date_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_o(id)),
- name |-> f_UCHEBA_programm_list_p_date_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- name |-> f_UCHEBA_programm_list_p_data_naprav(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- name |-> f_UCHEBA_programm_list_p_data_kafedra(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- name |-> f_UCHEBA_programm_list_p_data_unuse(id).name],
- VPol.col_uch_programm_napravlenie,
- VPol.col_uch_napravlenie_id,
- VPol.col_uch_programm_department,
- VPol.col_upr_department_id,
- VPol.col_uch_programm_type,
- VPol.col_uch_programm_id,
- VPol.col_uch_programm_name,
- VPol.col_uch_programm_code,
- VPol.col_uch_programm_data,
- VPol.col_uch_programm_count_chasov,
- VPol.col_uch_programm_unuse
- >>,
- <<
- [policy |-> min, name |-> "literal_12"],
- [policy |-> min, name |-> "literal_1"],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_view(id)),
- name |-> f_UCHEBA_programm_list_p_data_view(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_name(id)),
- name |-> f_UCHEBA_programm_list_p_data_name(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_code(id)),
- name |-> f_UCHEBA_programm_list_p_data_code(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_n(id)),
- name |-> f_UCHEBA_programm_list_p_date_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_date_o(id)),
- name |-> f_UCHEBA_programm_list_p_date_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_naprav(id)),
- name |-> f_UCHEBA_programm_list_p_data_naprav(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_kafedra(id)),
- name |-> f_UCHEBA_programm_list_p_data_kafedra(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_n(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_n(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_chacov_o(id)),
- name |-> f_UCHEBA_programm_list_p_data_chacov_o(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_p_data_unuse(id)),
- name |-> f_UCHEBA_programm_list_p_data_unuse(id).name],
- VPol.col_uch_programm_napravlenie,
- VPol.col_uch_napravlenie_id,
- VPol.col_uch_programm_department,
- VPol.col_upr_department_id,
- VPol.col_uch_programm_type,
- VPol.col_uch_programm_id,
- VPol.col_uch_programm_name,
- VPol.col_uch_programm_code,
- VPol.col_uch_programm_data,
- VPol.col_uch_programm_count_chasov,
- VPol.col_uch_programm_unuse
+ VPol.col_submissions_paper_id,
+ VPol.col_submissions_submission_id,
+ [policy |-> load(id, p_allocate_p_s_id(id)),
+ name |-> p_allocate_p_s_id(id).name]
  >>
  >>,
  to |-> <<
- [policy |-> load(id, f_UCHEBA_programm_list_v_r_rec_c1(id)),
- name |-> f_UCHEBA_programm_list_v_r_rec_c1(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_v_r_rec_c2(id)),
- name |-> f_UCHEBA_programm_list_v_r_rec_c2(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_v_r_rec_c3(id)),
- name |-> f_UCHEBA_programm_list_v_r_rec_c3(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_v_r_rec_c4(id)),
- name |-> f_UCHEBA_programm_list_v_r_rec_c4(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_v_r_rec_c5(id)),
- name |-> f_UCHEBA_programm_list_v_r_rec_c5(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_v_r_rec_c6(id)),
- name |-> f_UCHEBA_programm_list_v_r_rec_c6(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_v_r_rec_c7(id)),
- name |-> f_UCHEBA_programm_list_v_r_rec_c7(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_v_r_rec_c8(id)),
- name |-> f_UCHEBA_programm_list_v_r_rec_c8(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_v_r_rec_c9(id)),
- name |-> f_UCHEBA_programm_list_v_r_rec_c9(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_v_r_rec_c10(id)),
- name |-> f_UCHEBA_programm_list_v_r_rec_c10(id).name],
- [policy |-> load(id, f_UCHEBA_programm_list_v_r_rec_c11(id)),
- name |-> f_UCHEBA_programm_list_v_r_rec_c11(id).name]>>
+ [policy |-> load(id, p_allocate_v_v_p_id(id)),
+ name |-> p_allocate_v_v_p_id(id).name]>>
  ]>>)
 /\ Ignore' = 0
 /\ SLocks' = SLocks
 /\ StateE' = SLocks'[id]
 /\ UNCHANGED <<XLocks, VPol>>
 
-f_UCHEBA_programm_list33(id) ==
+p_allocate12(id) ==
+/\ insert(id, <<
+ "col_allocations_allocation_id",
+ "col_allocations_submission_id",
+ "col_allocations_section_id",
+ "col_allocations_allocation_date">>,
+ <<
+ load(id, p_allocate_p_id(id)),
+ load(id, p_allocate_p_s_id(id)),
+ load(id, p_allocate_p_sec_id(id)),
+ load(id, p_allocate_p_alloc_date(id))>>,
+ <<
+ "p_allocate", "lbl_14"
+ >>)
+/\ Trace' = Append(Trace,<<id,
+ "p_allocate12",
+ "insert into allocations ( allocation_id , submission_id , section_id , allocation_date ) values ( id , s_id , sec_id , alloc_date )",
+ [from |-> <<
+ <<[policy |-> load(id, p_allocate_p_id(id)),
+ name |-> p_allocate_p_id(id).name]>>,
+ <<[policy |-> load(id, p_allocate_p_s_id(id)),
+ name |-> p_allocate_p_s_id(id).name]>>,
+ <<[policy |-> load(id, p_allocate_p_sec_id(id)),
+ name |-> p_allocate_p_sec_id(id).name]>>,
+ <<[policy |-> load(id, p_allocate_p_alloc_date(id)),
+ name |-> p_allocate_p_alloc_date(id).name]>>
+ >>,
+ to |-> <<
+ VPol.col_allocations_allocation_id,
+ VPol.col_allocations_submission_id,
+ VPol.col_allocations_section_id,
+ VPol.col_allocations_allocation_date>>
+ ]>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ XLocks' = XLocks
+
+p_allocate13(id) ==
+/\ skip(id, <<"p_allocate", "lbl_16">>)
+/\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore, Trace>>
+
+p_allocate16(id) ==
+/\ whenexc(id, load(id, p_allocate_e_paper_not_accepted(id)),
+ <<
+ "p_allocate", "lbl_17"
+ >>)
+/\ Trace' = Append(Trace,<<id,
+ "p_allocate13",
+ "raise paper_not_accepted",
+ [from |-> <<
+ <<[policy |-> load(id, p_allocate_e_paper_not_accepted(id)),
+ name |-> p_allocate_e_paper_not_accepted(id).name]>>>>,
+  to |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]), name |-> "PCLabel"]>>]>>)
+ /\ UNCHANGED  <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>
+
+p_allocate14(id) ==
+/\ ifend(id, <<"p_allocate", "exit">>)
+/\ Trace' = Append(Trace,<<id,
+ "p_allocate14",
+ "endif",
+ [from |-> <<<<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]), name |-> "PCLabel"]>>>>,
+ to |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]), name |-> "PCLabel"]>>]>>)
+ /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>
+
+p_allocate17(id) ==
+/\ insert(id, <<
+ "col_logs_event_id",
+ "col_logs_err_info">>,
+ <<
+ min,
+ min>>,
+ <<
+ "p_allocate", "exit"
+ >>)
+/\ Trace' = Append(Trace,<<id,
+ "p_allocate17",
+ "insert into logs values ( 1 , 'an attempt was made to allocate unaccepted submission ' | | s_id | | ', ' | | sysdate | | '.' )",
+ [from |-> <<
+ <<[policy |-> min, name |-> "literal_1"]>>,
+ <<[policy |-> min, name |-> "literal_2"]>>
+ >>,
+ to |-> <<
+ VPol.col_logs_event_id,
+ VPol.col_logs_err_info>>
+ ]>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ XLocks' = XLocks
+
+p_allocate_exit(id) ==
+/\ IF Len(Sessions[id]["StateRegs"]) = 1
+ THEN XLocks' = Undef
+ ELSE XLocks' = XLocks
+/\ Sessions' =
+ [Sessions EXCEPT
+ ![id]["StateRegs"] = Tail(Sessions[id]["StateRegs"]) \o <<>>,
+ ![id]["SessionM"] = SubSeq(Sessions[id]["SessionM"], 1, Len(Sessions[id]["SessionM"]) - 7)]
+/\ Trace' = Append(Trace, <<id,"p_allocate_exit",
+ "p_allocate_exit",
+ [from |-> << >>, to |-> << >>]>>)
+ /\ Ignore' = 1
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<New2Old, VPol>>
+
+p_allocate(id,st) ==
+ CASE Head(st).pc[2] = "lbl_7" -> p_allocate7(id)
+[] Head(st).pc[2] = "lbl_7r" -> p_allocate7r(id)
+[] Head(st).pc[2] = "lbl_8" -> p_allocate8(id)
+[] Head(st).pc[2] = "lbl_10_13" -> p_allocate10_13(id)
+[] Head(st).pc[2] = "lbl_10" -> p_allocate10(id)
+[] Head(st).pc[2] = "lbl_12" -> p_allocate12(id)
+[] Head(st).pc[2] = "lbl_13" -> p_allocate13(id)
+[] Head(st).pc[2] = "lbl_16" -> p_allocate16(id)
+[] Head(st).pc[2] = "lbl_14" -> p_allocate14(id)
+[] Head(st).pc[2] = "lbl_17" -> p_allocate17(id)
+[] Head(st).pc[2] = "exit" -> p_allocate_exit(id)
+[] OTHER -> UNCHANGED vars
+
+p_change_status_load(id) ==
+IF XLocks = Undef
+THEN
+/\ XLocks' = id
+/\ Sessions' =
+ [
+ Sessions EXCEPT ![id]["SessionM"] = Sessions[id]["SessionM"] \o
+ <<min,
+ min>>
+ ]
+/\ New2Old' =
+ <<
+ <<p_change_status_p_s_id(id).policy,
+ p_change_status_p_stat(id).policy>>,
+ <<min,
+ min>>
+ >>
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<VPol>>
+ELSE UNCHANGED vars
+
+p_change_status4(id) ==
+/\ update(id, <<
+ "col_submissions_status">>,
+ <<
+ load(id, p_change_status_p_stat(id))>>,
+ LUB4Seq(<<
+ VPol["col_submissions_submission_id"].policy,
+ load(id, p_change_status_p_s_id(id))>>),
+ <<
+ "p_change_status", "exit"
+ >>)
+/\ Trace' = Append(Trace,<<id,
+ "p_change_status4",
+ "update submissions set status = stat where submission_id = s_id",
+ [from |-> <<
+ <<[policy |-> load(id, p_change_status_p_stat(id)),
+ name |-> p_change_status_p_stat(id).name],
+ VPol.col_submissions_submission_id,
+ [policy |-> load(id, p_change_status_p_s_id(id)),
+ name |-> p_change_status_p_s_id(id).name]>>
+ >>,
+ to |-> <<
+ VPol.col_submissions_status>>
+ ]>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ XLocks' = XLocks
+
+p_change_status_exit(id) ==
+/\ IF Len(Sessions[id]["StateRegs"]) = 1
+ THEN XLocks' = Undef
+ ELSE XLocks' = XLocks
+/\ Sessions' =
+ [Sessions EXCEPT
+ ![id]["StateRegs"] = Tail(Sessions[id]["StateRegs"]) \o <<>>,
+ ![id]["SessionM"] = SubSeq(Sessions[id]["SessionM"], 1, Len(Sessions[id]["SessionM"]) - 2)]
+/\ Trace' = Append(Trace, <<id,"p_change_status_exit",
+ "p_change_status_exit",
+ [from |-> << >>, to |-> << >>]>>)
+ /\ Ignore' = 1
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<New2Old, VPol>>
+
+p_change_status(id,st) ==
+ CASE Head(st).pc[2] = "lbl_4" -> p_change_status4(id)
+[] Head(st).pc[2] = "exit" -> p_change_status_exit(id)
+[] OTHER -> UNCHANGED vars
+
+p_submit_paper_load(id) ==
+IF XLocks = Undef
+THEN
+/\ XLocks' = id
+/\ Sessions' =
+ [
+ Sessions EXCEPT ![id]["SessionM"] = Sessions[id]["SessionM"] \o
+ <<min,
+ min,
+ min,
+ min,
+ min>>
+ ]
+/\ New2Old' =
+ <<
+ <<p_submit_paper_p_s_id(id).policy,
+ p_submit_paper_p_p_id(id).policy,
+ p_submit_paper_p_c_id(id).policy,
+ p_submit_paper_p_sub_date(id).policy,
+ p_submit_paper_p_stat(id).policy>>,
+ <<min,
+ min,
+ min,
+ min,
+ min>>
+ >>
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<VPol>>
+ELSE UNCHANGED vars
+
+p_submit_paper4(id) ==
+/\ insert(id, <<
+ "col_submissions_submission_id",
+ "col_submissions_paper_id",
+ "col_submissions_conference_id",
+ "col_submissions_submission_date",
+ "col_submissions_status">>,
+ <<
+ load(id, p_submit_paper_p_s_id(id)),
+ load(id, p_submit_paper_p_p_id(id)),
+ load(id, p_submit_paper_p_c_id(id)),
+ load(id, p_submit_paper_p_sub_date(id)),
+ load(id, p_submit_paper_p_stat(id))>>,
+ <<
+ "p_submit_paper", "exit"
+ >>)
+/\ Trace' = Append(Trace,<<id,
+ "p_submit_paper4",
+ "insert into submissions ( submission_id , paper_id , conference_id , submission_date , status ) values ( s_id , p_id , c_id , sub_date , stat )",
+ [from |-> <<
+ <<[policy |-> load(id, p_submit_paper_p_s_id(id)),
+ name |-> p_submit_paper_p_s_id(id).name]>>,
+ <<[policy |-> load(id, p_submit_paper_p_p_id(id)),
+ name |-> p_submit_paper_p_p_id(id).name]>>,
+ <<[policy |-> load(id, p_submit_paper_p_c_id(id)),
+ name |-> p_submit_paper_p_c_id(id).name]>>,
+ <<[policy |-> load(id, p_submit_paper_p_sub_date(id)),
+ name |-> p_submit_paper_p_sub_date(id).name]>>,
+ <<[policy |-> load(id, p_submit_paper_p_stat(id)),
+ name |-> p_submit_paper_p_stat(id).name]>>
+ >>,
+ to |-> <<
+ VPol.col_submissions_submission_id,
+ VPol.col_submissions_paper_id,
+ VPol.col_submissions_conference_id,
+ VPol.col_submissions_submission_date,
+ VPol.col_submissions_status>>
+ ]>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ XLocks' = XLocks
+
+p_submit_paper_exit(id) ==
+/\ IF Len(Sessions[id]["StateRegs"]) = 1
+ THEN XLocks' = Undef
+ ELSE XLocks' = XLocks
+/\ Sessions' =
+ [Sessions EXCEPT
+ ![id]["StateRegs"] = Tail(Sessions[id]["StateRegs"]) \o <<>>,
+ ![id]["SessionM"] = SubSeq(Sessions[id]["SessionM"], 1, Len(Sessions[id]["SessionM"]) - 5)]
+/\ Trace' = Append(Trace, <<id,"p_submit_paper_exit",
+ "p_submit_paper_exit",
+ [from |-> << >>, to |-> << >>]>>)
+ /\ Ignore' = 1
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<New2Old, VPol>>
+
+p_submit_paper(id,st) ==
+ CASE Head(st).pc[2] = "lbl_4" -> p_submit_paper4(id)
+[] Head(st).pc[2] = "exit" -> p_submit_paper_exit(id)
+[] OTHER -> UNCHANGED vars
+
+f_get_paper_load(id) ==
+IF XLocks = Undef
+THEN
+/\ XLocks' = id
+/\ Sessions' =
+ [
+ Sessions EXCEPT ![id]["SessionM"] = Sessions[id]["SessionM"] \o
+ <<min,
+ f_get_paper_v_v_paper_rec_c1(id).policy,
+ f_get_paper_v_v_paper_rec_c2(id).policy,
+ f_get_paper_v_v_paper_rec_c3(id).policy,
+ f_get_paper_v_v_paper_rec_c4(id).policy,
+ f_get_paper_v_v_paper_rec_c5(id).policy,
+ f_get_paper_r_rec_c1(id).policy,
+ f_get_paper_r_rec_c2(id).policy,
+ f_get_paper_r_rec_c3(id).policy,
+ f_get_paper_r_rec_c4(id).policy,
+ f_get_paper_r_rec_c5(id).policy>>
+ ]
+/\ New2Old' =
+ <<
+ <<f_get_paper_p_p_id(id).policy,
+ f_get_paper_v_v_paper_rec_c1(id).policy,
+ f_get_paper_v_v_paper_rec_c2(id).policy,
+ f_get_paper_v_v_paper_rec_c3(id).policy,
+ f_get_paper_v_v_paper_rec_c4(id).policy,
+ f_get_paper_v_v_paper_rec_c5(id).policy,
+ f_get_paper_r_rec_c1(id).policy,
+ f_get_paper_r_rec_c2(id).policy,
+ f_get_paper_r_rec_c3(id).policy,
+ f_get_paper_r_rec_c4(id).policy,
+ f_get_paper_r_rec_c5(id).policy>>,
+ <<min,
+ f_get_paper_v_v_paper_rec_c1(id).policy,
+ f_get_paper_v_v_paper_rec_c2(id).policy,
+ f_get_paper_v_v_paper_rec_c3(id).policy,
+ f_get_paper_v_v_paper_rec_c4(id).policy,
+ f_get_paper_v_v_paper_rec_c5(id).policy,
+ f_get_paper_r_rec_c1(id).policy,
+ f_get_paper_r_rec_c2(id).policy,
+ f_get_paper_r_rec_c3(id).policy,
+ f_get_paper_r_rec_c4(id).policy,
+ f_get_paper_r_rec_c5(id).policy>>
+ >>
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<VPol>>
+ELSE UNCHANGED vars
+
+f_get_paper6(id) ==
+/\ select(id, <<
+ f_get_paper_v_v_paper_rec_c1(id),
+ f_get_paper_v_v_paper_rec_c2(id),
+ f_get_paper_v_v_paper_rec_c3(id),
+ f_get_paper_v_v_paper_rec_c4(id),
+ f_get_paper_v_v_paper_rec_c5(id)>>,
+ <<
+ VPol["col_papers_paper_id"].policy,
+ VPol["col_papers_title"].policy,
+ VPol["col_papers_abstract"].policy,
+ VPol["col_papers_text"].policy,
+ VPol["col_papers_authors"].policy>>,
+ LUB4Seq(<<
+ VPol["col_papers_paper_id"].policy,
+ load(id, f_get_paper_p_p_id(id))>>),
+ <<
+ "f_get_paper", "lbl_8"
+ >>)
+/\ Trace' = Append(Trace,<<id,
+ "f_get_paper6",
+ "select paper_type ( paper_id , title , abstract , text , authors ) into v_paper from papers where paper_id = p_id",
+ [from |-> <<
+ <<
+ VPol.col_papers_paper_id,
+ VPol.col_papers_paper_id,
+ [policy |-> load(id, f_get_paper_p_p_id(id)),
+ name |-> f_get_paper_p_p_id(id).name]
+ >>,
+ <<
+ VPol.col_papers_title,
+ VPol.col_papers_paper_id,
+ [policy |-> load(id, f_get_paper_p_p_id(id)),
+ name |-> f_get_paper_p_p_id(id).name]
+ >>,
+ <<
+ VPol.col_papers_abstract,
+ VPol.col_papers_paper_id,
+ [policy |-> load(id, f_get_paper_p_p_id(id)),
+ name |-> f_get_paper_p_p_id(id).name]
+ >>,
+ <<
+ VPol.col_papers_text,
+ VPol.col_papers_paper_id,
+ [policy |-> load(id, f_get_paper_p_p_id(id)),
+ name |-> f_get_paper_p_p_id(id).name]
+ >>,
+ <<
+ VPol.col_papers_authors,
+ VPol.col_papers_paper_id,
+ [policy |-> load(id, f_get_paper_p_p_id(id)),
+ name |-> f_get_paper_p_p_id(id).name]
+ >>
+ >>,
+ to |-> <<
+ [policy |-> load(id, f_get_paper_v_v_paper_rec_c1(id)),
+ name |-> f_get_paper_v_v_paper_rec_c1(id).name],
+ [policy |-> load(id, f_get_paper_v_v_paper_rec_c2(id)),
+ name |-> f_get_paper_v_v_paper_rec_c2(id).name],
+ [policy |-> load(id, f_get_paper_v_v_paper_rec_c3(id)),
+ name |-> f_get_paper_v_v_paper_rec_c3(id).name],
+ [policy |-> load(id, f_get_paper_v_v_paper_rec_c4(id)),
+ name |-> f_get_paper_v_v_paper_rec_c4(id).name],
+ [policy |-> load(id, f_get_paper_v_v_paper_rec_c5(id)),
+ name |-> f_get_paper_v_v_paper_rec_c5(id).name]>>
+ ]>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<XLocks, VPol>>
+
+f_get_paper8(id) ==
 /\ return(id, <<
- f_UCHEBA_programm_list_r_rec_c1(id),
- f_UCHEBA_programm_list_r_rec_c2(id),
- f_UCHEBA_programm_list_r_rec_c3(id),
- f_UCHEBA_programm_list_r_rec_c4(id),
- f_UCHEBA_programm_list_r_rec_c5(id),
- f_UCHEBA_programm_list_r_rec_c6(id),
- f_UCHEBA_programm_list_r_rec_c7(id),
- f_UCHEBA_programm_list_r_rec_c8(id),
- f_UCHEBA_programm_list_r_rec_c9(id),
- f_UCHEBA_programm_list_r_rec_c10(id),
- f_UCHEBA_programm_list_r_rec_c11(id)>>,
+ f_get_paper_r_rec_c1(id),
+ f_get_paper_r_rec_c2(id),
+ f_get_paper_r_rec_c3(id),
+ f_get_paper_r_rec_c4(id),
+ f_get_paper_r_rec_c5(id)>>,
  <<
- load(id, f_UCHEBA_programm_list_v_r_rec_c1(id)),
- load(id, f_UCHEBA_programm_list_v_r_rec_c2(id)),
- load(id, f_UCHEBA_programm_list_v_r_rec_c3(id)),
- load(id, f_UCHEBA_programm_list_v_r_rec_c4(id)),
- load(id, f_UCHEBA_programm_list_v_r_rec_c5(id)),
- load(id, f_UCHEBA_programm_list_v_r_rec_c6(id)),
- load(id, f_UCHEBA_programm_list_v_r_rec_c7(id)),
- load(id, f_UCHEBA_programm_list_v_r_rec_c8(id)),
- load(id, f_UCHEBA_programm_list_v_r_rec_c9(id)),
- load(id, f_UCHEBA_programm_list_v_r_rec_c10(id)),
- load(id, f_UCHEBA_programm_list_v_r_rec_c11(id))>>,
+ load(id, f_get_paper_v_v_paper_rec_c1(id)),
+ load(id, f_get_paper_v_v_paper_rec_c2(id)),
+ load(id, f_get_paper_v_v_paper_rec_c3(id)),
+ load(id, f_get_paper_v_v_paper_rec_c4(id)),
+ load(id, f_get_paper_v_v_paper_rec_c5(id))>>,
  <<
- "f_UCHEBA_programm_list", "exit"
+ "f_get_paper", "exit"
  >>)
 /\ Trace' = Append(Trace,<<>>)
 /\ Ignore' = 0
@@ -617,7 +647,7 @@ f_UCHEBA_programm_list33(id) ==
 /\ XLocks' = XLocks
 /\ VPol' = VPol
 
-f_UCHEBA_programm_list_exit(id) ==
+f_get_paper_exit(id) ==
 /\ IF Len(Sessions[id]["StateRegs"]) = 1
  THEN XLocks' = Undef
  ELSE XLocks' = XLocks
@@ -626,342 +656,606 @@ f_UCHEBA_programm_list_exit(id) ==
  ![id]["StateRegs"] = Tail(Sessions[id]["StateRegs"]) \o <<>>,
  ![id]["Ret"] =
  <<
- Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_UCHEBA_programm_list_r_rec_c1(id).offs],
- Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_UCHEBA_programm_list_r_rec_c2(id).offs],
- Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_UCHEBA_programm_list_r_rec_c3(id).offs],
- Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_UCHEBA_programm_list_r_rec_c4(id).offs],
- Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_UCHEBA_programm_list_r_rec_c5(id).offs],
- Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_UCHEBA_programm_list_r_rec_c6(id).offs],
- Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_UCHEBA_programm_list_r_rec_c7(id).offs],
- Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_UCHEBA_programm_list_r_rec_c8(id).offs],
- Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_UCHEBA_programm_list_r_rec_c9(id).offs],
- Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_UCHEBA_programm_list_r_rec_c10(id).offs],
- Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_UCHEBA_programm_list_r_rec_c11(id).offs]
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_paper_r_rec_c1(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_paper_r_rec_c2(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_paper_r_rec_c3(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_paper_r_rec_c4(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_paper_r_rec_c5(id).offs]
  >>,
- ![id]["SessionM"] = SubSeq(Sessions[id]["SessionM"], 1, Len(Sessions[id]["SessionM"]) - 32)]
-/\ Trace' = Append(Trace, <<id,"f_UCHEBA_programm_list_exit",
- "f_UCHEBA_programm_list_exit",
+ ![id]["SessionM"] = SubSeq(Sessions[id]["SessionM"], 1, Len(Sessions[id]["SessionM"]) - 11)]
+/\ Trace' = Append(Trace, <<id,"f_get_paper_exit",
+ "f_get_paper_exit",
  [from |-> << >>, to |-> << >>]>>)
  /\ Ignore' = 1
 /\ SLocks' = SLocks
 /\ StateE' = SLocks'[id]
 /\ UNCHANGED <<New2Old, VPol>>
 
-f_UCHEBA_programm_list(id,st) ==
- CASE Head(st).pc[2] = "lbl_31" -> f_UCHEBA_programm_list31(id)
-[] Head(st).pc[2] = "lbl_33" -> f_UCHEBA_programm_list33(id)
-[] Head(st).pc[2] = "exit" -> f_UCHEBA_programm_list_exit(id)
+f_get_paper(id,st) ==
+ CASE Head(st).pc[2] = "lbl_6" -> f_get_paper6(id)
+[] Head(st).pc[2] = "lbl_8" -> f_get_paper8(id)
+[] Head(st).pc[2] = "exit" -> f_get_paper_exit(id)
+[] OTHER -> UNCHANGED vars
+
+f_get_section_program_load(id) ==
+IF XLocks = Undef
+THEN
+/\ XLocks' = id
+/\ Sessions' =
+ [
+ Sessions EXCEPT ![id]["SessionM"] = Sessions[id]["SessionM"] \o
+ <<min,
+ f_get_section_program_v_v_program_arr_e1_c1(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c2(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c3(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c4(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c5(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c1(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c2(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c3(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c4(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c5(id).policy,
+ f_get_section_program_r_arr_e1_c1(id).policy,
+ f_get_section_program_r_arr_e1_c2(id).policy,
+ f_get_section_program_r_arr_e1_c3(id).policy,
+ f_get_section_program_r_arr_e1_c4(id).policy,
+ f_get_section_program_r_arr_e1_c5(id).policy,
+ f_get_section_program_r_arr_e2_c1(id).policy,
+ f_get_section_program_r_arr_e2_c2(id).policy,
+ f_get_section_program_r_arr_e2_c3(id).policy,
+ f_get_section_program_r_arr_e2_c4(id).policy,
+ f_get_section_program_r_arr_e2_c5(id).policy>>
+ ]
+/\ New2Old' =
+ <<
+ <<f_get_section_program_p_s_id(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c1(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c2(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c3(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c4(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c5(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c1(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c2(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c3(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c4(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c5(id).policy,
+ f_get_section_program_r_arr_e1_c1(id).policy,
+ f_get_section_program_r_arr_e1_c2(id).policy,
+ f_get_section_program_r_arr_e1_c3(id).policy,
+ f_get_section_program_r_arr_e1_c4(id).policy,
+ f_get_section_program_r_arr_e1_c5(id).policy,
+ f_get_section_program_r_arr_e2_c1(id).policy,
+ f_get_section_program_r_arr_e2_c2(id).policy,
+ f_get_section_program_r_arr_e2_c3(id).policy,
+ f_get_section_program_r_arr_e2_c4(id).policy,
+ f_get_section_program_r_arr_e2_c5(id).policy>>,
+ <<min,
+ f_get_section_program_v_v_program_arr_e1_c1(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c2(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c3(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c4(id).policy,
+ f_get_section_program_v_v_program_arr_e1_c5(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c1(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c2(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c3(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c4(id).policy,
+ f_get_section_program_v_v_program_arr_e2_c5(id).policy,
+ f_get_section_program_r_arr_e1_c1(id).policy,
+ f_get_section_program_r_arr_e1_c2(id).policy,
+ f_get_section_program_r_arr_e1_c3(id).policy,
+ f_get_section_program_r_arr_e1_c4(id).policy,
+ f_get_section_program_r_arr_e1_c5(id).policy,
+ f_get_section_program_r_arr_e2_c1(id).policy,
+ f_get_section_program_r_arr_e2_c2(id).policy,
+ f_get_section_program_r_arr_e2_c3(id).policy,
+ f_get_section_program_r_arr_e2_c4(id).policy,
+ f_get_section_program_r_arr_e2_c5(id).policy>>
+ >>
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<VPol>>
+ELSE UNCHANGED vars
+
+f_get_section_program8(id) ==
+/\ select(id, <<
+ f_get_section_program_v_v_program_arr_e1_c1(id),
+ f_get_section_program_v_v_program_arr_e1_c2(id),
+ f_get_section_program_v_v_program_arr_e1_c3(id),
+ f_get_section_program_v_v_program_arr_e1_c4(id),
+ f_get_section_program_v_v_program_arr_e1_c5(id),
+ f_get_section_program_v_v_program_arr_e2_c1(id),
+ f_get_section_program_v_v_program_arr_e2_c2(id),
+ f_get_section_program_v_v_program_arr_e2_c3(id),
+ f_get_section_program_v_v_program_arr_e2_c4(id),
+ f_get_section_program_v_v_program_arr_e2_c5(id)>>,
+ <<
+ VPol["col_papers_paper_id"].policy,
+ VPol["col_papers_title"].policy,
+ VPol["col_papers_abstract"].policy,
+ VPol["col_papers_text"].policy,
+ min,
+ VPol["col_papers_paper_id"].policy,
+ VPol["col_papers_title"].policy,
+ VPol["col_papers_abstract"].policy,
+ VPol["col_papers_text"].policy,
+ min>>,
+ LUB4Seq(<<
+ load(id, f_get_section_program_p_s_id(id)),
+ VPol["col_papers_paper_id"].policy,
+ VPol["col_submissions_paper_id"].policy,
+ VPol["col_allocations_submission_id"].policy,
+ VPol["col_submissions_submission_id"].policy,
+ VPol["col_allocations_section_id"].policy>>),
+ <<
+ "f_get_section_program", "lbl_10"
+ >>)
+/\ Trace' = Append(Trace,<<id,
+ "f_get_section_program8",
+ "select paper_id , title , abstract , text , 'unknown_auth' bulk collect into v_program from papers where papers . paper_id in ( select SUBMISSIONS . paper_id from allocations JOIN SUBMISSIONS ON allocations . submission_id = SUBMISSIONS . submission_id WHERE allocations . section_id = s_id )",
+ [from |-> <<
+ <<
+ VPol.col_papers_paper_id,
+ [policy |-> load(id, f_get_section_program_p_s_id(id)),
+ name |-> f_get_section_program_p_s_id(id).name],
+ VPol.col_papers_paper_id,
+ VPol.col_submissions_paper_id,
+ VPol.col_allocations_submission_id,
+ VPol.col_submissions_submission_id,
+ VPol.col_allocations_section_id
+ >>,
+ <<
+ VPol.col_papers_title,
+ [policy |-> load(id, f_get_section_program_p_s_id(id)),
+ name |-> f_get_section_program_p_s_id(id).name],
+ VPol.col_papers_paper_id,
+ VPol.col_submissions_paper_id,
+ VPol.col_allocations_submission_id,
+ VPol.col_submissions_submission_id,
+ VPol.col_allocations_section_id
+ >>,
+ <<
+ VPol.col_papers_abstract,
+ [policy |-> load(id, f_get_section_program_p_s_id(id)),
+ name |-> f_get_section_program_p_s_id(id).name],
+ VPol.col_papers_paper_id,
+ VPol.col_submissions_paper_id,
+ VPol.col_allocations_submission_id,
+ VPol.col_submissions_submission_id,
+ VPol.col_allocations_section_id
+ >>,
+ <<
+ VPol.col_papers_text,
+ [policy |-> load(id, f_get_section_program_p_s_id(id)),
+ name |-> f_get_section_program_p_s_id(id).name],
+ VPol.col_papers_paper_id,
+ VPol.col_submissions_paper_id,
+ VPol.col_allocations_submission_id,
+ VPol.col_submissions_submission_id,
+ VPol.col_allocations_section_id
+ >>,
+ <<
+ [policy |-> min, name |-> "literal_3"],
+ [policy |-> load(id, f_get_section_program_p_s_id(id)),
+ name |-> f_get_section_program_p_s_id(id).name],
+ VPol.col_papers_paper_id,
+ VPol.col_submissions_paper_id,
+ VPol.col_allocations_submission_id,
+ VPol.col_submissions_submission_id,
+ VPol.col_allocations_section_id
+ >>,
+ <<
+ VPol.col_papers_paper_id,
+ [policy |-> load(id, f_get_section_program_p_s_id(id)),
+ name |-> f_get_section_program_p_s_id(id).name],
+ VPol.col_papers_paper_id,
+ VPol.col_submissions_paper_id,
+ VPol.col_allocations_submission_id,
+ VPol.col_submissions_submission_id,
+ VPol.col_allocations_section_id
+ >>,
+ <<
+ VPol.col_papers_title,
+ [policy |-> load(id, f_get_section_program_p_s_id(id)),
+ name |-> f_get_section_program_p_s_id(id).name],
+ VPol.col_papers_paper_id,
+ VPol.col_submissions_paper_id,
+ VPol.col_allocations_submission_id,
+ VPol.col_submissions_submission_id,
+ VPol.col_allocations_section_id
+ >>,
+ <<
+ VPol.col_papers_abstract,
+ [policy |-> load(id, f_get_section_program_p_s_id(id)),
+ name |-> f_get_section_program_p_s_id(id).name],
+ VPol.col_papers_paper_id,
+ VPol.col_submissions_paper_id,
+ VPol.col_allocations_submission_id,
+ VPol.col_submissions_submission_id,
+ VPol.col_allocations_section_id
+ >>,
+ <<
+ VPol.col_papers_text,
+ [policy |-> load(id, f_get_section_program_p_s_id(id)),
+ name |-> f_get_section_program_p_s_id(id).name],
+ VPol.col_papers_paper_id,
+ VPol.col_submissions_paper_id,
+ VPol.col_allocations_submission_id,
+ VPol.col_submissions_submission_id,
+ VPol.col_allocations_section_id
+ >>,
+ <<
+ [policy |-> min, name |-> "literal_4"],
+ [policy |-> load(id, f_get_section_program_p_s_id(id)),
+ name |-> f_get_section_program_p_s_id(id).name],
+ VPol.col_papers_paper_id,
+ VPol.col_submissions_paper_id,
+ VPol.col_allocations_submission_id,
+ VPol.col_submissions_submission_id,
+ VPol.col_allocations_section_id
+ >>
+ >>,
+ to |-> <<
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c1(id)),
+ name |-> f_get_section_program_v_v_program_arr_e1_c1(id).name],
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c2(id)),
+ name |-> f_get_section_program_v_v_program_arr_e1_c2(id).name],
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c3(id)),
+ name |-> f_get_section_program_v_v_program_arr_e1_c3(id).name],
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c4(id)),
+ name |-> f_get_section_program_v_v_program_arr_e1_c4(id).name],
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e1_c5(id)),
+ name |-> f_get_section_program_v_v_program_arr_e1_c5(id).name],
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c1(id)),
+ name |-> f_get_section_program_v_v_program_arr_e2_c1(id).name],
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c2(id)),
+ name |-> f_get_section_program_v_v_program_arr_e2_c2(id).name],
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c3(id)),
+ name |-> f_get_section_program_v_v_program_arr_e2_c3(id).name],
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c4(id)),
+ name |-> f_get_section_program_v_v_program_arr_e2_c4(id).name],
+ [policy |-> load(id, f_get_section_program_v_v_program_arr_e2_c5(id)),
+ name |-> f_get_section_program_v_v_program_arr_e2_c5(id).name]>>
+ ]>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<XLocks, VPol>>
+
+f_get_section_program10(id) ==
+/\ return(id, <<
+ f_get_section_program_r_arr_e1_c1(id),
+ f_get_section_program_r_arr_e1_c2(id),
+ f_get_section_program_r_arr_e1_c3(id),
+ f_get_section_program_r_arr_e1_c4(id),
+ f_get_section_program_r_arr_e1_c5(id),
+ f_get_section_program_r_arr_e2_c1(id),
+ f_get_section_program_r_arr_e2_c2(id),
+ f_get_section_program_r_arr_e2_c3(id),
+ f_get_section_program_r_arr_e2_c4(id),
+ f_get_section_program_r_arr_e2_c5(id)>>,
+ <<
+ load(id, f_get_section_program_v_v_program_arr_e1_c1(id)),
+ load(id, f_get_section_program_v_v_program_arr_e1_c2(id)),
+ load(id, f_get_section_program_v_v_program_arr_e1_c3(id)),
+ load(id, f_get_section_program_v_v_program_arr_e1_c4(id)),
+ load(id, f_get_section_program_v_v_program_arr_e1_c5(id)),
+ load(id, f_get_section_program_v_v_program_arr_e2_c1(id)),
+ load(id, f_get_section_program_v_v_program_arr_e2_c2(id)),
+ load(id, f_get_section_program_v_v_program_arr_e2_c3(id)),
+ load(id, f_get_section_program_v_v_program_arr_e2_c4(id)),
+ load(id, f_get_section_program_v_v_program_arr_e2_c5(id))>>,
+ <<
+ "f_get_section_program", "exit"
+ >>)
+/\ Trace' = Append(Trace,<<>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ XLocks' = XLocks
+/\ VPol' = VPol
+
+f_get_section_program_exit(id) ==
+/\ IF Len(Sessions[id]["StateRegs"]) = 1
+ THEN XLocks' = Undef
+ ELSE XLocks' = XLocks
+/\ Sessions' =
+ [Sessions EXCEPT
+ ![id]["StateRegs"] = Tail(Sessions[id]["StateRegs"]) \o <<>>,
+ ![id]["Ret"] =
+ <<
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_section_program_r_arr_e1_c1(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_section_program_r_arr_e1_c2(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_section_program_r_arr_e1_c3(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_section_program_r_arr_e1_c4(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_section_program_r_arr_e1_c5(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_section_program_r_arr_e2_c1(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_section_program_r_arr_e2_c2(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_section_program_r_arr_e2_c3(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_section_program_r_arr_e2_c4(id).offs],
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_get_section_program_r_arr_e2_c5(id).offs]
+ >>,
+ ![id]["SessionM"] = SubSeq(Sessions[id]["SessionM"], 1, Len(Sessions[id]["SessionM"]) - 21)]
+/\ Trace' = Append(Trace, <<id,"f_get_section_program_exit",
+ "f_get_section_program_exit",
+ [from |-> << >>, to |-> << >>]>>)
+ /\ Ignore' = 1
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<New2Old, VPol>>
+
+f_get_section_program(id,st) ==
+ CASE Head(st).pc[2] = "lbl_8" -> f_get_section_program8(id)
+[] Head(st).pc[2] = "lbl_10" -> f_get_section_program10(id)
+[] Head(st).pc[2] = "exit" -> f_get_section_program_exit(id)
+[] OTHER -> UNCHANGED vars
+
+f_is_accepted_load(id) ==
+IF XLocks = Undef
+THEN
+/\ XLocks' = id
+/\ Sessions' =
+ [
+ Sessions EXCEPT ![id]["SessionM"] = Sessions[id]["SessionM"] \o
+ <<min,
+ f_is_accepted_v_v_status(id).policy,
+ f_is_accepted_r(id).policy>>
+ ]
+/\ New2Old' =
+ <<
+ <<f_is_accepted_p_s_id(id).policy,
+ f_is_accepted_v_v_status(id).policy,
+ f_is_accepted_r(id).policy>>,
+ <<min,
+ f_is_accepted_v_v_status(id).policy,
+ f_is_accepted_r(id).policy>>
+ >>
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<VPol>>
+ELSE UNCHANGED vars
+
+f_is_accepted5(id) ==
+/\ select(id, <<
+ f_is_accepted_v_v_status(id)>>,
+ <<
+ VPol["col_submissions_status"].policy>>,
+ LUB4Seq(<<
+ VPol["col_submissions_submission_id"].policy,
+ load(id, f_is_accepted_p_s_id(id))>>),
+ <<
+ "f_is_accepted", "lbl_7"
+ >>)
+/\ Trace' = Append(Trace,<<id,
+ "f_is_accepted5",
+ "select status into v_status from submissions where submission_id = s_id",
+ [from |-> <<
+ <<
+ VPol.col_submissions_status,
+ VPol.col_submissions_submission_id,
+ [policy |-> load(id, f_is_accepted_p_s_id(id)),
+ name |-> f_is_accepted_p_s_id(id).name]
+ >>
+ >>,
+ to |-> <<
+ [policy |-> load(id, f_is_accepted_v_v_status(id)),
+ name |-> f_is_accepted_v_v_status(id).name]>>
+ ]>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<XLocks, VPol>>
+
+f_is_accepted7(id) ==
+/\ if(id, LUB4Seq(<<
+ load(id, f_is_accepted_v_v_status(id))>>),
+ <<
+ "f_is_accepted", "lbl_8_9"
+ >>)
+/\ Trace' = Append(Trace,<<id,
+ "f_is_accepted7",
+ "if v_status = 1",
+ [from |-> <<
+ <<[policy |-> load(id, f_is_accepted_v_v_status(id)),
+ name |-> f_is_accepted_v_v_status(id).name],
+ [policy |-> min, name |-> "literal_5"]>>
+ >>,
+ to |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]), name |-> "PCLabel"]>>]>>)
+ /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>
+
+f_is_accepted8_9(id) ==
+\/ /\ skip(id, <<"f_is_accepted", "lbl_8">>)
+ /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore, Trace>>
+\/ /\ skip(id, <<"f_is_accepted", "lbl_9">>)
+ /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore, Trace>>
+
+
+f_is_accepted8(id) ==
+/\ return(id, <<
+ f_is_accepted_r(id)>>,
+ <<
+ min>>,
+ <<
+ "f_is_accepted", "lbl_10"
+ >>)
+/\ Trace' = Append(Trace,<<>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ XLocks' = XLocks
+/\ VPol' = VPol
+
+f_is_accepted9(id) ==
+/\ return(id, <<
+ f_is_accepted_r(id)>>,
+ <<
+ min>>,
+ <<
+ "f_is_accepted", "lbl_10"
+ >>)
+/\ Trace' = Append(Trace,<<>>)
+/\ Ignore' = 0
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ XLocks' = XLocks
+/\ VPol' = VPol
+
+f_is_accepted10(id) ==
+/\ ifend(id, <<"f_is_accepted", "exit">>)
+/\ Trace' = Append(Trace,<<id,
+ "f_is_accepted10",
+ "endif",
+ [from |-> <<<<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]), name |-> "PCLabel"]>>>>,
+ to |-> <<[policy |-> LUB4Seq(Sessions[id]["PCLabel"]), name |-> "PCLabel"]>>]>>)
+ /\ UNCHANGED <<StateE, New2Old, XLocks, VPol, SLocks, Ignore>>
+
+f_is_accepted_exit(id) ==
+/\ IF Len(Sessions[id]["StateRegs"]) = 1
+ THEN XLocks' = Undef
+ ELSE XLocks' = XLocks
+/\ Sessions' =
+ [Sessions EXCEPT
+ ![id]["StateRegs"] = Tail(Sessions[id]["StateRegs"]) \o <<>>,
+ ![id]["Ret"] =
+ <<
+ Sessions[id]["SessionM"][Head(Sessions[id]["StateRegs"]).fp + f_is_accepted_r(id).offs]
+ >>,
+ ![id]["SessionM"] = SubSeq(Sessions[id]["SessionM"], 1, Len(Sessions[id]["SessionM"]) - 3)]
+/\ Trace' = Append(Trace, <<id,"f_is_accepted_exit",
+ "f_is_accepted_exit",
+ [from |-> << >>, to |-> << >>]>>)
+ /\ Ignore' = 1
+/\ SLocks' = SLocks
+/\ StateE' = SLocks'[id]
+/\ UNCHANGED <<New2Old, VPol>>
+
+f_is_accepted(id,st) ==
+ CASE Head(st).pc[2] = "lbl_5" -> f_is_accepted5(id)
+[] Head(st).pc[2] = "lbl_7" -> f_is_accepted7(id)
+[] Head(st).pc[2] = "lbl_8_9" -> f_is_accepted8_9(id)
+[] Head(st).pc[2] = "lbl_8" -> f_is_accepted8(id)
+[] Head(st).pc[2] = "lbl_9" -> f_is_accepted9(id)
+[] Head(st).pc[2] = "lbl_10" -> f_is_accepted10(id)
+[] Head(st).pc[2] = "exit" -> f_is_accepted_exit(id)
 [] OTHER -> UNCHANGED vars
 
 dispatch(id,st) ==
 CASE
-/\ Head(st).pc[1] = "f_UCHEBA_programm_list"
+/\ Head(st).pc[1] = "p_add_paper"
 /\ Sessions[id]["SessionM"] = <<>> ->
-   /\ f_UCHEBA_programm_list_load(id)
+   /\ p_add_paper_load(id)
    /\ Trace' = Append(Trace,<<>>)
-[] /\ Head(st).pc[1] = "f_UCHEBA_programm_list"
-/\ Sessions[id]["SessionM"] # <<>> -> f_UCHEBA_programm_list(id, st)
+[] /\ Head(st).pc[1] = "p_add_paper"
+/\ Sessions[id]["SessionM"] # <<>> -> p_add_paper(id, st)
+
+[] Head(st).pc[1] = "p_allocate"
+/\ Sessions[id]["SessionM"] = <<>> ->
+   /\ p_allocate_load(id)
+   /\ Trace' = Append(Trace,<<>>)
+[] /\ Head(st).pc[1] = "p_allocate"
+/\ Sessions[id]["SessionM"] # <<>> -> p_allocate(id, st)
+
+[] Head(st).pc[1] = "p_change_status"
+/\ Sessions[id]["SessionM"] = <<>> ->
+   /\ p_change_status_load(id)
+   /\ Trace' = Append(Trace,<<>>)
+[] /\ Head(st).pc[1] = "p_change_status"
+/\ Sessions[id]["SessionM"] # <<>> -> p_change_status(id, st)
+
+[] Head(st).pc[1] = "p_submit_paper"
+/\ Sessions[id]["SessionM"] = <<>> ->
+   /\ p_submit_paper_load(id)
+   /\ Trace' = Append(Trace,<<>>)
+[] /\ Head(st).pc[1] = "p_submit_paper"
+/\ Sessions[id]["SessionM"] # <<>> -> p_submit_paper(id, st)
+
+[] Head(st).pc[1] = "f_get_paper"
+/\ Sessions[id]["SessionM"] = <<>> ->
+   /\ f_get_paper_load(id)
+   /\ Trace' = Append(Trace,<<>>)
+[] /\ Head(st).pc[1] = "f_get_paper"
+/\ Sessions[id]["SessionM"] # <<>> -> f_get_paper(id, st)
+
+[] Head(st).pc[1] = "f_get_section_program"
+/\ Sessions[id]["SessionM"] = <<>> ->
+   /\ f_get_section_program_load(id)
+   /\ Trace' = Append(Trace,<<>>)
+[] /\ Head(st).pc[1] = "f_get_section_program"
+/\ Sessions[id]["SessionM"] # <<>> -> f_get_section_program(id, st)
+
+[] Head(st).pc[1] = "f_is_accepted"
+/\ Sessions[id]["SessionM"] = <<>> ->
+   /\ f_is_accepted_load(id)
+   /\ Trace' = Append(Trace,<<>>)
+[] /\ Head(st).pc[1] = "f_is_accepted"
+/\ Sessions[id]["SessionM"] # <<>> -> f_is_accepted(id, st)
 
 Init ==
 LET pc == [{"pc"} ->
-{<<"f_UCHEBA_programm_list", "lbl_31">>}
+{<<"p_add_paper", "lbl_4">>,
+<<"p_allocate", "lbl_7">>,
+<<"p_change_status", "lbl_4">>,
+<<"p_submit_paper", "lbl_4">>,
+<<"f_get_paper", "lbl_6">>,
+<<"f_get_section_program", "lbl_8">>,
+<<"f_is_accepted", "lbl_5">>}
 ]
 IN
 /\ Trace = <<>>
 /\ StateE = [e1 \in E0 |-> {}] @@ [e2 \in E1 |-> {}]
-/\ Sessions \in
-     [S ->
-          ReduceSet(LAMBDA x, y: x \cup
+/\ Sessions \in 
+     [S -> 
+          ReduceSet(LAMBDA x, y: x \cup 
               {y @@ [SessionM |-> <<>>]
                  @@ [PCLabel  |-> <<min>>]
                  @@ [Ret      |-> Undef]},
-                 {},
-                 [{"StateRegs"} ->
-                      ReduceSet (LAMBDA x, y:
+                 {}, 
+                 [{"StateRegs"} -> 
+                      ReduceSet (LAMBDA x, y: 
                           x \cup ({<<y @@ [fp |->1]>>}), {}, pc) ])
      ]
-/\ SLocks =
-     [s \in S |-> [e1 \in E0 |-> {}]
+/\ SLocks = 
+     [s \in S |-> [e1 \in E0 |-> {}] 
       @@ [e2 \in E1 |-> {}]]
 /\ New2Old = <<>>
 /\ Ignore = 0
 /\ XLocks = Undef
 /\ VPol =
  [
- col_meth_author_id |-> [ext|->0, policy |-> min, name |-> "col_meth_author_id"],
- col_meth_author_f |-> [ext|->0, policy |-> min, name |-> "col_meth_author_f"],
- col_meth_author_i |-> [ext|->0, policy |-> min, name |-> "col_meth_author_i"],
- col_meth_author_o |-> [ext|->0, policy |-> min, name |-> "col_meth_author_o"],
- col_meth_author_full |-> [ext|->0, policy |-> min, name |-> "col_meth_author_full"],
- col_meth_author_fio |-> [ext|->0, policy |-> min, name |-> "col_meth_author_fio"],
+ col_allocations_allocation_id |-> [ext|->0, policy |-> min, name |-> "col_allocations_allocation_id"],
+ col_allocations_paper_id |-> [ext|->0, policy |-> min, name |-> "col_allocations_paper_id"],
+ col_allocations_section_id |-> [ext|->0, policy |-> min, name |-> "col_allocations_section_id"],
+ col_allocations_allocation_date |-> [ext|->0, policy |-> min, name |-> "col_allocations_allocation_date"],
+ col_allocations_submission_id |-> [ext|->0, policy |-> min, name |-> "col_allocations_submission_id"],
 
- col_meth_book_access_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_access_id"],
- col_meth_book_access_book_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_access_book_id"],
- col_meth_book_access_account_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_access_account_id"],
+ col_conferences_conference_id |-> [ext|->0, policy |-> min, name |-> "col_conferences_conference_id"],
+ col_conferences_name |-> [ext|->0, policy |-> min, name |-> "col_conferences_name"],
+ col_conferences_start_date |-> [ext|->0, policy |-> min, name |-> "col_conferences_start_date"],
+ col_conferences_end_date |-> [ext|->0, policy |-> min, name |-> "col_conferences_end_date"],
+ col_conferences_description |-> [ext|->0, policy |-> min, name |-> "col_conferences_description"],
 
- col_meth_book_catalog_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_id"],
- col_meth_book_catalog_timestamp |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_timestamp"],
- col_meth_book_catalog_code |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_code"],
- col_meth_book_catalog_serial_select |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_serial_select"],
- col_meth_book_catalog_title_1 |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_title_1"],
- col_meth_book_catalog_title_svedeniya |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_title_svedeniya"],
- col_meth_book_catalog_ISBN |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_ISBN"],
- col_meth_book_catalog_ISSN |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_ISSN"],
- col_meth_book_catalog_period_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_period_id"],
- col_meth_book_catalog_regulative |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_regulative"],
- col_meth_book_catalog_title_vypusk |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_title_vypusk"],
- col_meth_book_catalog_number |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_number"],
- col_meth_book_catalog_title_part |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_title_part"],
- col_meth_book_catalog_number_part |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_number_part"],
- col_meth_book_catalog_publishing_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_publishing_id"],
- col_meth_book_catalog_city1_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_city1_id"],
- col_meth_book_catalog_date_publication |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_date_publication"],
- col_meth_book_catalog_volume |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_volume"],
- col_meth_book_catalog_illustration |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_illustration"],
- col_meth_book_catalog_anotation |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_anotation"],
- col_meth_book_catalog_autor_1_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_autor_1_id"],
- col_meth_book_catalog_autor_dr |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_autor_dr"],
- col_meth_book_catalog_autor_2_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_autor_2_id"],
- col_meth_book_catalog_autor_3_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_autor_3_id"],
- col_meth_book_catalog_UDK |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_UDK"],
- col_meth_book_catalog_autor_znak |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_autor_znak"],
- col_meth_book_catalog_key_word |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_key_word"],
- col_meth_book_catalog_language_text_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_language_text_id"],
- col_meth_book_catalog_language_resume_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_language_resume_id"],
- col_meth_book_catalog_country_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_country_id"],
- col_meth_book_catalog_type_media_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_type_media_id"],
- col_meth_book_catalog_electronic_media |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_electronic_media"],
- col_meth_book_catalog_type_publishing_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_type_publishing_id"],
- col_meth_book_catalog_vid_edition_key |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_vid_edition_key"],
- col_meth_book_catalog_characters_edition_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_characters_edition_id"],
- col_meth_book_catalog_title_2 |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_title_2"],
- col_meth_book_catalog_city2_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_city2_id"],
- col_meth_book_catalog_city3_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_city3_id"],
- col_meth_book_catalog_attachments |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_attachments"],
- col_meth_book_catalog_title_serial |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_title_serial"],
- col_meth_book_catalog_number_serial |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_number_serial"],
- col_meth_book_catalog_republishing |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_republishing"],
- col_meth_book_catalog_autor_t_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_autor_t_id"],
- col_meth_book_catalog_original_ISBN |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_original_ISBN"],
- col_meth_book_catalog_original_ISSN |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_original_ISSN"],
- col_meth_book_catalog_daktors |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_daktors"],
- col_meth_book_catalog_organization |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_organization"],
- col_meth_book_catalog_stelag |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_stelag"],
- col_meth_book_catalog_polka |-> [ext|->0, policy |-> min, name |-> "col_meth_book_catalog_polka"],
+ col_logs_event_id |-> [ext|->0, policy |-> min, name |-> "col_logs_event_id"],
+ col_logs_err_info |-> [ext|->0, policy |-> min, name |-> "col_logs_err_info"],
 
- col_meth_book_content_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_id"],
- col_meth_book_content_book_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_book_id"],
- col_meth_book_content_head_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_head_id"],
- col_meth_book_content_ierarh_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_ierarh_id"],
- col_meth_book_content_level |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_level"],
- col_meth_book_content_nonumeric |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_nonumeric"],
- col_meth_book_content_number |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_number"],
- col_meth_book_content_fullnumber |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_fullnumber"],
- col_meth_book_content_count_child |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_count_child"],
- col_meth_book_content_name |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_name"],
- col_meth_book_content_desc |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_desc"],
- col_meth_book_content_naprav_id |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_naprav_id"],
- col_meth_book_content_public |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_public"],
- col_meth_book_content_autor |-> [ext|->0, policy |-> min, name |-> "col_meth_book_content_autor"],
+ col_papers_paper_id |-> [ext|->0, policy |-> min, name |-> "col_papers_paper_id"],
+ col_papers_title |-> [ext|->0, policy |-> min, name |-> "col_papers_title"],
+ col_papers_abstract |-> [ext|->0, policy |-> min, name |-> "col_papers_abstract"],
+ col_papers_text |-> [ext|->0, policy |-> min, name |-> "col_papers_text"],
+ col_papers_authors |-> [ext|->0, policy |-> min, name |-> "col_papers_authors"],
 
- col_meth_publishing_id |-> [ext|->0, policy |-> min, name |-> "col_meth_publishing_id"],
- col_meth_publishing_type |-> [ext|->0, policy |-> min, name |-> "col_meth_publishing_type"],
- col_meth_publishing_title |-> [ext|->0, policy |-> min, name |-> "col_meth_publishing_title"],
- col_meth_publishing_adress |-> [ext|->0, policy |-> min, name |-> "col_meth_publishing_adress"],
- col_meth_publishing_URL |-> [ext|->0, policy |-> min, name |-> "col_meth_publishing_URL"],
- col_meth_publishing_email |-> [ext|->0, policy |-> min, name |-> "col_meth_publishing_email"],
+ col_sections_section_id |-> [ext|->0, policy |-> min, name |-> "col_sections_section_id"],
+ col_sections_title |-> [ext|->0, policy |-> min, name |-> "col_sections_title"],
+ col_sections_place |-> [ext|->0, policy |-> min, name |-> "col_sections_place"],
+ col_sections_start_date |-> [ext|->0, policy |-> min, name |-> "col_sections_start_date"],
+ col_sections_end_date |-> [ext|->0, policy |-> min, name |-> "col_sections_end_date"],
+ col_sections_conference_id |-> [ext|->0, policy |-> min, name |-> "col_sections_conference_id"],
 
- col_meth_test_content_id |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_id"],
- col_meth_test_content_test_id |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_test_id"],
- col_meth_test_content_head_id |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_head_id"],
- col_meth_test_content_ierarh_id |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_ierarh_id"],
- col_meth_test_content_level |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_level"],
- col_meth_test_content_count_child |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_count_child"],
- col_meth_test_content_name |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_name"],
- col_meth_test_content_desc |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_desc"],
- col_meth_test_content_desc_text |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_desc_text"],
- col_meth_test_content_naprav_id |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_naprav_id"],
- col_meth_test_content_time |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_time"],
- col_meth_test_content_rundom |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_rundom"],
- col_meth_test_content_public |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_public"],
- col_meth_test_content_anonim |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_anonim"],
- col_meth_test_content_autor |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_autor"],
- col_meth_test_content_ucheb |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_ucheb"],
- col_meth_test_content_terminal |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_terminal"],
- col_meth_test_content_end_terminal |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_end_terminal"],
- col_meth_test_content_razdel_number |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_razdel_number"],
- col_meth_test_content_razdel_count_answer |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_razdel_count_answer"],
- col_meth_test_content_qweshion_multiselect |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_qweshion_multiselect"],
- col_meth_test_content_qweshion_methodik |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_qweshion_methodik"],
- col_meth_test_content_qweshion_obligatory |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_qweshion_obligatory"],
- col_meth_test_content_qweshion_time |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_qweshion_time"],
- col_meth_test_content_qweshion_count_answer |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_qweshion_count_answer"],
- col_meth_test_content_qweshion_all_number |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_qweshion_all_number"],
- col_meth_test_content_qweshion_number |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_qweshion_number"],
- col_meth_test_content_answer_correct |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_answer_correct"],
- col_meth_test_content_answer_negative |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_answer_negative"],
- col_meth_test_content_answer_bal |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_answer_bal"],
- col_meth_test_content_answer_input |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_answer_input"],
- col_meth_test_content_answer_input_int |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_answer_input_int"],
- col_meth_test_content_answer_input_text |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_answer_input_text"],
- col_meth_test_content_answer_min |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_answer_min"],
- col_meth_test_content_answer_max |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_answer_max"],
- col_meth_test_content_answer_ignor_qw |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_answer_ignor_qw"],
- col_meth_test_content_answer_number |-> [ext|->0, policy |-> min, name |-> "col_meth_test_content_answer_number"],
-
- col_uch_liter_id |-> [ext|->0, policy |-> min, name |-> "col_uch_liter_id"],
- col_uch_liter_programm_id |-> [ext|->0, policy |-> min, name |-> "col_uch_liter_programm_id"],
- col_uch_liter_book_id |-> [ext|->0, policy |-> min, name |-> "col_uch_liter_book_id"],
- col_uch_liter_name |-> [ext|->0, policy |-> min, name |-> "col_uch_liter_name"],
- col_uch_liter_osnovnaya |-> [ext|->0, policy |-> min, name |-> "col_uch_liter_osnovnaya"],
- col_uch_create_user |-> [ext|->0, policy |-> min, name |-> "col_uch_create_user"],
- col_uch_create_date |-> [ext|->0, policy |-> min, name |-> "col_uch_create_date"],
- col_uch_edit_user |-> [ext|->0, policy |-> min, name |-> "col_uch_edit_user"],
- col_uch_edit_date |-> [ext|->0, policy |-> min, name |-> "col_uch_edit_date"],
-
- col_uch_napravlenie_id |-> [ext|->0, policy |-> min, name |-> "col_uch_napravlenie_id"],
- col_uch_napravlenie_head_id |-> [ext|->0, policy |-> min, name |-> "col_uch_napravlenie_head_id"],
- col_uch_napravlenie_name |-> [ext|->0, policy |-> min, name |-> "col_uch_napravlenie_name"],
- col_uch_napravlenie_short_name |-> [ext|->0, policy |-> min, name |-> "col_uch_napravlenie_short_name"],
- col_uch_napravlenie_code |-> [ext|->0, policy |-> min, name |-> "col_uch_napravlenie_code"],
- col_uch_napravlenie_order |-> [ext|->0, policy |-> min, name |-> "col_uch_napravlenie_order"],
-
- col_uch_programm_id |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_id"],
- col_uch_programm_ierarh_id |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_ierarh_id"],
- col_uch_programm_level |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_level"],
- col_uch_programm_count_child |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_count_child"],
- col_uch_programm_unuse |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_unuse"],
- col_uch_programm_programm_id |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_programm_id"],
- col_uch_programm_head_id |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_head_id"],
- col_uch_programm_razdel |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_razdel"],
- col_uch_programm_nonumeric |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_nonumeric"],
- col_uch_programm_number |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_number"],
- col_uch_programm_fullnumber |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_fullnumber"],
- col_uch_programm_name |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_name"],
- col_uch_programm_short_name |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_short_name"],
- col_uch_programm_tablo_name |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_tablo_name"],
- col_uch_programm_code |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_code"],
- col_uch_programm_data |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_data"],
- col_uch_programm_napravlenie |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_napravlenie"],
- col_uch_programm_department |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_department"],
- col_uch_programm_organization |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_organization"],
- col_uch_programm_type |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_type"],
- col_uch_programm_count_chasov |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_count_chasov"],
- col_uch_programm_count_chasov_audit |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_count_chasov_audit"],
- col_uch_programm_count_chasov_lection |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_count_chasov_lection"],
- col_uch_programm_count_chasov_practik |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_count_chasov_practik"],
- col_uch_programm_count_chasov_seminar |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_count_chasov_seminar"],
- col_uch_programm_count_chasov_outer |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_count_chasov_outer"],
- col_uch_programm_count_chasov_outer_name |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_count_chasov_outer_name"],
- col_uch_programm_count_chasov_samost_prep |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_count_chasov_samost_prep"],
- col_uch_programm_count_chasov_samost |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_count_chasov_samost"],
- col_uch_programm_count_chasov_attestat |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_count_chasov_attestat"],
- col_uch_programm_category |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_category"],
- col_uch_programm_srok |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_srok"],
- col_uch_programm_form |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_form"],
- col_uch_programm_target |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_target"],
- col_uch_programm_target_seminar |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_target_seminar"],
- col_uch_programm_target_practik |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_target_practik"],
- col_uch_programm_target_samost |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_target_samost"],
- col_uch_programm_rezult |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_rezult"],
- col_uch_programm_mtu |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_mtu"],
- col_uch_programm_osob |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_osob"],
- col_uch_programm_rekom |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_rekom"],
- col_uch_programm_attestation |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_attestation"],
- col_uch_programm_authorlist |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_authorlist"],
- col_uch_programm_control_qw |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_control_qw"],
- col_uch_programm_control_test |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_control_test"],
- col_uch_programm_programm_link |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_programm_link"],
- col_uch_programm_index |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_index"],
-
- col_uch_programm_mtu_id |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_mtu_id"],
- col_uch_programm_mtu_programm_id |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_mtu_programm_id"],
- col_uch_programm_mtu_name |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_mtu_name"],
-
- col_uch_programm_unmtu_id |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_unmtu_id"],
- col_uch_programm_unmtu_programm_id |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_unmtu_programm_id"],
- col_uch_programm_unmtu_mtu_id |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_unmtu_mtu_id"],
- col_uch_programm_unmtu_type |-> [ext|->0, policy |-> min, name |-> "col_uch_programm_unmtu_type"],
-
- col_upr_account_id |-> [ext|->0, policy |-> min, name |-> "col_upr_account_id"],
- col_upr_account_f |-> [ext|->0, policy |-> min, name |-> "col_upr_account_f"],
- col_upr_account_f_r |-> [ext|->0, policy |-> min, name |-> "col_upr_account_f_r"],
- col_upr_account_f_t |-> [ext|->0, policy |-> min, name |-> "col_upr_account_f_t"],
- col_upr_account_f_d |-> [ext|->0, policy |-> min, name |-> "col_upr_account_f_d"],
- col_upr_account_i |-> [ext|->0, policy |-> min, name |-> "col_upr_account_i"],
- col_upr_account_i_r |-> [ext|->0, policy |-> min, name |-> "col_upr_account_i_r"],
- col_upr_account_i_t |-> [ext|->0, policy |-> min, name |-> "col_upr_account_i_t"],
- col_upr_account_i_d |-> [ext|->0, policy |-> min, name |-> "col_upr_account_i_d"],
- col_upr_account_o |-> [ext|->0, policy |-> min, name |-> "col_upr_account_o"],
- col_upr_account_o_r |-> [ext|->0, policy |-> min, name |-> "col_upr_account_o_r"],
- col_upr_account_o_t |-> [ext|->0, policy |-> min, name |-> "col_upr_account_o_t"],
- col_upr_account_o_d |-> [ext|->0, policy |-> min, name |-> "col_upr_account_o_d"],
- col_upr_account_full |-> [ext|->0, policy |-> min, name |-> "col_upr_account_full"],
- col_upr_account_fio |-> [ext|->0, policy |-> min, name |-> "col_upr_account_fio"],
- col_upr_account_podp |-> [ext|->0, policy |-> min, name |-> "col_upr_account_podp"],
- col_upr_account_podp2 |-> [ext|->0, policy |-> min, name |-> "col_upr_account_podp2"],
- col_upr_account_pol |-> [ext|->0, policy |-> min, name |-> "col_upr_account_pol"],
- col_upr_account_dept |-> [ext|->0, policy |-> min, name |-> "col_upr_account_dept"],
- col_upr_account_dept_shtat |-> [ext|->0, policy |-> min, name |-> "col_upr_account_dept_shtat"],
- col_upr_account_range |-> [ext|->0, policy |-> min, name |-> "col_upr_account_range"],
- col_upr_account_bd |-> [ext|->0, policy |-> min, name |-> "col_upr_account_bd"],
- col_upr_account_bd_string |-> [ext|->0, policy |-> min, name |-> "col_upr_account_bd_string"],
- col_upr_account_zvanie_id |-> [ext|->0, policy |-> min, name |-> "col_upr_account_zvanie_id"],
- col_upr_account_office_id |-> [ext|->0, policy |-> min, name |-> "col_upr_account_office_id"],
- col_upr_account_worktel |-> [ext|->0, policy |-> min, name |-> "col_upr_account_worktel"],
- col_upr_account_worktel_dop |-> [ext|->0, policy |-> min, name |-> "col_upr_account_worktel_dop"],
- col_upr_account_worktel_os |-> [ext|->0, policy |-> min, name |-> "col_upr_account_worktel_os"],
- col_upr_account_hometel |-> [ext|->0, policy |-> min, name |-> "col_upr_account_hometel"],
- col_upr_account_homeadress |-> [ext|->0, policy |-> min, name |-> "col_upr_account_homeadress"],
- col_upr_account_homeputh |-> [ext|->0, policy |-> min, name |-> "col_upr_account_homeputh"],
- col_upr_account_hometime |-> [ext|->0, policy |-> min, name |-> "col_upr_account_hometime"],
- col_upr_account_mobile |-> [ext|->0, policy |-> min, name |-> "col_upr_account_mobile"],
- col_upr_account_domain_name |-> [ext|->0, policy |-> min, name |-> "col_upr_account_domain_name"],
- col_upr_account_samid |-> [ext|->0, policy |-> min, name |-> "col_upr_account_samid"],
- col_upr_account_online |-> [ext|->0, policy |-> min, name |-> "col_upr_account_online"],
- col_upr_account_foto_file_type |-> [ext|->0, policy |-> min, name |-> "col_upr_account_foto_file_type"],
- col_upr_account_foto_file_length |-> [ext|->0, policy |-> min, name |-> "col_upr_account_foto_file_length"],
- col_upr_account_foto_file_value |-> [ext|->0, policy |-> min, name |-> "col_upr_account_foto_file_value"],
-
- col_upr_department_id |-> [ext|->0, policy |-> min, name |-> "col_upr_department_id"],
- col_upr_department_head_id |-> [ext|->0, policy |-> min, name |-> "col_upr_department_head_id"],
- col_upr_department_ierarh_id |-> [ext|->0, policy |-> min, name |-> "col_upr_department_ierarh_id"],
- col_upr_department_level |-> [ext|->0, policy |-> min, name |-> "col_upr_department_level"],
- col_upr_department_count_child |-> [ext|->0, policy |-> min, name |-> "col_upr_department_count_child"],
- col_upr_department_title |-> [ext|->0, policy |-> min, name |-> "col_upr_department_title"],
- col_upr_department_short_title |-> [ext|->0, policy |-> min, name |-> "col_upr_department_short_title"],
- col_upr_department_short_title_r |-> [ext|->0, policy |-> min, name |-> "col_upr_department_short_title_r"],
- col_upr_department_rashod |-> [ext|->0, policy |-> min, name |-> "col_upr_department_rashod"],
- col_upr_department_pogar_nomer |-> [ext|->0, policy |-> min, name |-> "col_upr_department_pogar_nomer"],
- col_upr_department_ucheb |-> [ext|->0, policy |-> min, name |-> "col_upr_department_ucheb"],
-
- col_upr_range_head_id |-> [ext|->0, policy |-> min, name |-> "col_upr_range_head_id"],
- col_upr_range_ierarh_id |-> [ext|->0, policy |-> min, name |-> "col_upr_range_ierarh_id"],
- col_upr_range_level |-> [ext|->0, policy |-> min, name |-> "col_upr_range_level"],
- col_upr_range_count_child |-> [ext|->0, policy |-> min, name |-> "col_upr_range_count_child"],
- col_upr_range_dept_id |-> [ext|->0, policy |-> min, name |-> "col_upr_range_dept_id"],
- col_upr_range_title |-> [ext|->0, policy |-> min, name |-> "col_upr_range_title"],
- col_upr_range_short_title |-> [ext|->0, policy |-> min, name |-> "col_upr_range_short_title"],
- col_upr_range_head |-> [ext|->0, policy |-> min, name |-> "col_upr_range_head"],
- col_upr_range_sys |-> [ext|->0, policy |-> min, name |-> "col_upr_range_sys"],
- col_upr_range_unuse |-> [ext|->0, policy |-> min, name |-> "col_upr_range_unuse"],
-
- col_upr_zv_head_id |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_head_id"],
- col_upr_zv_ierarh_id |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_ierarh_id"],
- col_upr_zv_level |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_level"],
- col_upr_zv_count_child |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_count_child"],
- col_upr_zv_group |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_group"],
- col_upr_zv_unuse |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_unuse"],
- col_upr_zv_timestamp |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_timestamp"],
- col_upr_zv_code |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_code"],
- col_upr_zv_name |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_name"],
- col_upr_zv_name_rodit |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_name_rodit"],
- col_upr_zv_name_tvorit |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_name_tvorit"],
- col_upr_zv_name_dat |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_name_dat"],
- col_upr_zv_short_name |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_short_name"],
- col_upr_zv_rang |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_rang"],
- col_upr_zv_state |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_state"],
- col_upr_zv_order |-> [ext|->0, policy |-> min, name |-> "col_upr_zv_order"]
+ col_submissions_submission_id |-> [ext|->0, policy |-> min, name |-> "col_submissions_submission_id"],
+ col_submissions_paper_id |-> [ext|->0, policy |-> min, name |-> "col_submissions_paper_id"],
+ col_submissions_conference_id |-> [ext|->0, policy |-> min, name |-> "col_submissions_conference_id"],
+ col_submissions_submission_date |-> [ext|->0, policy |-> min, name |-> "col_submissions_submission_date"],
+ col_submissions_status |-> [ext|->0, policy |-> min, name |-> "col_submissions_status"]
  ]
 
 Next(K(_,_)) == 

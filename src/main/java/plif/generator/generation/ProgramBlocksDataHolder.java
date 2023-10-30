@@ -38,8 +38,8 @@ public class ProgramBlocksDataHolder {
     private void fillProgramBlocksData(String sourceDirectory) {
         File proceduresDirectory = new File(sourceDirectory + File.separator + "procedures");
         File functionsDirectory = new File(sourceDirectory + File.separator + "functions");
-        File[] procedures = Objects.requireNonNull(proceduresDirectory.listFiles());
-        File[] functions = Objects.requireNonNull(functionsDirectory.listFiles());
+        File[] procedures = Optional.ofNullable(proceduresDirectory.listFiles()).orElse(new File[0]);
+        File[] functions = Optional.ofNullable(functionsDirectory.listFiles()).orElse(new File[0]);
         List<File> programBlockFiles = new ArrayList<>(procedures.length + functions.length);
         programBlockFiles.addAll(Arrays.asList(procedures));
         programBlockFiles.addAll(Arrays.asList(functions));
